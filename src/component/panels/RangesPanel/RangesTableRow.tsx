@@ -1,0 +1,284 @@
+import type { Info1D } from '@zakodium/nmr-types';
+import type { WorkspacePanelPreferences } from '@zakodium/nmrium-core';
+import type { CSSProperties, MouseEvent } from 'react';
+import { useCallback, useMemo } from 'react';
+
+import type { AssignmentsData } from '../../assignment/AssignmentsContext.js';
+import {
+  useAssignment,
+  useAssignmentContext,
+} from '../../assignment/AssignmentsContext.js';
+import { filterAssignedIDs } from '../../assignment/utilities/filterAssignedIDs.js';
+import { useDispatch } from '../../context/DispatchContext.js';
+import { ContextMenu } from '../../elements/ContextMenuBluePrint.js';
+import type { TableContextMenuProps } from '../../elements/ReactTable/ReactTable.js';
+import { useHighlight } from '../../highlight/index.js';
+
+import AbsoluteColumn from './TableColumns/AbsoluteColumn.js';
+import ActionsColumn from './TableColumns/ActionsColumn.js';
+import CouplingColumn from './TableColumns/CouplingColumn.js';
+import RangeColumn from './TableColumns/RangeColumn.js';
+import RelativeColumn from './TableColumns/RelativeColumn.js';
+import { SignalAssignmentColumn } from './TableColumns/SignalAssignmentColumn.js';
+import SignalAssignmentsColumn from './TableColumns/SignalAssignmentsColumn.js';
+import SignalDeltaColumn from './TableColumns/SignalDeltaColumn.js';
+import SignalDeltaHzColumn from './TableColumns/SignalDeltaHzColumn.js';
+import type { RangeData } from './hooks/useMapRanges.js';
+
+const HighlightedRowStyle = {
+  backgroundColor: '#ff6f0057',
+};
+
+const ConstantlyHighlightedRowStyle = {
+  backgroundColor: '#f5f5dc',
+};
+
+interface RangesTableRowProps extends TableContextMenuProps {
+  rowData: RangeData;
+  preferences: WorkspacePanelPreferences['ranges'];
+  info: Info1D;
+}
+
+export interface BaseRangeColumnProps {
+  row: RangeData;
+  format: string;
+}
+
+export interface OnHoverEvent {
+  onHover: {
+    onMouseEnter: () => void;
+    onMouseLeave: () => void;
+  };
+}
+
+export interface RowSpanTags {
+  rowSpanTags: {
+    rowSpan?: number;
+    style?: CSSProperties;
+  };
+}
+
+export type RangeColumnProps = BaseRangeColumnProps &
+  OnHoverEvent &
+  RowSpanTags;
+
+export default function RangesTableRow(props: RangesTableRowProps) {
+  const {
+    rowData,
+    onContextMenuSelect,
+    contextMenu = [],
+    preferences: { tablePreferences },
+    info,
+  } = props;
+  const dispatch = useDispatch();
+  const assignmentData = useAssignmentContext();
+  const rangeKey = rowData.id;
+  const assignmentRange = useAssignment(rangeKey);
+  const highlightRange = useHighlight(
+    [rangeKey].concat(assignmentRange.assignedDiaIds?.x || []).concat(
+      filterAssignedIDs(
+        assignmentData.data,
+        rowData.signals.map((signal) => signal.id),
+      ),
+    ),
+    {
+      type: 'RANGE',
+      extra: {
+        id: rangeKey,
+      },
+    },
+  );
+  const signalKey = rowData?.tableMetaInfo?.id || '';
+  const assignmentSignal = useAssignment(signalKey);
+
+  const highlightSignal = useHighlight(
+    signalKey
+      ? [signalKey].concat(assignmentSignal.assignedDiaIds?.x || [])
+      : [],
+    { type: 'SIGNAL' },
+  );
+  const rowSpanTags = useMemo(() => {
+    return {
+      rowSpan: rowData.tableMetaInfo.rowSpan,
+      style: rowData.tableMetaInfo.hide ? { display: 'none' } : undefined,
+    };
+  }, [rowData.tableMetaInfo]);
+
+  const unlinkHandler = useCallback(
+    (e: MouseEvent, isOnRangeLevel: boolean) => {
+      // stop propagation here to prevent enabling/disabling the assignment mode at the same time
+      if (e) {
+        e.stopPropagation();
+      }
+
+      if (isOnRangeLevel !== undefined) {
+        const { id: rangeKey, tableMetaInfo } = rowData;
+
+        const signalIndex = isOnRangeLevel ? -1 : tableMetaInfo.signalIndex;
+
+        dispatch({
+          type: 'UNASSIGN_1D_SIGNAL',
+          payload: {
+            rangeKey,
+            signalIndex,
+          },
+        });
+      }
+    },
+    [dispatch, rowData],
+  );
+
+  const linkHandler = useCallback(
+    (e: MouseEvent, assignment: AssignmentsData) => {
+      e.stopPropagation();
+      assignment.activate('x');
+    },
+    [],
+  );
+
+  const onHoverRange = useMemo(() => {
+    return {
+      onMouseEnter: () => {
+        assignmentRange.highlight('x');
+        highlightRange.show();
+      },
+      onMouseLeave: () => {
+        assignmentRange.clearHighlight();
+        highlightRange.hide();
+      },
+    };
+  }, [assignmentRange, highlightRange]);
+
+  const onHoverSignal = useMemo(() => {
+    return {
+      onMouseEnter: () => {
+        assignmentSignal.highlight('x');
+        highlightSignal.show();
+      },
+      onMouseLeave: () => {
+        assignmentSignal.clearHighlight();
+        highlightSignal.hide();
+      },
+    };
+  }, [assignmentSignal, highlightSignal]);
+
+  const trStyle = useMemo(() => {
+    return highlightRange.isActive || assignmentRange.isActive
+      ? HighlightedRowStyle
+      : rowData.tableMetaInfo.isConstantlyHighlighted
+        ? ConstantlyHighlightedRowStyle
+        : undefined;
+  }, [
+    assignmentRange.isActive,
+    highlightRange.isActive,
+    rowData.tableMetaInfo.isConstantlyHighlighted,
+  ]);
+
+  return (
+    <ContextMenu
+      options={contextMenu}
+      onSelect={(selected: any) => onContextMenuSelect?.(selected, rowData)}
+      as="tr"
+      style={trStyle}
+    >
+      {tablePreferences.showSerialNumber && (
+        <td {...rowSpanTags} {...onHoverRange}>
+          {rowData.tableMetaInfo.rowIndex + 1}
+        </td>
+      )}
+      {tablePreferences.showAssignmentLabel && (
+        <SignalAssignmentColumn
+          row={rowData}
+          highlight={highlightSignal}
+          onHover={onHoverSignal}
+        />
+      )}
+
+      {tablePreferences.from.show && (
+        <RangeColumn
+          value={rowData.from}
+          rowSpanTags={rowSpanTags}
+          onHover={onHoverRange}
+          format={tablePreferences.from.format}
+        />
+      )}
+      {tablePreferences.to.show && (
+        <RangeColumn
+          value={rowData.to}
+          rowSpanTags={rowSpanTags}
+          onHover={onHoverRange}
+          format={tablePreferences.to.format}
+        />
+      )}
+
+      {tablePreferences.deltaPPM.show && (
+        <SignalDeltaColumn
+          row={rowData}
+          rowSpanTags={rowSpanTags}
+          onHover={onHoverSignal}
+          format={tablePreferences.deltaPPM.format}
+        />
+      )}
+      {tablePreferences.deltaHz.show && (
+        <SignalDeltaHzColumn
+          row={rowData}
+          rowSpanTags={rowSpanTags}
+          onHover={onHoverSignal}
+          format={tablePreferences.deltaHz.format}
+          info={info}
+        />
+      )}
+
+      {tablePreferences.relative.show && (
+        <RelativeColumn
+          row={rowData}
+          rowSpanTags={rowSpanTags}
+          onHover={onHoverRange}
+          format={tablePreferences.relative.format}
+        />
+      )}
+
+      {tablePreferences.absolute.show && (
+        <AbsoluteColumn
+          row={rowData}
+          rowSpanTags={rowSpanTags}
+          onHover={onHoverRange}
+          format={tablePreferences.absolute.format}
+        />
+      )}
+      {tablePreferences.showMultiplicity && (
+        <td {...onHoverSignal}>
+          {rowData.tableMetaInfo.signal?.multiplicity ?? 'm'}
+        </td>
+      )}
+
+      {tablePreferences.coupling.show && (
+        <CouplingColumn
+          row={rowData}
+          onHover={onHoverSignal}
+          format={tablePreferences.coupling.format}
+        />
+      )}
+      {tablePreferences.showAssignment && (
+        <SignalAssignmentsColumn
+          row={rowData}
+          assignment={assignmentSignal}
+          highlight={highlightSignal}
+          onHover={onHoverSignal}
+          onLink={linkHandler}
+          onUnlink={unlinkHandler}
+        />
+      )}
+      <ActionsColumn
+        row={rowData}
+        onHoverSignal={onHoverSignal}
+        onHoverRange={onHoverRange}
+        rowSpanTags={rowSpanTags}
+        showKind={tablePreferences.showKind}
+        showDeleteAction={tablePreferences.showDeleteAction}
+        showEditAction={tablePreferences.showEditAction}
+        showZoomAction={tablePreferences.showZoomAction}
+      />
+    </ContextMenu>
+  );
+}

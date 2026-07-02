@@ -1,0 +1,80 @@
+import type { Range, Signal1D } from '@zakodium/nmr-types';
+import { useMemo } from 'react';
+
+import type {
+  RangesTableDataMetaInfo,
+  RangesTableDataRow,
+} from '../RangesPanel.tsx';
+
+export interface RangeData extends Range {
+  rowKey: string;
+  tableMetaInfo: RangesTableDataMetaInfo & {
+    rowIndex: number;
+    signal?: Signal1D;
+    signalIndex?: number;
+    id?: string;
+    rowSpan?: number;
+    hide?: boolean;
+  };
+}
+
+export default function useMapRanges(data: RangesTableDataRow[]) {
+  return useMemo(() => {
+    const rangesData: RangeData[] = [];
+    for (const [i, range] of data.entries()) {
+      if (!range?.signals || range?.signals?.length === 0) {
+        rangesData.push({
+          rowKey: crypto.randomUUID(),
+          ...range,
+          tableMetaInfo: {
+            ...range.tableMetaInfo,
+            rowIndex: i,
+          },
+        });
+      } else if (range.signals.length === 1) {
+        const signal = range.signals[0];
+        rangesData.push({
+          rowKey: signal.id,
+          ...range,
+          tableMetaInfo: {
+            ...range.tableMetaInfo,
+            signal,
+            rowIndex: i,
+            signalIndex: 0,
+            id: signal.id,
+          },
+        });
+      } else if (range.signals.length > 1) {
+        for (const [j, signal] of range.signals.entries()) {
+          let hide = false;
+          let rowSpan;
+          if (j < range.signals.length - 1) {
+            if (j === 0) {
+              rowSpan = range.signals.length;
+            } else {
+              hide = true;
+            }
+          } else {
+            hide = true;
+          }
+
+          rangesData.push({
+            rowKey: crypto.randomUUID(),
+            ...range,
+            tableMetaInfo: {
+              ...range.tableMetaInfo,
+              signal,
+              rowSpan,
+              hide,
+              rowIndex: i,
+              signalIndex: j,
+              id: signal.id,
+            },
+          });
+        }
+      }
+    }
+
+    return rangesData;
+  }, [data]);
+}

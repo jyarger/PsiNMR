@@ -1,0 +1,17 @@
+{
+  "name": "psinmr-core",
+  "type": "module",
+  "description": "PsiNMR native compute engine: contour generation, FFT, baseline correction and peak picking compiled to WebAssembly.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "files": [
+    "psinmr_core_bg.wasm",
+    "psinmr_core.js",
+    "psinmr_core.d.ts"
+  ],
+  "main": "psinmr_core.js",
+  "types": "psinmr_core.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

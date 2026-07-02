@@ -1,0 +1,277 @@
+import type { ReactElement, SVGAttributes } from 'react';
+import { createContext, isValidElement, useContext, useMemo } from 'react';
+
+type CellTextProps = Omit<
+  SVGAttributes<SVGTextElement>,
+  'x' | 'y' | 'width' | 'height'
+>;
+type CellBoxProps = Omit<
+  SVGAttributes<SVGRectElement>,
+  'x' | 'y' | 'width' | 'height' | 'dx' | 'dy'
+>;
+
+interface StyleCell {
+  cellTextProps?: CellTextProps;
+  cellBoxProps?: CellBoxProps;
+}
+interface BaseSVGTableColumn<T> extends StyleCell {
+  header: string | ReactElement;
+  width: number;
+  minWidth?: number;
+  rowSpanGroupKey?: keyof T;
+  headerTextProps?: CellTextProps;
+  headerBoxProps?: CellBoxProps;
+}
+interface AccessorKeyColumn<T> extends BaseSVGTableColumn<T> {
+  accessorKey: string;
+}
+
+interface AccessorFuncColumn<T> extends BaseSVGTableColumn<T> {
+  accessorFun: (row: T & { index: number }) => number | string;
+}
+
+export type SVGTableColumn<T> = AccessorKeyColumn<T> | AccessorFuncColumn<T>;
+
+function isAccessorKeyColumn<T>(
+  column: SVGTableColumn<T>,
+): column is AccessorKeyColumn<T> {
+  return 'accessorKey' in column;
+}
+
+interface ColumnOptions {
+  key: string;
+  x: number;
+  width: number;
+}
+
+type InternalColumns<T> = SVGTableColumn<T> & { _columnOptions: ColumnOptions };
+
+interface SVGTableContextProps {
+  rowHeight: number;
+}
+
+const SVGTableContext = createContext<SVGTableContextProps | null>(null);
+
+function useSVGTable() {
+  return useContext(SVGTableContext);
+}
+
+function mapColumns<T>(columns: Array<SVGTableColumn<T>>) {
+  let x = 0;
+  const output: Array<InternalColumns<T>> = [];
+  for (const column of columns) {
+    const width = Math.max(column.width, column.minWidth || 0);
+    const options: ColumnOptions = { width, x, key: crypto.randomUUID() };
+    output.push({ ...column, _columnOptions: options });
+    x += Math.max(column.width, column.minWidth || 0);
+  }
+  return { width: x, columns: output };
+}
+
+interface FormatKeyOptions {
+  index: number;
+  columnKey: string;
+  groupKey: string;
+}
+
+function formatKey(options: FormatKeyOptions) {
+  const { index, columnKey, groupKey } = options;
+  return `GroupKey[${groupKey || null}]-ColumnKey[${columnKey}]-RowIndex[${index}]`;
+}
+
+function mapRowsSpan<T>(data: T[], columns: Array<InternalColumns<T>>) {
+  const rowSpanMap = new Map<string, number>();
+  const skipColumns = new Set<string>(); // columns that should be skipped
+
+  for (const col of columns) {
+    if (!col.rowSpanGroupKey) continue; // Skip columns without row spanning
+    let lastValue: string | null = null;
+    let lastRowIndex = 0;
+    let lastGroupKey: string | null = null;
+
+    for (let index = 0; index < data.length; index++) {
+      const row = data[index];
+      const groupKey = String(row?.[col.rowSpanGroupKey] || '');
+      const key = col._columnOptions.key;
+
+      const value = isAccessorKeyColumn(col)
+        ? (row as any)[col.accessorKey]
+        : col.accessorFun({ ...row, index });
+
+      if (
+        value === lastValue &&
+        lastRowIndex !== null &&
+        groupKey === lastGroupKey
+      ) {
+        //skipped row columns
+        const prevKey = formatKey({
+          groupKey,
+          columnKey: key,
+          index: lastRowIndex,
+        });
+        rowSpanMap.set(prevKey, (rowSpanMap.get(prevKey) || 1) + 1);
+        skipColumns.add(formatKey({ groupKey, columnKey: key, index }));
+      } else {
+        // Start a new rowspan
+        lastValue = value;
+        lastRowIndex = index;
+        lastGroupKey = groupKey;
+        rowSpanMap.set(formatKey({ groupKey, columnKey: key, index }), 1);
+      }
+    }
+  }
+
+  return { rowSpanMap, skipColumns };
+}
+
+interface SVGTableProps<T> {
+  columns: Array<SVGTableColumn<T>>;
+  rowHeight?: number;
+  data: T[];
+}
+
+export function SVGTable<T>(props: SVGTableProps<T>) {
+  const { columns: externalColumns, data, rowHeight = 25 } = props;
+
+  const { width, columns } = mapColumns(externalColumns);
+
+  const tableOptions = useMemo(() => {
+    return { rowHeight };
+  }, [rowHeight]);
+
+  const { rowSpanMap, skipColumns } = useMemo(() => {
+    return mapRowsSpan(data, columns);
+  }, [columns, data]);
+
+  return (
+    <SVGTableContext.Provider value={tableOptions}>
+      <svg
+        width={width}
+        height={rowHeight * (data.length + 1)}
+        viewBox={`0 0 ${width} ${rowHeight * (data.length + 1)}`}
+        textAnchor="middle"
+      >
+        {columns.map((col) => {
+          const {
+            header,
+            headerBoxProps,
+            headerTextProps,
+            _columnOptions: { key },
+          } = col;
+          return (
+            <Column
+              key={key}
+              value={header}
+              cellTextProps={headerTextProps}
+              column={col}
+              rowSpan={1}
+              cellBoxProps={headerBoxProps}
+            />
+          );
+        })}
+
+        {data.map((row, index) => {
+          return (
+            <g
+              key={index}
+              transform={`translate(0, ${rowHeight * (index + 1)})`}
+            >
+              {columns.map((col) => {
+                const {
+                  cellBoxProps,
+                  cellTextProps,
+                  _columnOptions: { key: columnKey },
+                  rowSpanGroupKey,
+                } = col;
+                const groupKey = rowSpanGroupKey ? row?.[rowSpanGroupKey] : '';
+                const cellKey = formatKey({
+                  groupKey: String(groupKey),
+                  columnKey,
+                  index,
+                });
+                if (skipColumns.has(cellKey)) {
+                  return null; // Skip merged row
+                }
+
+                const rowSpan = rowSpanMap.get(cellKey) || 1;
+
+                return (
+                  <ValueColumn
+                    key={columnKey}
+                    column={col}
+                    row={{ ...row, index }}
+                    rowSpan={rowSpan}
+                    cellBoxProps={cellBoxProps}
+                    cellTextProps={cellTextProps}
+                  />
+                );
+              })}
+            </g>
+          );
+        })}
+      </svg>
+    </SVGTableContext.Provider>
+  );
+}
+
+interface BaseColumnProps<T> extends StyleCell {
+  column: InternalColumns<T>;
+  rowSpan: number;
+}
+
+interface ColumnProps<T> extends BaseColumnProps<T> {
+  value: string | number | ReactElement;
+}
+
+interface ValueColumnProps<T> extends BaseColumnProps<T> {
+  row: T & { index: number };
+}
+
+function ValueColumn<T>(props: ValueColumnProps<T>) {
+  const { row, ...otherProps } = props;
+  const column = otherProps.column;
+  let value: number | string = '';
+  if (isAccessorKeyColumn(column)) {
+    value = (row as any)[column.accessorKey];
+  } else {
+    value = column.accessorFun(row);
+  }
+  return <Column {...otherProps} value={value} />;
+}
+
+function Column<T>(props: ColumnProps<T>) {
+  const { value, column, cellTextProps, cellBoxProps, rowSpan } = props;
+  const tableOptions = useSVGTable();
+  if (!tableOptions) return null;
+
+  const {
+    _columnOptions: { x, width },
+  } = column;
+  const { rowHeight } = tableOptions;
+
+  return (
+    <g transform={`translate(${x} 0)`}>
+      <rect
+        width={width}
+        height={rowHeight * rowSpan}
+        fill="white"
+        stroke="black"
+        strokeWidth="1"
+        {...cellBoxProps}
+      />
+      {isValidElement(value) ? (
+        value
+      ) : (
+        <text
+          x={width / 2}
+          y={(rowHeight * rowSpan) / 2}
+          fontSize="11"
+          dominantBaseline="middle"
+          {...cellTextProps}
+        >
+          {value}
+        </text>
+      )}
+    </g>
+  );
+}

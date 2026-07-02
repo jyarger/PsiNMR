@@ -1,0 +1,76 @@
+import dlv from 'dlv';
+import type { MouseEventHandler } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+
+type SortType = 'ASCENDING' | 'DESCENDING' | 'ORIGINAL';
+
+interface SortConfig {
+  key: string;
+  direction: SortType;
+}
+
+export default function useTableSortBy<ItemType extends object>(
+  items: readonly ItemType[],
+  config = null,
+) {
+  const [sortConfig, setSortConfig] = useState<SortConfig | null>(config);
+  const sortedItems = useMemo(() => {
+    const sortableItems = items.slice();
+    if (sortConfig !== null) {
+      sortableItems.sort((a, b) => {
+        if (sortConfig.direction === 'ASCENDING') {
+          return dlv(a, sortConfig.key, 0) - dlv(b, sortConfig.key, 0);
+        } else if (sortConfig.direction === 'DESCENDING') {
+          return dlv(b, sortConfig.key, 0) - dlv(a, sortConfig.key, 0);
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [items, sortConfig]);
+
+  const sortHandler: MouseEventHandler = useCallback(
+    (event) => {
+      const key = event.currentTarget.id;
+      let direction: SortType = 'ASCENDING';
+      if (key && sortConfig?.key === key) {
+        switch (sortConfig.direction) {
+          case 'ASCENDING':
+            direction = 'DESCENDING';
+            break;
+          case 'DESCENDING':
+            direction = 'ORIGINAL';
+            break;
+          default:
+            direction = 'ASCENDING';
+            break;
+        }
+      }
+      setSortConfig({ key, direction });
+    },
+    [sortConfig],
+  );
+
+  const isSortedDesc = useCallback(
+    (columnName: string): { flag: boolean | null; content: string } => {
+      const defaultContent = { flag: null, content: ' ' };
+
+      if (sortConfig?.key !== columnName) {
+        return defaultContent;
+      }
+      switch (sortConfig.direction) {
+        case 'DESCENDING':
+          return { flag: true, content: ' ▼' };
+
+        case 'ASCENDING':
+          return { flag: false, content: ' ▲' };
+
+        default:
+          return defaultContent;
+      }
+    },
+    [sortConfig],
+  );
+
+  return { items: sortedItems, isSortedDesc, onSort: { onClick: sortHandler } };
+}

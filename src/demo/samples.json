@@ -1,0 +1,255 @@
+[
+  {
+    "groupName": "Cytisine",
+    "children": [
+      {
+        "file": "./data/cytisine/1H.json",
+        "title": "1H spectrum"
+      },
+      {
+        "file": "./data/cytisine/13CFID.json",
+        "title": "13C FID"
+      },
+      {
+        "file": "./data/cytisine/Big13C.json",
+        "title": "13C"
+      },
+      {
+        "file": "./data/cytisine/Dept.json",
+        "title": "DEPT"
+      },
+      {
+        "file": "./data/cytisine/1D.json",
+        "title": "1D spectra (H + C)"
+      },
+      {
+        "file": "./data/cytisine/processed13C.json",
+        "title": "Processed 13C FID"
+      },
+      {
+        "file": "./data/cytisine/2d/all.json",
+        "title": "Full cytisine"
+      },
+      {
+        "file": "./data/cytisine/2d/cosy.json",
+        "title": "2D cosy"
+      },
+      {
+        "file": "./data/cytisine/2d/hsqc.json",
+        "title": "HSQC cytisine + 1D spectra"
+      },
+      {
+        "file": "./data/cytisine/2d/hmbc-only.json",
+        "title": "HMBC only cytisine"
+      },
+      {
+        "file": "./data/cytisine/2d/hsqc_hmbc.json",
+        "title": "HSQC / HMBC cytisine"
+      },
+      {
+        "file": "./data/cytisine/2d/jresolv.json",
+        "title": "jResolv cytisine"
+      },
+      {
+        "file": "./data/cytisine/2d/HMBC_HN_Cytisin.json",
+        "title": "1H, 15N HMQC cytisine"
+      }
+    ]
+  },
+  {
+    "groupName": "Simple spectra",
+    "children": [
+      {
+        "file": "./data/ethylbenzene/1h.json",
+        "title": "1H ethylbenzene"
+      },
+      {
+        "file": "./data/ethylbenzene/cosy.json",
+        "title": "COSY ethylbenzene"
+      },
+      {
+        "file": "./data/ethylbenzene/full.json",
+        "title": "FULL ethylbenzene"
+      },
+      {
+        "file": "./data/19f/19f.json",
+        "title": "19F with baseline problems"
+      },
+      {
+        "file": "./data/108-21-4/CoupledDecoupled13C.json",
+        "title": "13C Coupled / Decoupled"
+      },
+      {
+        "file": "./data/ethylvinylether/1h.json",
+        "title": "1H ethylvinylether"
+      },
+      {
+        "file": "./data/BocAA/BocAA.json",
+        "title": "1H BocAA"
+      },
+      {
+        "file": "./data/ibuprofen.json",
+        "title": "Full ibuprofen"
+      }
+    ]
+  },
+  {
+    "groupName": "Multiple spectra",
+    "children": [
+      {
+        "file": "./data/xtc/XTC.json",
+        "title": "XTC"
+      },
+      {
+        "file": "./data/xtc/XTClight.json",
+        "title": "XTC just links"
+      },
+      {
+        "file": "./data/coffee/Coffee.json",
+        "title": "Coffee"
+      },
+      {
+        "file": "./data/t1-bruker-pseudo2d/t1_pseudo2d_bruker.json",
+        "title": "T1 pseudo-2D Bruker"
+      },
+      {
+        "file": "./data/t1/t1.json",
+        "title": "T1 samples (1H + 13C)"
+      },
+      {
+        "file": "./data/t2/t2.json",
+        "title": "T2 samples (1H + 13C)"
+      }
+    ]
+  },
+  {
+    "groupName": "Various formats",
+    "children": [
+      {
+        "file": "./data/nmriumFromSource.json",
+        "title": "Zip file as source with multiple spectra"
+      },
+      {
+        "file": "./data/oxfordInstruments/oxfordInstruments.json",
+        "title": "Ethyl Crotonate - oxford"
+      },
+      {
+        "file": "./data/oxfordInstruments/oxfordCosy.json",
+        "title": "Ethyl Crotonate - COSY - oxford"
+      },
+      {
+        "file": "./data/nmredata/nmredata.json",
+        "title": "NMReDATA Menthol 1D"
+      },
+      {
+        "file": "./data/brukerFolders/brukerFolderWithoutExpno.json",
+        "title": "Bruker Directory without expno level"
+      },
+      {
+        "file": "./data/brukerFolders/alphaIonone.json",
+        "title": "Bruker 2D spectrum with quadrants"
+      },
+      {
+        "file": "./data/brukerFolders/cosyAndHsqcFid.json",
+        "title": "Bruker Directory 2D FIDs"
+      },
+      {
+        "file": "./data/brukerFolders/hsqcBrukerFilters.json",
+        "title": "Bruker Directory 2D processing"
+      },
+      {
+        "file": "./data/cytisine/1H_Cytisin_linkJcamp.json",
+        "title": "FileCollection with link to jcamp"
+      },
+      {
+        "file": "./data/aspirin/bruker_aspirin_zip.json",
+        "title": "FileCollection with link to zip"
+      },
+      {
+        "file": "./data/aspirin/aspirin_bruker_files.json",
+        "title": "FileCollection with bruker folder"
+      },
+      {
+        "file": "./data/aspirin/aspirin_filecollection_with_integrals.json",
+        "title": "FileCollection with integrals"
+      },
+      {
+        "file": "./data/50-78-2/linked-jcamp.json",
+        "title": "Linked jcamp"
+      },
+      {
+        "file": "./data/acd/jcampWithAssignment.json",
+        "title": "JCAMP-DX with assignment"
+      },
+      {
+        "file": "./data/cytisine/1Honly.json",
+        "title": "1H no meta info"
+      }
+    ]
+  },
+  {
+    "groupName": "Simulation",
+    "children": [
+      {
+        "file": "./data/tests/simulated/d2-5-8-changingAll.json",
+        "title": "\u03b4=2,5,8 Integration test"
+      },
+      {
+        "file": "./data/tests/simulated/d2-changingHeigh.json",
+        "title": "\u03b4=2 Variable height"
+      },
+      {
+        "file": "./data/tests/simulated/d2-5-8-changingNbPoints.json",
+        "title": "\u03b4=2,5,8 Variable nbPoints"
+      },
+      {
+        "file": "./data/tests/simulated/d1-2-3-4-5-6-7-8.json",
+        "title": "\u03b4=1,2,3,4,5,6,7,8"
+      },
+      {
+        "file": "./data/tests/simulated/d1-2-3-4-5-6-7-8HR.json",
+        "title": "\u03b4=1,2,3,4,5,6,7,8 HR"
+      },
+      {
+        "file": "./data/tests/simulated/d1-1.2_j7.json",
+        "title": "\u03b4=1,1.2 J=7"
+      },
+      {
+        "file": "./data/tests/simulated/d1-2_j7.json",
+        "title": "\u03b4=1,2 J=7"
+      },
+      {
+        "file": "./data/tests/simulated/d1-2-3_j16-10-2.json",
+        "title": "\u03b4=1,2,3 J=2,10,16"
+      },
+      {
+        "file": "./data/tests/simulated/d1-7_j7.json",
+        "title": "\u03b4=1,7 J=7"
+      },
+      {
+        "file": "./data/tests/simulated/d1-2-3-4-5-6-7-8_baseline.json",
+        "title": "Tests with baseline"
+      },
+      {
+        "file": "./data/tests/triangle/low-res.json",
+        "title": "Test low resolution"
+      },
+      {
+        "file": "./data/tests/simulated2D/simulated.json",
+        "title": "Simulated 2D zero shift"
+      },
+      {
+        "file": "./data/tests/simulated2D/simulated-shift100.json",
+        "title": "Simulated 2D positive shift"
+      },
+      {
+        "file": "./data/tests/simulated2D/simulated-shift-100.json",
+        "title": "Simulated 2D negative shift"
+      },
+      {
+        "file": "./data/tests/triangle/high-res.json",
+        "title": "Test high resolution"
+      }
+    ]
+  }
+]

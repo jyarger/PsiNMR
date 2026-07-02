@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src"
+  },
+  "exclude": [
+    "**/__tests__",
+    "playwright.config.ts",
+    "src/demo",
+    "src/index.tsx",
+    "test-e2e",
+    "knip.config.ts",
+    "vite.config.ts"
+  ]
+}

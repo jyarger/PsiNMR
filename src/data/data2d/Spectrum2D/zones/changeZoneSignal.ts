@@ -1,0 +1,37 @@
+import type { Spectrum2D } from '@zakodium/nmrium-core';
+
+import { isNumber } from '../../../utilities/isNumber.js';
+
+/**
+ *
+ * @param spectrum
+ * @param zoneID
+ * @param signal
+ */
+export function changeZoneSignal(
+  spectrum: Spectrum2D,
+  zoneID: string,
+  signal: { id?: string; deltaX?: number; deltaY?: number },
+): { xShift: number; yShift: number } {
+  const zoneIndex = spectrum.zones.values.findIndex(
+    (zone) => zone.id === zoneID,
+  );
+
+  const { id, deltaX, deltaY } = signal;
+
+  if (zoneIndex !== -1) {
+    const signalIndex = spectrum.zones.values[zoneIndex].signals.findIndex(
+      (s) => s.id === id,
+    );
+
+    const zone = spectrum.zones.values[zoneIndex];
+    if (signalIndex !== -1) {
+      const originalSignal = zone.signals[signalIndex];
+      const xShift = isNumber(deltaX) ? deltaX - originalSignal.x.delta : 0;
+      const yShift = isNumber(deltaY) ? deltaY - originalSignal.y.delta : 0;
+
+      return { xShift, yShift };
+    }
+  }
+  return { xShift: 0, yShift: 0 };
+}

@@ -1,0 +1,11 @@
+export function getUniqueNuclei(nuclei: string[]) {
+  const uniqueNuclei: Record<string, boolean> = {};
+
+  for (const nucleus of nuclei) {
+    const _nuclei = nucleus.split(',');
+    for (const _nucleus of _nuclei) {
+      uniqueNuclei[_nucleus.toUpperCase()] = true;
+    }
+  }
+  return Object.keys(uniqueNuclei);
+}

@@ -1,0 +1,104 @@
+import { Button, DialogBody, DialogFooter } from '@blueprintjs/core';
+import { revalidateLogic } from '@tanstack/react-form';
+import type { Workspace } from '@zakodium/nmrium-core';
+import { useRef } from 'react';
+import { AppForm, useForm, useOnOff } from 'react-science/ui';
+import { z } from 'zod/v4';
+
+import { usePreferences } from '../context/PreferencesContext.js';
+import { useToaster } from '../context/ToasterContext.js';
+import { StandardDialog } from '../elements/StandardDialog.tsx';
+
+import { useWorkspaceAction } from './useWorkspaceAction.js';
+
+const schema = z.object({
+  workspaceName: z
+    .string()
+    .trim()
+    .min(1, { error: 'Workspace name must have at least one character' }),
+});
+
+export function useSaveSettings() {
+  const toaster = useToaster();
+  const [isOpenDialog, openDialog, closeDialog] = useOnOff(false);
+  const settingsRef = useRef<Workspace>();
+  const { current } = usePreferences();
+
+  const { saveWorkspace, addNewWorkspace } = useWorkspaceAction();
+
+  const form = useForm({
+    defaultValues: { workspaceName: '' },
+    validationLogic: revalidateLogic({ modeAfterSubmission: 'change' }),
+    validators: { onDynamic: schema },
+    onSubmit: ({ value }) => {
+      const { workspaceName } = value;
+      addNewWorkspace(workspaceName, settingsRef.current);
+      closeDialog();
+
+      toaster.show({
+        message: 'Preferences saved successfully',
+        intent: 'success',
+      });
+    },
+  });
+
+  function saveSettings(values?: Partial<Workspace>) {
+    settingsRef.current = values as Workspace;
+    if (current.source !== 'user') {
+      form.reset();
+      openDialog();
+    } else {
+      saveWorkspace(values);
+      closeDialog();
+    }
+  }
+
+  return {
+    saveSettings,
+    SaveSettingsModal: () => {
+      return (
+        <StandardDialog
+          onClose={closeDialog}
+          isOpen={isOpenDialog}
+          title="Save workspace"
+          role="dialog"
+        >
+          <AppForm form={form} layout="stacked">
+            <DialogBody>
+              <form.AppField name="workspaceName">
+                {(field) => (
+                  <field.Input
+                    autoFocus
+                    label="New Workspace name"
+                    placeholder="Enter workspace name"
+                    helpText="Please enter a new user workspace name in order to save your changes locally"
+                    required
+                  />
+                )}
+              </form.AppField>
+            </DialogBody>
+
+            <DialogFooter
+              actions={
+                <>
+                  <Button
+                    intent="danger"
+                    variant="outlined"
+                    onClick={() => closeDialog()}
+                  >
+                    Cancel
+                  </Button>
+                  <form.AppForm>
+                    <form.SubmitButton intent="success">
+                      Save workspace
+                    </form.SubmitButton>
+                  </form.AppForm>
+                </>
+              }
+            />
+          </AppForm>
+        </StandardDialog>
+      );
+    },
+  };
+}

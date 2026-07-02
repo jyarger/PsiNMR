@@ -1,0 +1,240 @@
+import type { CoreReadReturn } from '@zakodium/nmrium-core';
+import debounce from 'lodash/debounce.js';
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import { ObjectInspector } from 'react-inspector';
+import { DropZone } from 'react-science/ui';
+
+import { NMRium } from '../../component/main/index.js';
+import { demoCore } from '../utility/core.ts';
+
+import { loadData } from './View.helpers.js';
+
+function searchDeep(obj: any, searchKey: any) {
+  const result: any = [];
+  function objectHelper(obj: any) {
+    for (const key in obj) {
+      if (searchKey === key) {
+        result.push({ [key]: obj[key] });
+      }
+      if (Array.isArray(obj[key])) {
+        for (const object of obj[key]) {
+          objectHelper(object);
+        }
+      } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+        objectHelper(obj[key]);
+      }
+    }
+  }
+
+  objectHelper(obj);
+  return result;
+}
+
+function Inspector(data: any) {
+  const [key, setKey] = useState<string>('');
+  const filteredData = useMemo(() => {
+    if (key) {
+      return searchDeep(data, key);
+    } else {
+      return data;
+    }
+  }, [data, key]);
+  const handleSearch = useMemo(
+    () =>
+      debounce((e: any) => {
+        const key = e.target.value;
+        setKey(key);
+      }, 500),
+    [],
+  );
+
+  return (
+    <div
+      style={{ display: 'flex', flexDirection: 'column', paddingTop: '10px' }}
+    >
+      <input
+        style={{ border: '1px solid gray', padding: '5px' }}
+        type="text"
+        placeholder="Search for key..."
+        onChange={handleSearch}
+      />
+      <ObjectInspector data={filteredData} />;
+    </div>
+  );
+}
+
+export default function Test(props: any) {
+  const { file, title, baseURL, workspace } = props;
+  const [data, setData] = useState<CoreReadReturn>();
+  const [viewCount, incrementViewCount] = useReducer((a: any) => a + 1, 0);
+  const [dataCount, incrementDataCount] = useReducer((a: any) => a + 1, 0);
+  const [settingsCount, incrementSettingsCount] = useReducer(
+    (a: any) => a + 1,
+    0,
+  );
+
+  if (!file && data !== undefined) {
+    setData(undefined);
+  }
+
+  useEffect(() => {
+    // eslint-disable-next-line react-you-might-not-need-an-effect/no-event-handler
+    if (!file) return;
+
+    void loadData(file, baseURL).then(setData);
+  }, [baseURL, file, props]);
+  const [viewCallback, setViewCallback] = useState<any>({});
+  const [dataCallback, setDataCallback] = useState<any>({});
+  const [settingsCallback, setSettingsCallback] = useState<any>({});
+  const dropFileHandler = useCallback((dropFiles: File[]) => {
+    void (async () => {
+      try {
+        const rawText = await dropFiles[0].text();
+        const nmriumObject = JSON.parse(rawText);
+        const result = await demoCore.readNMRiumObject(nmriumObject);
+        setData(result);
+      } catch (error) {
+        reportError(error);
+        // eslint-disable-next-line no-alert
+        globalThis.alert('Invalid JSON file');
+      }
+    })();
+  }, []);
+
+  const changeHandler = useCallback(
+    ({ data, view, settings }: any, source: any) => {
+      switch (source) {
+        case 'view': {
+          incrementViewCount();
+          setViewCallback({ activate: true, data: view });
+          setTimeout(() => {
+            setViewCallback(({ data }: any) => ({ data, activate: false }));
+          }, 500);
+          break;
+        }
+        case 'data': {
+          incrementDataCount();
+          setDataCallback({ activate: true, data });
+          setTimeout(() => {
+            setDataCallback(({ data }: any) => ({ data, activate: false }));
+          }, 500);
+          break;
+        }
+        case 'settings': {
+          incrementSettingsCount();
+          setSettingsCallback({ activate: true, data: settings });
+          setTimeout(() => {
+            setSettingsCallback(({ data }: any) => ({ data, activate: false }));
+          }, 500);
+          break;
+        }
+        default:
+          break;
+      }
+    },
+    [],
+  );
+
+  return (
+    <div
+      style={{
+        height: '100%',
+        marginLeft: 30,
+      }}
+    >
+      {file && (
+        <div
+          style={{
+            height: '60px',
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative',
+          }}
+        >
+          <h5
+            style={{
+              fontWeight: 700,
+              fontSize: '1.5em',
+              lineHeight: '1.4em',
+              marginBottom: '15px',
+            }}
+          >
+            Display and process 1D NMR spectra from a JCAMP-DX file
+          </h5>
+          <p
+            style={{
+              marginTop: '-10px',
+              marginBottom: '1rem',
+              fontWeight: 400,
+              color: '#9a9a9a',
+              fontSize: '0.7142em',
+            }}
+          >
+            {title}
+          </p>
+        </div>
+      )}
+      <div
+        style={{
+          display: 'flex',
+          minHeight: file ? '90vh' : '100vh',
+          padding: file ? '' : '20px 0',
+        }}
+      >
+        <div style={{ flex: 9 }}>
+          <NMRium
+            state={data?.state}
+            aggregator={data?.aggregator}
+            onChange={changeHandler}
+            workspace={workspace || null}
+          />
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '10px',
+            flex: 3,
+          }}
+        >
+          <div style={{ flex: 3 }}>
+            <DropZone onDrop={dropFileHandler} />
+          </div>
+          <div style={{ flex: 9 }}>
+            <h3
+              style={
+                dataCallback.activate
+                  ? { color: 'red', fontWeight: 'bold' }
+                  : {}
+              }
+            >
+              <span data-testid="data-count">{dataCount}</span> - Data Change:
+            </h3>
+            <Inspector data={dataCallback.data} />
+            <h3
+              style={
+                viewCallback.activate
+                  ? { color: 'red', fontWeight: 'bold' }
+                  : {}
+              }
+            >
+              <span data-testid="view-count">{viewCount}</span> - View Change:
+            </h3>
+            <Inspector data={viewCallback.data} />
+            <h3
+              style={
+                settingsCallback.activate
+                  ? { color: 'red', fontWeight: 'bold' }
+                  : {}
+              }
+            >
+              <span data-testid="settings-count">{settingsCount}</span> -
+              Settings Change:
+            </h3>
+            <Inspector data={settingsCallback.data} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

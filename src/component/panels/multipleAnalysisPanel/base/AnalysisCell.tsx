@@ -1,0 +1,39 @@
+import type { CSSProperties } from 'react';
+
+import { useHighlight } from '../../../highlight/index.js';
+import { useFormatNumberByNucleus } from '../../../hooks/useFormatNumberByNucleus.js';
+
+const styles: Record<'container' | 'errorLabel', CSSProperties> = {
+  container: {
+    position: 'inherit',
+    padding: '0.15rem 0.4rem',
+  },
+  errorLabel: {
+    color: 'red',
+  },
+};
+
+interface AnalysisCellProps {
+  columnKey: string;
+  value: number | Error;
+  activeTab: string;
+}
+
+export default function AnalysisCell(props: AnalysisCellProps) {
+  const { columnKey, value, activeTab } = props;
+  const highlight = useHighlight([columnKey]);
+  const format = useFormatNumberByNucleus(activeTab);
+
+  return (
+    <div
+      style={{ ...styles.container, ...highlight.defaultActiveStyle }}
+      {...highlight.onHover}
+    >
+      {value instanceof Error ? (
+        <span style={styles.errorLabel}>{value.message}</span>
+      ) : (
+        format(value)
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,136 @@
+import type { ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+
+import { usePreferences } from './PreferencesContext.js';
+
+type ModifiersKey = `shift[${boolean}]_ctrl[${boolean}]_alt[${boolean}]`;
+
+type PrimaryKey =
+  'shift[true]_ctrl[false]_alt[false]' | 'shift[false]_ctrl[false]_alt[false]';
+
+function getPrimaryKey(invert: boolean): PrimaryKey {
+  if (invert) {
+    return 'shift[false]_ctrl[false]_alt[false]';
+  }
+  return 'shift[true]_ctrl[false]_alt[false]';
+}
+
+interface KeyModifiers {
+  ctrlKey: boolean;
+  shiftKey: boolean;
+  altKey: boolean;
+}
+interface KeyModifiersState extends KeyModifiers {
+  modifiersKey: ModifiersKey | null;
+}
+
+const defaultKeyModifiersState: KeyModifiersState = {
+  ctrlKey: false,
+  shiftKey: false,
+  altKey: false,
+  modifiersKey: null,
+};
+
+const KeyModifierContext = createContext<KeyModifiersState>(
+  defaultKeyModifiersState,
+);
+
+export function useKeyModifiers() {
+  const context = useContext(KeyModifierContext);
+  if (!context) {
+    throw new Error('key modifiers context was not found');
+  }
+
+  return context;
+}
+
+interface KeyModifierProviderProps {
+  children: ReactNode;
+}
+
+const isMac = globalThis.navigator?.userAgent?.toLowerCase().includes('mac');
+
+export type EventModifierKeys = Record<
+  'shiftKey' | 'altKey' | 'metaKey' | 'ctrlKey',
+  boolean
+>;
+
+export function getModifiers(eventKeys: EventModifierKeys) {
+  const { shiftKey, altKey, metaKey, ctrlKey } = eventKeys;
+  return {
+    ctrlKey: isMac ? metaKey : ctrlKey,
+    shiftKey,
+    altKey,
+  };
+}
+
+function toModifiersKey(keyModifiers: KeyModifiers): ModifiersKey {
+  const { shiftKey, altKey, ctrlKey } = keyModifiers;
+  return `shift[${shiftKey ? 'true' : 'false'}]_ctrl[${ctrlKey ? 'true' : 'false'}]_alt[${altKey ? 'true' : 'false'}]`;
+}
+
+function getModifiersKey(event: EventModifierKeys) {
+  const keyModifiers = getModifiers(event);
+  return toModifiersKey(keyModifiers);
+}
+
+export function useIsPrimaryKeyActivated() {
+  const { primaryKeyIdentifier } = useMapKeyModifiers();
+  return primaryKeyIdentifier === 'shift[false]_ctrl[false]_alt[false]';
+}
+
+export function useMapKeyModifiers() {
+  const {
+    current: {
+      general: { invert },
+    },
+  } = usePreferences();
+
+  return useMemo(() => {
+    const primaryKeyIdentifier = getPrimaryKey(invert);
+
+    return {
+      primaryKeyIdentifier,
+      getModifiersKey,
+    };
+  }, [invert]);
+}
+
+export function KeyModifiersProvider({ children }: KeyModifierProviderProps) {
+  const [modifiers, setModifiers] = useState<KeyModifiersState>(
+    defaultKeyModifiersState,
+  );
+  const {
+    current: {
+      general: { invert },
+    },
+  } = usePreferences();
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      const keyModifiers = getModifiers(event);
+      const modifiersKey = toModifiersKey(keyModifiers);
+      setModifiers({ ...keyModifiers, modifiersKey });
+    }
+
+    function handleKeyUp(event: KeyboardEvent) {
+      const keyModifiers = getModifiers(event);
+      const modifiersKey = toModifiersKey(keyModifiers);
+      setModifiers({ ...keyModifiers, modifiersKey });
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [invert]);
+
+  return (
+    <KeyModifierContext.Provider value={modifiers}>
+      {children}
+    </KeyModifierContext.Provider>
+  );
+}

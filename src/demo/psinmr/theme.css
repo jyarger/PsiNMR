@@ -1,0 +1,62 @@
+/*
+ * Psi platform theme.
+ * Low-eye-strain palette: warm paper background, deep slate chrome,
+ * muted teal accent. All values exposed as --psi-* variables so other
+ * Psi apps (PsiXRD, PsiDSC, PsiRaman, ...) can reuse the same shell.
+ */
+
+:root {
+  /* Surfaces */
+  --psi-bg: #f6f5f1;
+  --psi-surface: #fdfdfb;
+  --psi-chrome: #232a33;
+  --psi-chrome-raised: #2c3540;
+  --psi-chrome-border: #3a4552;
+
+  /* Text */
+  --psi-text: #2b3440;
+  --psi-text-muted: #6b7684;
+  --psi-text-on-chrome: #d7dde4;
+  --psi-text-on-chrome-muted: #93a0ae;
+
+  /* Accent */
+  --psi-accent: #3d8f85;
+  --psi-accent-strong: #2f7268;
+  --psi-accent-soft: rgb(61 143 133 / 14%);
+  --psi-accent-on-chrome: #5fb3a7;
+
+  /* Feedback */
+  --psi-danger: #b3564d;
+
+  /* Shape & type */
+  --psi-radius: 8px;
+  --psi-font:
+    'Inter Variable', 'Inter', -apple-system, blinkmacsystemfont, 'Segoe UI',
+    roboto, 'Helvetica Neue', arial, sans-serif;
+  --psi-font-serif: georgia, 'Times New Roman', serif;
+}
+
+html,
+body {
+  font-family: var(--psi-font);
+  color: var(--psi-text);
+  background-color: var(--psi-bg);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbars that don't glare */
+.psi-chrome ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.psi-chrome ::-webkit-scrollbar-thumb {
+  background: var(--psi-chrome-border);
+  border-radius: 4px;
+}
+
+.psi-chrome ::-webkit-scrollbar-track {
+  background: transparent;
+}

@@ -1,0 +1,16 @@
+{
+  "extends": "@zakodium/tsconfig/jsx",
+  "compilerOptions": {
+    "customConditions": ["nmrium-internal"],
+    "types": ["vite/client"],
+    "outDir": "lib",
+    "noUncheckedIndexedAccess": false
+  },
+  "include": [
+    "playwright.config.ts",
+    "src",
+    "test-e2e",
+    "knip.config.ts",
+    "vite.config.ts"
+  ]
+}

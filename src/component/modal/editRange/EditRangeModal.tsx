@@ -1,0 +1,203 @@
+import { Button, DialogFooter } from '@blueprintjs/core';
+import styled from '@emotion/styled';
+import { yupResolver } from '@hookform/resolvers/yup';
+import type { Jcoupling, Range, Signal1D } from '@zakodium/nmr-types';
+import type { Spectrum1D } from '@zakodium/nmrium-core';
+import { splitPatterns } from 'nmr-processing';
+import { useCallback, useMemo, useRef } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { FaSearchPlus } from 'react-icons/fa';
+
+import { useDispatch } from '../../context/DispatchContext.js';
+import type { DialogProps } from '../../elements/DialogManager.js';
+import { DraggableDialog } from '../../elements/DraggableDialog.js';
+import { StyledDialogBody } from '../../elements/StyledDialogBody.js';
+import { TabsProvider } from '../../elements/TabsProvider.js';
+import { useActiveNucleusTab } from '../../hooks/useActiveNucleusTab.js';
+import { usePanelPreferences } from '../../hooks/usePanelPreferences.js';
+import useSpectrum from '../../hooks/useSpectrum.js';
+import useEditRangeModal from '../../panels/RangesPanel/hooks/useEditRangeModal.js';
+import { useWatchForm } from '../../useWatchForm.js';
+import { formatNumber } from '../../utility/formatNumber.js';
+
+import SignalsContent from './forms/components/SignalsContent.js';
+import editRangeFormValidation from './forms/validation/EditRangeValidation.js';
+import { mapRange } from './utils/mapRange.js';
+
+const DialogBody = styled(StyledDialogBody)`
+  .tabs .tab-list {
+    overflow-x: auto;
+  }
+`;
+
+interface EditRangeModalProps {
+  rangeID: string;
+}
+
+interface InnerEditRangeModalProps extends EditRangeModalProps {
+  onSave: (value: any) => Promise<void> | null | void;
+  onRest: (originalRange: Range) => void;
+  onZoom: (value: any) => void;
+}
+
+export function EditRangeModal(props: DialogProps<string>) {
+  const { reset, saveEditRange, zoomRange } = useEditRangeModal();
+  const { dialogData: rangeID, onCloseDialog } = props;
+
+  return (
+    <InnerEditRangeModal
+      onRest={(range) => {
+        onCloseDialog();
+        reset(range);
+      }}
+      onSave={(range: any) => {
+        onCloseDialog();
+        saveEditRange(range);
+      }}
+      onZoom={zoomRange}
+      rangeID={rangeID}
+    />
+  );
+}
+
+function InnerEditRangeModal(props: InnerEditRangeModalProps) {
+  const { onSave, onZoom, onRest, rangeID } = props;
+  const activeTab = useActiveNucleusTab();
+
+  const dispatch = useDispatch();
+  const range = useRange(rangeID);
+  const originalRangeRef = useRef(range);
+  const preferences = usePanelPreferences('ranges', activeTab);
+
+  function handleOnZoom() {
+    onZoom(range);
+  }
+
+  function handleOnClose() {
+    dispatch({
+      type: 'SET_SELECTED_TOOL',
+      payload: {
+        selectedTool: 'zoom',
+      },
+    });
+    onRest(mapRange(originalRangeRef.current));
+  }
+
+  const handleSave = useCallback(
+    (formValues: any) => {
+      void (async () => {
+        const { signals } = formValues;
+        await onSave(mapRange({ ...range, signals }));
+      })();
+    },
+    [onSave, range],
+  );
+
+  const methods = useForm({
+    defaultValues: range,
+    resolver: yupResolver(editRangeFormValidation) as any,
+  });
+
+  useWatchForm({
+    reset: methods.reset,
+    initialValues: range,
+    control: methods.control,
+    onChange: async (values) => {
+      const isValid = await editRangeFormValidation.isValid(values);
+      if (!isValid) return;
+      const range = mapRange(values as Range);
+      dispatch({
+        type: 'UPDATE_RANGE',
+        payload: { range },
+      });
+    },
+  });
+
+  if (!preferences || !range) {
+    return;
+  }
+
+  const { tablePreferences } = preferences;
+
+  const title = ` Range and Signal edition: ${formatNumber(
+    range?.from,
+    tablePreferences.from.format,
+  )} ppm to ${formatNumber(range?.to, tablePreferences.to.format)} ppm`;
+
+  return (
+    <TabsProvider defaultSelectedTabId={0}>
+      <FormProvider {...methods}>
+        <DraggableDialog
+          hasBackdrop={false}
+          canOutsideClickClose={false}
+          style={{ width: 700 }}
+          title={title}
+          isOpen
+          headerLeftElement={
+            <Button
+              intent="success"
+              style={{ marginRight: '5px', borderRadius: '5px' }}
+              icon={
+                <FaSearchPlus title="Set to default view on range in spectrum" />
+              }
+              variant="minimal"
+              onClick={handleOnZoom}
+            />
+          }
+          onClose={handleOnClose}
+          placement="top-right"
+        >
+          <DialogBody>
+            <SignalsContent range={range} />
+          </DialogBody>
+          <DialogFooter>
+            <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+              <Button
+                intent="success"
+                onClick={() => methods.handleSubmit(handleSave)()}
+              >
+                Save and Exit
+              </Button>
+            </div>
+          </DialogFooter>
+        </DraggableDialog>
+      </FormProvider>
+    </TabsProvider>
+  );
+}
+
+function useRange(rangeId: string) {
+  const { ranges } = useSpectrum({
+    ranges: { values: [] },
+  }) as Spectrum1D;
+
+  return useMemo(() => {
+    const index = ranges.values.findIndex(
+      (rangeRecord) => rangeRecord.id === rangeId,
+    );
+    return appendCouplings(ranges.values[index]);
+  }, [rangeId, ranges.values]);
+}
+
+function appendCouplings(range: Range) {
+  const signals: Signal1D[] = [];
+
+  for (const signal of range?.signals || []) {
+    const js: Jcoupling[] = [];
+    if (!signal.multiplicity || !['s', 'm'].includes(signal.multiplicity)) {
+      signals.push(signal);
+      continue;
+    }
+
+    for (const multiplicity of splitPatterns(signal.multiplicity)) {
+      js.push({
+        multiplicity: multiplicity.value,
+        coupling: '',
+      } as unknown as Jcoupling);
+    }
+
+    signals.push({ ...signal, js });
+  }
+
+  return { ...range, signals };
+}

@@ -1,0 +1,437 @@
+import type { Peak2D, Signal2D, Zone } from '@zakodium/nmr-types';
+import type { Spectrum } from '@zakodium/nmrium-core';
+import type { Logger } from 'cheminfo-types';
+import {
+  xMaxAbsoluteValue,
+  xMinMaxValues,
+  xNormed,
+} from 'ml-spectra-processing';
+import type {
+  NMRZone,
+  Predicted,
+  Prediction1D,
+  Prediction2D,
+  PredictionBase1D,
+  PredictionBase2D,
+  PredictionOptionsByExperiment,
+} from 'nmr-processing';
+import {
+  calculateRelativeFrequency,
+  getRelativeFrequency,
+  predict,
+  signals2DToZ,
+  signalsToRanges,
+  signalsToXY,
+} from 'nmr-processing';
+import { Molecule } from 'openchemlib';
+
+import {
+  initiateDatum1D,
+  mapRanges,
+  updateIntegralsRelativeValues,
+} from './data1d/Spectrum1D/index.js';
+import { initiateDatum2D } from './data2d/Spectrum2D/index.js';
+import { adjustAlpha } from './utilities/generateColor.js';
+import { isProton } from './utilities/isProton.js';
+
+export type Experiment = 'proton' | 'carbon' | 'cosy' | 'hsqc' | 'hmbc';
+type SpectraPredictionOptions = Record<Experiment, boolean>;
+export type PredictedSpectraResult = Partial<
+  Record<Experiment, PredictionBase1D | PredictionBase2D>
+>;
+
+export interface PredictionOptions {
+  name: string;
+  frequency: number;
+  '1d': {
+    '1H': { from: number; to: number };
+    '13C': { from: number; to: number };
+    nbPoints: number;
+    lineWidth: number;
+  };
+  '2d': {
+    nbPoints: { x: number; y: number };
+  };
+  autoExtendRange: boolean;
+  spectra: SpectraPredictionOptions;
+  logger?: Logger;
+}
+
+export const getDefaultPredictionOptions = (): PredictionOptions => ({
+  name: '',
+  frequency: 400,
+  '1d': {
+    '1H': { from: -1, to: 12 },
+    '13C': { from: -5, to: 220 },
+    nbPoints: 2 ** 17,
+    lineWidth: 1,
+  },
+  '2d': {
+    nbPoints: { x: 1024, y: 1024 },
+  },
+  spectra: {
+    proton: true,
+    carbon: true,
+    cosy: true,
+    hsqc: true,
+    hmbc: true,
+  },
+  autoExtendRange: true,
+});
+
+export const FREQUENCIES: Array<{ value: number; label: string }> = [
+  { value: 25, label: '25 MHz' },
+  { value: 40, label: '40 MHz' },
+  { value: 60, label: '60 MHz' },
+  { value: 80, label: '80 MHz' },
+  { value: 90, label: '90 MHz' },
+  { value: 100, label: '100 MHz' },
+  { value: 200, label: '200 MHz' },
+  { value: 250, label: '250 MHz' },
+  { value: 300, label: '300 MHz' },
+  { value: 400, label: '400 MHz' },
+  { value: 500, label: '500 MHz' },
+  { value: 600, label: '600 MHz' },
+  { value: 700, label: '700 MHz' },
+  { value: 800, label: '800 MHz' },
+  { value: 950, label: '950 MHz' },
+  { value: 1000, label: '1000 MHz' },
+  { value: 1100, label: '1100 MHz' },
+  { value: 1200, label: '1200 MHz' },
+];
+
+export async function predictSpectra(
+  molfile: string,
+  options: any,
+): Promise<Predicted> {
+  const molecule = Molecule.fromMolfile(molfile);
+  const predictOptions: Record<string, PredictionOptionsByExperiment> = {};
+  for (const key in options) {
+    if (!options[key]) continue;
+    const experiment = key === 'proton' ? 'H' : key === 'carbon' ? 'C' : key;
+    predictOptions[experiment] = {};
+  }
+  return predict(molecule, { predictOptions });
+}
+
+function generateName(
+  name: string,
+  options: { frequency: number | number[]; experiment: string },
+) {
+  const { frequency, experiment } = options;
+  const freq = Array.isArray(frequency) ? frequency[0] : frequency;
+  return name || `${experiment.toUpperCase()}_${freq}MHz`;
+}
+
+export function generateSpectra(
+  predictedSpectra: PredictedSpectraResult,
+  inputOptions: PredictionOptions,
+  color: string,
+  logger: Logger,
+): Spectrum[] {
+  const options: PredictionOptions = structuredClone(inputOptions);
+
+  checkFromTo(predictedSpectra, options, logger);
+  const spectra: Spectrum[] = [];
+  for (const experiment in predictedSpectra) {
+    if (options.spectra[experiment as Experiment]) {
+      const spectrum = predictedSpectra[experiment as Experiment];
+      switch (experiment) {
+        case 'proton':
+        case 'carbon': {
+          const datum = generated1DSpectrum({
+            spectrum,
+            options,
+            experiment,
+            color,
+          });
+          spectra.push(datum);
+          break;
+        }
+        case 'cosy':
+        case 'hsqc':
+        case 'hmbc': {
+          const datum = generated2DSpectrum({
+            spectrum: spectrum as PredictionBase2D,
+            options,
+            experiment,
+            color,
+          });
+          spectra.push(datum);
+          break;
+        }
+        default:
+          break;
+      }
+    }
+  }
+  return spectra;
+}
+
+function checkFromTo(
+  predictedSpectra: PredictedSpectraResult,
+  inputOptions: PredictionOptions,
+  logger: Logger,
+) {
+  const setFromTo = (
+    inputOptions: PredictionOptions,
+    nucleus: '1H' | '13C',
+    fromTo: GetNewFromToReturn,
+  ) => {
+    inputOptions['1d'][nucleus].to = fromTo.to;
+    inputOptions['1d'][nucleus].from = fromTo.from;
+    if (fromTo.signalsOutOfRange) {
+      signalsOutOfRange[nucleus] = true;
+    }
+  };
+
+  const { autoExtendRange, spectra } = inputOptions;
+  const signalsOutOfRange: Record<string, boolean> = {};
+
+  for (const exp in predictedSpectra) {
+    const experiment = exp as Experiment;
+    if (!spectra[experiment]) continue;
+    if (predictedSpectra[experiment]?.signals.length === 0) continue;
+
+    if (['carbon', 'proton'].includes(experiment)) {
+      const spectrum = predictedSpectra[experiment] as Prediction1D;
+      const { signals, nucleus } = spectrum;
+      const { from, to } = (inputOptions['1d'] as any)[nucleus];
+      const fromTo = getNewFromTo({
+        deltas: signals.map((s) => s.delta),
+        from,
+        to,
+        nucleus,
+        autoExtendRange,
+      });
+      setFromTo(inputOptions, nucleus as '1H' | '13C', fromTo);
+    } else {
+      const { signals, nuclei } = predictedSpectra[experiment] as Prediction2D;
+      for (const nucleus of nuclei) {
+        const axis = isProton(nucleus) ? 'x' : 'y';
+        const { from, to } = (inputOptions['1d'] as any)[nucleus];
+        const fromTo = getNewFromTo({
+          deltas: signals.map((s) => s[axis].delta),
+          from,
+          to,
+          nucleus,
+          autoExtendRange,
+        });
+        setFromTo(inputOptions, nucleus as '1H' | '13C', fromTo);
+      }
+    }
+  }
+  for (const nucleus of ['1H', '13C']) {
+    if (signalsOutOfRange[nucleus]) {
+      const { from, to } = (inputOptions['1d'] as any)[nucleus];
+      if (autoExtendRange) {
+        logger.info(
+          `There are ${nucleus} signals out of the range, it was extended to ${from}-${to}.`,
+        );
+      } else {
+        logger.warn(`There are ${nucleus} signals out of the range.`);
+      }
+    }
+  }
+}
+
+interface GetNewFromToReturn {
+  from: number;
+  to: number;
+  signalsOutOfRange: boolean;
+}
+
+function getNewFromTo(params: {
+  deltas: number[];
+  from: number;
+  to: number;
+  nucleus: string;
+  autoExtendRange: boolean;
+}): GetNewFromToReturn {
+  const { deltas, nucleus, autoExtendRange } = params;
+  let { from, to } = params;
+  const { min, max } = xMinMaxValues(deltas);
+  const signalsOutOfRange = from > min || to < max;
+  if (autoExtendRange && signalsOutOfRange) {
+    const spread = isProton(nucleus) ? 0.2 : 2;
+    if (from > min) from = min - spread;
+    if (to < max) to = max + spread;
+  }
+  return { from, to, signalsOutOfRange };
+}
+
+function generated1DSpectrum(params: {
+  options: PredictionOptions;
+  spectrum: any;
+  experiment: string;
+  color: string;
+}) {
+  const { spectrum, options, experiment, color } = params;
+
+  const { signals, joinedSignals, nucleus } = spectrum;
+
+  const {
+    name,
+    '1d': { nbPoints, lineWidth },
+    frequency: freq,
+  } = options;
+  const SpectrumName = generateName(name, { frequency: freq, experiment });
+  const frequency = getRelativeFrequency(nucleus, {
+    frequency: freq,
+    nucleus,
+  });
+  const { x, y } = signalsToXY(signals, {
+    ...(options['1d'] as any)[nucleus],
+    frequency,
+    nbPoints,
+    lineWidth,
+  });
+
+  const normalizedY = xNormed(y, {
+    algorithm: 'max',
+    value: xMaxAbsoluteValue(y),
+  });
+
+  const first = x[0] ?? 0;
+  const last = x.at(-1) ?? 0;
+  const getFreqOffset = (freq: number) => {
+    return (first + last) * freq * 0.5;
+  };
+
+  const datum = initiateDatum1D(
+    {
+      data: { x, im: null, re: normalizedY },
+      display: {
+        color,
+      },
+      info: {
+        nucleus,
+        originFrequency: frequency,
+        baseFrequency: frequency,
+        frequencyOffset: Array.isArray(frequency)
+          ? frequency.map(getFreqOffset)
+          : getFreqOffset(frequency),
+
+        pulseSequence: 'prediction',
+        spectralWidth: Math.abs(first - last),
+        solvent: '',
+        experiment,
+        isFt: true,
+        name: SpectrumName,
+        title: SpectrumName,
+        spectrumSource: 'prediction',
+      },
+    },
+    {},
+  );
+  datum.ranges.values = mapRanges(
+    signalsToRanges(joinedSignals, { frequency }),
+    datum,
+  );
+  updateIntegralsRelativeValues(datum);
+  return datum;
+}
+
+function mapZones(zones: NMRZone[]): Zone[] {
+  return zones.map((zone): Zone => {
+    const { signals, ...resZone } = zone;
+    const newSignals = signals.map((signal): Signal2D => {
+      const { x, y, id, peaks, kind, ...resSignal } = signal;
+      return {
+        ...resSignal,
+        id: id || crypto.randomUUID(),
+        kind: kind || 'signal',
+        x: { ...x, originalDelta: x.delta || 0 },
+        y: { ...y, originalDelta: y.delta || 0 },
+        peaks: peaks?.map((peak): Peak2D => ({
+          ...peak,
+          id: peak.id || crypto.randomUUID(),
+        })),
+      };
+    });
+    return {
+      ...resZone,
+      id: crypto.randomUUID(),
+      signals: newSignals,
+      kind: 'signal',
+    };
+  });
+}
+
+function generated2DSpectrum(params: {
+  options: PredictionOptions;
+  spectrum: PredictionBase2D;
+  experiment: string;
+  color: string;
+}) {
+  const { spectrum, options, experiment, color } = params;
+  const { signals, zones, nuclei } = spectrum;
+  const xOption = (options['1d'] as any)[nuclei[0]];
+  const yOption = (options['1d'] as any)[nuclei[1]];
+
+  const width = get2DWidth(nuclei);
+  const frequency = calculateRelativeFrequency(nuclei, options.frequency);
+
+  const minMaxContent = signals2DToZ(signals, {
+    from: { x: xOption.from, y: yOption.from },
+    to: { x: xOption.to, y: yOption.to },
+    nbPoints: {
+      x: options['2d'].nbPoints.x,
+      y: options['2d'].nbPoints.y,
+    },
+    width,
+    factor: 3,
+  });
+  const SpectrumName = generateName(options.name, {
+    frequency,
+    experiment,
+  });
+  const spectralWidth = getSpectralWidth(experiment, options);
+  const datum = initiateDatum2D({
+    data: { rr: { ...minMaxContent, noise: 0.01 } },
+    display: {
+      positiveColor: color,
+      negativeColor: adjustAlpha(color, 40),
+    },
+    info: {
+      name: SpectrumName,
+      title: SpectrumName,
+      nucleus: nuclei,
+      originFrequency: frequency,
+      baseFrequency: frequency,
+      pulseSequence: 'prediction',
+      spectralWidth,
+      experiment,
+      spectrumSource: 'prediction',
+    },
+  });
+  datum.zones.values = mapZones(zones);
+  return datum;
+}
+
+function get2DWidth(nucleus: string[]) {
+  return nucleus[0] === nucleus[1] ? 0.02 : { x: 0.02, y: 0.2133 };
+}
+
+function getSpectralWidth(experiment: string, options: PredictionOptions) {
+  const formTo = options['1d'];
+
+  switch (experiment) {
+    case 'cosy': {
+      const { from, to } = formTo['1H'];
+      const diff = to - from;
+      return [diff, diff];
+    }
+    case 'hsqc':
+    case 'hmbc': {
+      const proton = formTo['1H'];
+      const carbon = formTo['13C'];
+      const protonDiff = proton.to - proton.from;
+      const carbonDiff = carbon.to - carbon.from;
+
+      return [protonDiff, carbonDiff];
+    }
+    default:
+      return [];
+  }
+}

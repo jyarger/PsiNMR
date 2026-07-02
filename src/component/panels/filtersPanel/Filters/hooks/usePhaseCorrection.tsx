@@ -1,0 +1,190 @@
+import type { Spectrum1D } from '@zakodium/nmrium-core';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSelect } from 'react-science/ui';
+
+import type { ExtractFilterEntry } from '../../../../../data/types/common/ExtractFilterEntry.js';
+import { useChartData } from '../../../../context/ChartContext.js';
+import { useDispatch } from '../../../../context/DispatchContext.js';
+import { useSyncedFilterOptions } from '../../../../context/FilterSyncOptionsContext.js';
+import useSpectrum from '../../../../hooks/useSpectrum.js';
+
+type PhaseCorrectionTypes = 'manual' | 'automatic' | 'absolute';
+
+export interface AlgorithmItem {
+  label: string;
+  value: PhaseCorrectionTypes;
+}
+
+const defaultPhasingTypeItem: AlgorithmItem = {
+  label: 'Manual',
+  value: 'manual',
+};
+
+export const algorithms: AlgorithmItem[] = [
+  defaultPhasingTypeItem,
+  {
+    label: 'Automatic',
+    value: 'automatic',
+  },
+  {
+    label: 'Convert to absolute spectrum',
+    value: 'absolute',
+  },
+];
+const emptyData = { data: { x: [], re: [] } };
+
+export function usePhaseCorrection(
+  filter: ExtractFilterEntry<'phaseCorrection'> | null,
+) {
+  const {
+    toolOptions: {
+      data: { pivot },
+    },
+  } = useChartData();
+
+  const { data } = useSpectrum(emptyData) as Spectrum1D;
+  const dispatch = useDispatch();
+  const [value, setValue] = useState({ ph0: 0, ph1: 0 });
+  const valueRef = useRef({ ph0: 0, ph1: 0 });
+
+  const ph0Ref = useRef<any>();
+  const ph1Ref = useRef<any>();
+  const { value: phaseCorrectionTypeItem, ...defaultSelectProps } =
+    useSelect<AlgorithmItem>({
+      defaultSelectedItem: defaultPhasingTypeItem,
+      itemTextKey: 'label',
+    });
+
+  useEffect(() => {
+    // eslint-disable-next-line react-you-might-not-need-an-effect/no-event-handler
+    if (filter && phaseCorrectionTypeItem?.value === 'manual') {
+      const { ph0 = 0, ph1 = 0 } = filter?.value || {};
+      valueRef.current = { ph0, ph1 };
+      // eslint-disable-next-line react-you-might-not-need-an-effect/no-adjust-state-on-prop-change
+      setValue(valueRef.current);
+    }
+
+    if (filter) {
+      ph0Ref.current?.setValue(filter?.value?.ph0 || 0);
+      ph1Ref.current?.setValue(filter?.value?.ph1 || 0);
+    } else {
+      ph0Ref.current?.setValue(valueRef.current?.ph0 || 0);
+      ph1Ref.current?.setValue(valueRef.current?.ph1 || 0);
+    }
+  }, [filter, phaseCorrectionTypeItem]);
+
+  const updateInputRangeInitialValue = useCallback((value: any) => {
+    // update InputRange initial value
+    ph0Ref.current?.setValue(value.ph0);
+    ph1Ref.current?.setValue(value.ph1);
+  }, []);
+
+  function syncWatch(sharedFilterOptions: any) {
+    updateInputRangeInitialValue(sharedFilterOptions);
+    setValue(sharedFilterOptions);
+  }
+
+  const { syncFilterOptions, clearSyncFilterOptions } =
+    useSyncedFilterOptions(syncWatch);
+
+  function handleApplyFilter() {
+    switch (phaseCorrectionTypeItem?.value) {
+      case 'automatic': {
+        dispatch({
+          type: 'APPLY_AUTO_PHASE_CORRECTION_FILTER',
+        });
+        break;
+      }
+
+      case 'manual': {
+        dispatch({
+          type: 'APPLY_MANUAL_PHASE_CORRECTION_FILTER',
+          payload: value,
+        });
+        break;
+      }
+      case 'absolute': {
+        dispatch({
+          type: 'APPLY_ABSOLUTE_FILTER',
+        });
+        break;
+      }
+      default:
+        break;
+    }
+    clearSyncFilterOptions();
+  }
+
+  const calcPhaseCorrectionHandler = useCallback(
+    (newValues: any, filedName: any) => {
+      if (filedName === 'ph1' && data.re) {
+        const diff0 = newValues.ph0 - valueRef.current.ph0;
+        const diff1 = newValues.ph1 - valueRef.current.ph1;
+        newValues.ph0 +=
+          diff0 - (diff1 * (data.re.length - pivot?.index)) / data.re.length;
+      }
+      dispatch({
+        type: 'CALCULATE_MANUAL_PHASE_CORRECTION_FILTER',
+        payload: newValues,
+      });
+    },
+    [data.re, dispatch, pivot?.index],
+  );
+
+  const handleInput = useCallback(
+    (valueAsNumber: any, valueAsString: any, element: any) => {
+      const { name } = element;
+
+      if (Number.isNaN(valueAsNumber)) return;
+
+      const newValue = { ...valueRef.current, [name]: Number(valueAsNumber) };
+
+      calcPhaseCorrectionHandler(newValue, name);
+
+      updateInputRangeInitialValue(newValue);
+      valueRef.current = newValue;
+      setValue(valueRef.current);
+      syncFilterOptions(valueRef.current);
+    },
+    [
+      calcPhaseCorrectionHandler,
+      syncFilterOptions,
+      updateInputRangeInitialValue,
+    ],
+  );
+
+  const handleRangeChange = useCallback(
+    (e: any) => {
+      const newValue = { ...valueRef.current, [e.name]: e.value };
+      calcPhaseCorrectionHandler(newValue, e.name);
+      updateInputRangeInitialValue(newValue);
+      valueRef.current = newValue;
+      setValue(valueRef.current);
+      syncFilterOptions(valueRef.current);
+    },
+    [
+      calcPhaseCorrectionHandler,
+      syncFilterOptions,
+      updateInputRangeInitialValue,
+    ],
+  );
+
+  function handleCancelFilter() {
+    dispatch({
+      type: 'RESET_SELECTED_TOOL',
+    });
+    clearSyncFilterOptions();
+  }
+
+  return {
+    handleApplyFilter,
+    handleCancelFilter,
+    handleRangeChange,
+    handleInput,
+    defaultSelectProps,
+    phaseCorrectionTypeItem,
+    ph0Ref,
+    ph1Ref,
+    value,
+  };
+}

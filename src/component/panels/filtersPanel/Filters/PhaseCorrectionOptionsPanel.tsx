@@ -1,0 +1,146 @@
+import { Button } from '@blueprintjs/core';
+import { Select } from '@blueprintjs/select';
+import styled from '@emotion/styled';
+import type { CSSProperties, MouseEvent } from 'react';
+
+import type { ExtractFilterEntry } from '../../../../data/types/common/ExtractFilterEntry.js';
+import InputRange from '../../../elements/InputRange.js';
+import type { LabelStyle } from '../../../elements/Label.js';
+import Label from '../../../elements/Label.js';
+import { NumberInput2 } from '../../../elements/NumberInput2.js';
+import { ReadOnly } from '../../../elements/ReadOnly.js';
+import { Sections } from '../../../elements/Sections.js';
+
+import { FilterActionButtons } from './FilterActionButtons.js';
+import { HeaderContainer, StickyHeader } from './InnerFilterHeader.js';
+import type { AlgorithmItem } from './hooks/usePhaseCorrection.js';
+import { algorithms, usePhaseCorrection } from './hooks/usePhaseCorrection.js';
+
+import type { BaseFilterOptionsPanelProps } from './index.js';
+
+const inputRangeStyle: CSSProperties = {
+  padding: '5px 10px',
+  flex: 8,
+};
+
+const formLabelStyle: LabelStyle = {
+  label: {
+    flex: 2,
+  },
+  wrapper: {
+    flex: 10,
+    display: 'flex',
+  },
+  container: {
+    marginBottom: '5px',
+  },
+};
+
+const NumberInputContainer = styled.div`
+  flex: 4;
+  min-width: 75px;
+`;
+
+export default function PhaseCorrectionOptionsPanel(
+  props: BaseFilterOptionsPanelProps<ExtractFilterEntry<'phaseCorrection'>>,
+) {
+  const { filter, enableEdit = true, onCancel, onConfirm, onEditStart } = props;
+  const {
+    handleApplyFilter,
+    handleCancelFilter,
+    handleInput,
+    handleRangeChange,
+    value,
+    defaultSelectProps,
+    phaseCorrectionTypeItem,
+    ph0Ref,
+    ph1Ref,
+  } = usePhaseCorrection(filter);
+
+  function handleConfirm(event: MouseEvent<HTMLElement>) {
+    handleApplyFilter();
+    onConfirm?.(event);
+  }
+
+  function handleCancel(event: MouseEvent<HTMLElement>) {
+    handleCancelFilter();
+    onCancel?.(event);
+  }
+
+  return (
+    <ReadOnly enabled={!enableEdit} onClick={onEditStart}>
+      {enableEdit && (
+        <StickyHeader>
+          <HeaderContainer>
+            <div />
+            <FilterActionButtons
+              onConfirm={handleConfirm}
+              onCancel={handleCancel}
+            />
+          </HeaderContainer>
+        </StickyHeader>
+      )}
+      <Sections.Body>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <Label title="Algorithm:" style={formLabelStyle}>
+            <Select<AlgorithmItem>
+              items={algorithms}
+              filterable={false}
+              itemsEqual="value"
+              {...defaultSelectProps}
+            >
+              <Button
+                text={phaseCorrectionTypeItem?.label}
+                endIcon="double-caret-vertical"
+                variant="outlined"
+              />
+            </Select>
+          </Label>
+          {phaseCorrectionTypeItem?.value === 'manual' && (
+            <>
+              <Label title="PH0:" style={formLabelStyle} widthThreshold={400}>
+                <NumberInputContainer>
+                  <NumberInput2
+                    name="ph0"
+                    onValueChange={handleInput}
+                    value={value.ph0}
+                    debounceTime={250}
+                    fill
+                  />
+                </NumberInputContainer>
+                <InputRange
+                  ref={ph0Ref}
+                  name="ph0"
+                  label="Change PH0 (click and drag)"
+                  shortLabel="Ph0"
+                  onChange={handleRangeChange}
+                  style={inputRangeStyle}
+                />
+              </Label>
+              <Label title="PH1:" style={formLabelStyle} widthThreshold={400}>
+                <NumberInputContainer>
+                  <NumberInput2
+                    name="ph1"
+                    onValueChange={handleInput}
+                    value={value.ph1}
+                    debounceTime={250}
+                    fill
+                  />
+                </NumberInputContainer>
+
+                <InputRange
+                  ref={ph1Ref}
+                  name="ph1"
+                  label="Change PH1 (click and drag)"
+                  shortLabel="Ph1"
+                  onChange={handleRangeChange}
+                  style={inputRangeStyle}
+                />
+              </Label>
+            </>
+          )}
+        </div>
+      </Sections.Body>
+    </ReadOnly>
+  );
+}

@@ -1,0 +1,162 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { Button, TooltipHelpContent } from 'react-science/ui';
+import * as Yup from 'yup';
+
+import { useDispatch } from '../context/DispatchContext.js';
+import { useToaster } from '../context/ToasterContext.js';
+import Label from '../elements/Label.js';
+import { NumberInput2Controller } from '../elements/NumberInput2Controller.js';
+import { Select2Controller } from '../elements/Select2Controller.js';
+import { useActiveNucleusTab } from '../hooks/useActiveNucleusTab.ts';
+import { useActiveSpectra } from '../hooks/useActiveSpectra.ts';
+import {
+  MIN_AREA_POINTS,
+  useCheckPointsNumberInSelectedSpectra,
+} from '../hooks/useCheckPointsNumberInWindowArea.js';
+import { usePanelPreferences } from '../hooks/usePanelPreferences.ts';
+
+import { headerLabelStyle } from './Header.js';
+import { HeaderWrapper } from './HeaderWrapper.js';
+
+type Direction = 'positive' | 'negative' | 'both';
+
+const LookFor: Array<{ label: string; value: Direction }> = [
+  {
+    label: 'Positive',
+    value: 'positive',
+  },
+  {
+    label: 'Negative',
+    value: 'negative',
+  },
+  {
+    label: 'Both',
+    value: 'both',
+  },
+];
+
+interface AutoPeakPickingOptions {
+  maxNumberOfPeaks: number;
+  minMaxRatio: number;
+  noiseFactor: number;
+  direction: Direction;
+}
+
+const validationSchema = Yup.object().shape({
+  maxNumberOfPeaks: Yup.number().min(1).required(),
+  minMaxRatio: Yup.number().min(0).required(),
+  noiseFactor: Yup.number().min(0).required(),
+  direction: Yup.mixed<Direction>()
+    .oneOf(['both', 'negative', 'positive'])
+    .required(),
+});
+
+const INIT_VALUES: AutoPeakPickingOptions = {
+  maxNumberOfPeaks: 50,
+  minMaxRatio: 0.05,
+  noiseFactor: 3,
+  direction: 'both',
+};
+
+export function AutoPeakPickingOptionPanel() {
+  const dispatch = useDispatch();
+  const hasEnoughPoints = useCheckPointsNumberInSelectedSpectra();
+  const toaster = useToaster();
+  const nucleus = useActiveNucleusTab();
+  const activeSpectra = useActiveSpectra();
+
+  const { defaultPeakShape } = usePanelPreferences('peaks', nucleus);
+  const {
+    handleSubmit,
+    formState: { isValid },
+    control,
+  } = useForm<AutoPeakPickingOptions>({
+    defaultValues: INIT_VALUES,
+    resolver: yupResolver(validationSchema),
+    mode: 'onChange',
+  });
+
+  function handlePeakPicking(values: any) {
+    if (hasEnoughPoints) {
+      dispatch({
+        type: 'AUTO_PEAK_PICKING',
+        payload: {
+          options: values,
+          defaultPeakShape,
+        },
+      });
+    } else {
+      toaster.show({
+        message: `Auto peak picking only available for area more than ${MIN_AREA_POINTS} points`,
+        intent: 'danger',
+      });
+    }
+  }
+
+  const isSpectraSelected = activeSpectra && activeSpectra.length > 0;
+  return (
+    <HeaderWrapper>
+      <Label title="Direction:" shortTitle="" style={headerLabelStyle}>
+        <Select2Controller control={control} name="direction" items={LookFor} />
+      </Label>
+      <Label
+        title="Max number of peaks:"
+        shortTitle="Max peaks:"
+        style={headerLabelStyle}
+      >
+        <NumberInput2Controller
+          control={control}
+          name="maxNumberOfPeaks"
+          min={1}
+          stepSize={1}
+          style={{ width: '60px' }}
+        />
+      </Label>
+      <Label title="Noise factor:" shortTitle="Noise:" style={headerLabelStyle}>
+        <NumberInput2Controller
+          control={control}
+          name="noiseFactor"
+          min={0}
+          stepSize={1}
+          style={{ width: '60px' }}
+        />
+      </Label>
+      <Label
+        title="Min/max Ratio:"
+        shortTitle="Ratio:"
+        style={headerLabelStyle}
+      >
+        <NumberInput2Controller
+          control={control}
+          name="minMaxRatio"
+          min={0}
+          stepSize={0.01}
+          majorStepSize={0.01}
+          minorStepSize={0.01}
+          style={{ width: '60px' }}
+          debounceTime={500}
+        />
+      </Label>
+      <Button
+        intent="success"
+        onClick={() => handleSubmit(handlePeakPicking)()}
+        style={{ margin: '0 10px' }}
+        disabled={!isValid || !isSpectraSelected}
+        {...(!isSpectraSelected && {
+          tooltipProps: {
+            content: (
+              <TooltipHelpContent
+                title="Auto peak picking"
+                description="Select a one or more spectra to enable auto peak picking"
+              />
+            ),
+            intent: 'danger',
+          },
+        })}
+      >
+        Apply to {activeSpectra?.length} spectra
+      </Button>
+    </HeaderWrapper>
+  );
+}

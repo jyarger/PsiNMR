@@ -1,0 +1,49 @@
+import type { ButtonProps } from '@blueprintjs/core';
+import { Button, PopoverNext } from '@blueprintjs/core';
+import styled from '@emotion/styled';
+import type { MouseEvent, ReactNode } from 'react';
+
+interface TabTitleProps {
+  onDelete?: ButtonProps['onClick'];
+  children?: ReactNode;
+}
+
+export function TabTitle(props: TabTitleProps) {
+  const { onDelete, children } = props;
+
+  function handleOnDelete(event: MouseEvent<HTMLElement>) {
+    event.stopPropagation();
+    onDelete?.(event);
+  }
+
+  return (
+    <PopoverNext
+      lazy
+      arrow={false}
+      animation="minimal"
+      popoverClassName="popover-tab"
+      placement="top-start"
+      interactionKind="hover"
+      enforceFocus={false}
+      disabled={typeof onDelete !== 'function'}
+      content={
+        <TabCloseButton
+          icon="cross"
+          intent="danger"
+          className="tab-close-btn"
+          onClick={handleOnDelete}
+          size="small"
+        />
+      }
+    >
+      {children}
+    </PopoverNext>
+  );
+}
+
+const TabCloseButton = styled(Button)`
+  border-radius: 50%;
+  box-shadow:
+    rgb(9 30 66 / 25%) 0 4px 8px -2px,
+    rgb(9 30 66 / 8%) 0 0 0 1px !important;
+`;

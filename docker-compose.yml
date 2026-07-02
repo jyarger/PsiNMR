@@ -1,0 +1,10 @@
+services:
+  psinmr:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: psinmr:latest
+    container_name: psinmr
+    ports:
+      - "8080:80"
+    restart: unless-stopped

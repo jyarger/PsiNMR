@@ -1,0 +1,28 @@
+# Node
+node_modules
+npm-debug.log*
+
+# Build output
+build
+lib
+
+# Rust build artifacts (the wasm is rebuilt inside the image)
+rust/**/target
+src/compute/pkg
+
+# VCS / editor / CI
+.git
+.github
+.vscode
+
+# Tests & docs not needed at build time
+test-e2e
+playwright-report
+test-results
+coverage
+images
+*.md
+
+# Local env
+.env
+.env.*
