@@ -33,15 +33,20 @@ with heavy numerical work offloaded to a Rust → WebAssembly compute core.
 
 ```bash
 docker compose up --build
-# open http://localhost:8080
+# open http://localhost:8080  (or https://localhost:8443)
 ```
 
 or without compose:
 
 ```bash
 docker build -t psinmr:latest .
-docker run --rm -p 8080:80 psinmr:latest
+docker run --rm -p 8080:80 -p 8443:443 psinmr:latest
 ```
+
+HTTPS uses a self-signed certificate generated fresh at container startup,
+so the browser shows a one-time trust warning for `https://localhost:8443` —
+click through ("Advanced → Proceed") to continue. Plain HTTP on port 8080
+works without any warning.
 
 ### Local development
 
