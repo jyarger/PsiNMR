@@ -39,6 +39,8 @@ COPY docker/10-gen-self-signed-cert.sh /docker-entrypoint.d/10-gen-self-signed-c
 RUN chmod +x /docker-entrypoint.d/10-gen-self-signed-cert.sh
 COPY --from=web /app/build /usr/share/nginx/html
 EXPOSE 80 443
+# Probe 127.0.0.1 explicitly: busybox wget resolves `localhost` to ::1
+# first, which would be refused unless nginx also listens on IPv6.
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s \
-  CMD wget -qO- http://localhost/ >/dev/null 2>&1 || exit 1
+  CMD wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1
 CMD ["nginx", "-g", "daemon off;"]
