@@ -3,6 +3,8 @@ import { expect, test } from '@playwright/test';
 import NmriumPage from '../NmriumPage/index.js';
 
 test('automatic assignment panel', async ({ page }) => {
+  // Depends on an external assignment web service — triple the timeout.
+  test.slow();
   const nmrium = await NmriumPage.create(page);
   await test.step('open 1H ethylvinylether spectrum', async () => {
     await nmrium.openSample('./data/ethylvinylether/1h.json');
@@ -29,8 +31,10 @@ test('automatic assignment panel', async ({ page }) => {
 
     await nmrium.getToolbarLocatorByTitle('Automatic assignment').click();
 
+    // The automatic assignment runs through an external web service; give
+    // it generous time on slow CI runners.
     await expect(
       nmrium.page.locator('_react=AutomaticAssignmentTable >> text=0.75'),
-    ).toHaveCount(2, { timeout: 30 * 1000 });
+    ).toHaveCount(2, { timeout: 90 * 1000 });
   });
 });

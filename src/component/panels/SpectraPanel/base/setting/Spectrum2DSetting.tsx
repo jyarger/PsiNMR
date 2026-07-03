@@ -14,7 +14,7 @@ import {
 } from 'react-hook-form';
 import { ColorPicker } from 'react-science/ui';
 
-import { COLORS } from '../../../../../data/utilities/generateColor.js';
+import { getSpectraPalette } from '../../../../../data/utilities/generateColor.js';
 import { useChartData } from '../../../../context/ChartContext.tsx';
 import { NumberInput2 } from '../../../../elements/NumberInput2.js';
 import { useFormValidateField } from '../../../../elements/useFormValidateField.js';
@@ -120,7 +120,7 @@ function Settings(props: SettingsProps) {
                 void handleSubmit(onSubmit)();
               }}
               color={{ hex: value || '#000' }}
-              presetColors={COLORS}
+              presetColors={getSpectraPalette()}
               style={{ boxShadow: 'none' }}
             />
           );

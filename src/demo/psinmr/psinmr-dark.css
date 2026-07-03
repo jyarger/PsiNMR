@@ -47,3 +47,72 @@
   background-color: var(--psi-chrome-raised);
   color: var(--psi-text-on-chrome);
 }
+
+/* --- Icons -------------------------------------------------------------
+   react-science toolbar items hardcode a dark icon color (#2f343c) that
+   disappears on the dark surfaces: header actions (save/manual/settings/
+   fullscreen), the left tool strip, the right panels bar, and the little
+   SpectraPanel header actions all go light here. */
+[data-psi-theme='dark'] .nmrium-container button svg,
+[data-psi-theme='dark'] .nmrium-container [role='button'] svg,
+[data-psi-theme='dark'] .nmrium-container a svg {
+  color: var(--psi-plot-fg) !important;
+}
+
+/* Keep the active tool visually distinct (accent on soft slate). */
+[data-psi-theme='dark'] .nmrium-container .bp6-button.bp6-active svg {
+  color: var(--psi-accent-on-chrome) !important;
+}
+
+/* Preserve the destructive tint on delete actions. */
+[data-psi-theme='dark'] .nmrium-container #delete-button svg,
+[data-psi-theme='dark'] .nmrium-container [data-testid='delete-button'] svg,
+[data-psi-theme='dark'] .nmrium-container .bp6-intent-danger svg {
+  color: var(--psi-danger) !important;
+}
+
+/* --- Tooltips & popovers (portal to <body>, so no container scope) ----
+   react-science paints popover content light while Blueprint's dark mode
+   supplies light text — force a consistent dark popover instead. */
+html[data-psi-theme='dark'] .bp6-popover .bp6-popover-content,
+html[data-psi-theme='dark'] .bp6-popover {
+  background-color: var(--psi-chrome-raised) !important;
+  color: var(--psi-text-on-chrome) !important;
+}
+
+html[data-psi-theme='dark'] .bp6-popover .bp6-popover-arrow-fill {
+  fill: var(--psi-chrome-raised) !important;
+}
+
+html[data-psi-theme='dark'] .bp6-popover .bp6-menu {
+  background-color: var(--psi-chrome-raised) !important;
+  color: var(--psi-text-on-chrome) !important;
+}
+
+/* --- Nucleus tabs (1H / 13C / 1H,1H) ----------------------------------- */
+[data-psi-theme='dark'] .nmrium-container .tab-list-item {
+  background-color: transparent !important;
+  color: var(--psi-text-on-chrome-muted) !important;
+}
+
+[data-psi-theme='dark'] .nmrium-container .tab-list-item.tab-list-active {
+  background-color: var(--psi-chrome-raised) !important;
+  border-color: var(--psi-accent) !important;
+  color: var(--psi-accent-on-chrome) !important;
+}
+
+/* --- Split-pane divider between viewer and panels ---------------------- */
+[data-psi-theme='dark'] .nmrium-container div[direction] {
+  background-color: var(--psi-chrome) !important;
+  color: var(--psi-text-on-chrome-muted) !important;
+}
+
+/* --- White spectra on light surfaces -----------------------------------
+   The dark theme's default palette starts with white. If the user
+   toggles to the light theme, remap pure-white traces to near-black on
+   screen so they stay visible. (Exports serialize the stored color:
+   recolor white spectra before exporting on a white background.) */
+[data-psi-theme='light'] .nmrium-container path[stroke='#FFFFFF'],
+[data-psi-theme='light'] .nmrium-container path[stroke='#FFFFFFFF'] {
+  stroke: #2b3440 !important;
+}

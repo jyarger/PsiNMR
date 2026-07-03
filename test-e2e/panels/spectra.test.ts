@@ -191,7 +191,7 @@ test('2d spectrum', async ({ page }) => {
     // test is independent of the palette order.
     await nmrium.page
       .locator('_react=SketchPresetColors >> nth=0')
-      .getByTitle('#FF5C5C')
+      .getByTitle('#64B5F6')
       .click();
     await nmrium.page
       .locator('_react=SketchPresetColors >> nth=1')
@@ -201,13 +201,13 @@ test('2d spectrum', async ({ page }) => {
     // Check that ColorIndicator color changed
     await expect(
       nmrium.page.locator(
-        '_react=ColorIndicator[display.negativeColor="#ffd54fff"][display.positiveColor="#ff5c5cff"]',
+        '_react=ColorIndicator[display.negativeColor="#ffd54fff"][display.positiveColor="#64b5f6ff"]',
       ),
     ).toBeVisible();
     // Check that spectra color changed
     await expect(
       nmrium.page.locator(
-        '_react=ContoursPaths[sign="positive"][color="#ff5c5cff"]',
+        '_react=ContoursPaths[sign="positive"][color="#64b5f6ff"]',
       ),
     ).toBeVisible();
     await expect(

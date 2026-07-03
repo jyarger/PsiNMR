@@ -1,4 +1,4 @@
-import { COLORS } from '../../../../data/utilities/generateColor.js';
+import { getSpectraPalette } from '../../../../data/utilities/generateColor.js';
 import { useChartData } from '../../../context/ChartContext.js';
 import type {
   PhaseCorrectionTraceData,
@@ -23,7 +23,8 @@ export function useActivePhaseTraces(): UseActivePhaseTracesReturn {
       },
     },
   } = useChartData();
-  const color = activeTraceDirection === 'horizontal' ? COLORS[0] : COLORS[1];
+  const palette = getSpectraPalette();
+  const color = activeTraceDirection === 'horizontal' ? palette[0] : palette[1];
   return {
     ...traces[activeTraceDirection],
     activeTraceDirection,

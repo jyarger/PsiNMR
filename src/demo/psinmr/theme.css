@@ -44,6 +44,11 @@
   --psi-plot-surface: #1e242d;
   --psi-plot-fg: #c6cfd9;
   --psi-plot-grid: #93a0ae;
+
+  /* Coordinate footer inside the viewer */
+  --psi-footer-bg: #1e242d;
+  --psi-footer-label: #93a0ae;
+  --psi-footer-value: #e5a29b;
 }
 
 [data-psi-theme='light'],
@@ -75,6 +80,11 @@
   --psi-plot-surface: #fff;
   --psi-plot-fg: #000;
   --psi-plot-grid: #000;
+
+  /* Coordinate footer inside the viewer */
+  --psi-footer-bg: #f7f7f7;
+  --psi-footer-label: #4d4d4d;
+  --psi-footer-value: #8d0018;
 }
 
 :root {

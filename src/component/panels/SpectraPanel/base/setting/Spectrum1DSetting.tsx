@@ -1,7 +1,7 @@
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { ColorPicker } from 'react-science/ui';
 
-import { COLORS } from '../../../../../data/utilities/generateColor.js';
+import { getSpectraPalette } from '../../../../../data/utilities/generateColor.js';
 import { colorToHexWithAlpha } from '../../../../utility/colorToHexWithAlpha.js';
 
 import { ApplyToAllSelected } from './ApplyToAllSelected.tsx';
@@ -39,7 +39,7 @@ export function Spectrum1DSetting({ data, onSubmit }: Spectrum1DSettingProps) {
                     void handleSubmit(onSubmit)();
                   }}
                   color={{ hex: value || '#000' }}
-                  presetColors={COLORS}
+                  presetColors={getSpectraPalette()}
                   style={{ boxShadow: 'none', width: 250 }}
                 />
               );

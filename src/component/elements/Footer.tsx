@@ -5,8 +5,8 @@ const FooterContainer = styled.div`
   position: absolute;
   bottom: 0;
   align-items: center;
-  background-color: #f7f7f7;
-  color: #8d0018;
+  background-color: var(--psi-footer-bg, #f7f7f7);
+  color: var(--psi-footer-value, #8d0018);
   container-type: inline-size;
   display: flex;
   height: 30px;
@@ -65,7 +65,7 @@ const Span = styled.span`
 `;
 
 InfoItem.Label = styled(Span)`
-  color: #4d4d4d;
+  color: var(--psi-footer-label, #4d4d4d);
   font-size: 12px;
 `;
 

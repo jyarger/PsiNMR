@@ -1,7 +1,31 @@
-// PsiNMR default spectrum palette: bright, saturated hues chosen for high
-// contrast on the dark plot background while remaining legible on white
-// (light theme and publication exports).
-export const COLORS: string[] = [
+// PsiNMR default spectrum palettes. The active one follows the app theme
+// (data-psi-theme on <html>): on the dark plot background spectra start
+// with white and the Psi teal/blue accents; on white they start with
+// stronger hues that survive publication-style rendering.
+const COLORS_DARK: string[] = [
+  '#FFFFFF', // white
+  '#5FB3A7', // Psi teal
+  '#64B5F6', // light blue
+  '#FFD54F', // amber
+  '#F06292', // pink
+  '#AED581', // lime
+  '#4DD0E1', // cyan
+  '#FF8A65', // orange
+  '#BA68C8', // purple
+  '#FFF176', // yellow
+  '#90CAF9', // pale blue
+  '#81C784', // green
+  '#FFB74D', // light orange
+  '#E57373', // soft red
+  '#7986CB', // indigo
+  '#4DB6AC', // teal
+  '#DCE775', // chartreuse
+  '#F48FB1', // rose
+  '#9575CD', // violet
+  '#A1887F', // warm gray
+];
+
+const COLORS_LIGHT: string[] = [
   '#FF5C5C', // red
   '#4DD0E1', // cyan
   '#FFD54F', // amber
@@ -23,6 +47,20 @@ export const COLORS: string[] = [
   '#DCE775', // chartreuse
   '#F48FB1', // rose
 ];
+
+/**
+ * Palette matching the active PsiNMR theme. Falls back to the light
+ * palette outside a browser (tests, SSR).
+ */
+export function getSpectraPalette(): string[] {
+  if (
+    typeof document !== 'undefined' &&
+    document.documentElement.dataset.psiTheme === 'dark'
+  ) {
+    return COLORS_DARK;
+  }
+  return COLORS_LIGHT;
+}
 
 function percentToHex(p: number): string {
   const percent = Math.max(0, Math.min(100, p));
@@ -48,7 +86,8 @@ export function generateColor(options: Options) {
     throw new Error(`Opacity value must be within the range of 0 to 100`);
   }
 
-  const resetColors = COLORS.filter((c) => !usedColors.includes(c));
+  const palette = getSpectraPalette();
+  const resetColors = palette.filter((c) => !usedColors.includes(c));
   if (resetColors.length > 0 && !isRandom) {
     return resetColors[0] + percentToHex(opacity);
   } else {

@@ -172,10 +172,10 @@ function HeaderInner(props: HeaderInnerProps) {
                 />
               )}
               <Toolbar.Item
-                id="user-manual"
-                tooltip="NMRium tutorials"
+                id="psinmr-tutorials"
+                tooltip="PsiNMR tutorials"
                 onClick={() =>
-                  window.open('https://www.nmrium.org/tutorials', '_blank')
+                  window.open(`${docsBaseUrl}/getting-started`, '_blank')
                 }
                 icon={<FaFilm />}
               />
