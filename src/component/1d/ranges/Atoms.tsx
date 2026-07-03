@@ -96,7 +96,11 @@ export function Atoms(props: AtomsProps) {
           fontSize={fontSize}
           borderRadius={5}
           padding={2}
-          rectProps={{ fill: 'white', stroke: 'black', strokeWidth: 0.5 }}
+          rectProps={{
+            fill: 'var(--psi-plot-bg, white)',
+            stroke: 'var(--psi-plot-fg, black)',
+            strokeWidth: 0.5,
+          }}
         >
           {row.atoms.join(',')}
         </SVGText>

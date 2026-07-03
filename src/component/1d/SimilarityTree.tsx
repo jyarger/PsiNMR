@@ -11,8 +11,8 @@ import useSpectrum from '../hooks/useSpectrum.js';
 
 const circleSize = 3;
 const marginTop = circleSize + 10;
-const lineColor: CSSProperties['color'] = 'black';
-const textColor: CSSProperties['color'] = 'black';
+const lineColor: CSSProperties['color'] = 'var(--psi-plot-fg, black)';
+const textColor: CSSProperties['color'] = 'var(--psi-plot-fg, black)';
 const textPadding = circleSize + 2;
 const textSize = 10;
 const maxTreeLevels = 25;

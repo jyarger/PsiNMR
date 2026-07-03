@@ -73,7 +73,7 @@ export default function Signal(props: SignalProps) {
               cx={scaleX(peak.x)}
               cy={scaleY(peak.y)}
               r={2}
-              fill="black"
+              fill="var(--psi-plot-fg, black)"
             />
           ))}
       </g>

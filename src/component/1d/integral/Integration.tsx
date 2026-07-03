@@ -21,11 +21,18 @@ export function Integration(props: IntegralProps) {
   const { showIntegralsValues } = useActiveSpectrumIntegralsViewState();
   const integralPreferences = usePanelPreferences('integrals', nucleus);
 
+  // The stored default is black; map it to the themed plot foreground so
+  // integrals stay visible on the dark theme. Custom colors are kept as-is.
+  const integralColor =
+    integralPreferences.color === '#000000'
+      ? 'var(--psi-plot-fg, #000000)'
+      : integralPreferences.color;
+
   return (
     <g>
       <path
         className="line"
-        stroke={integralPreferences.color}
+        stroke={integralColor}
         strokeWidth={integralPreferences.strokeWidth}
         fill="none"
         d={path}

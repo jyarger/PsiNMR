@@ -13,13 +13,13 @@ interface IntegralIndicatorProps {
 const styles: Record<'text' | 'path', CSSProperties> = {
   text: {
     fontSize: '11px',
-    fill: 'black',
+    fill: 'var(--psi-plot-fg, black)',
   },
   path: {
     fill: 'none',
     strokeWidth: '1px',
     shapeRendering: 'crispEdges',
-    stroke: 'black',
+    stroke: 'var(--psi-plot-fg, black)',
   },
 };
 

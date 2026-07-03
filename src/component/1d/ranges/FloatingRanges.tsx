@@ -281,7 +281,11 @@ function InnerSVGRangesTable(props: RangesTableProps) {
       .map(({ prefKey: _, ...col }) => ({
         ...col,
         headerTextProps: { fontWeight: 'bold' },
-        cellBoxProps: { stroke: '#dedede', fill: 'white', fillOpacity: 0.8 },
+        cellBoxProps: {
+          stroke: 'var(--psi-plot-grid, #dedede)',
+          fill: 'var(--psi-plot-bg, white)',
+          fillOpacity: 0.8,
+        },
         headerBoxProps: { stroke: '#dedede', fill: '#E5E8EB' },
       }));
   }, [floatingTablePreferences, element]);

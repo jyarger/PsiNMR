@@ -217,7 +217,9 @@ function PeaksTable(props: PeaksTableProps) {
   return (
     <ReactTable
       activeRow={handleActiveRow}
-      rowStyle={{ activated: { backgroundColor: '#f5f5dc' } }}
+      rowStyle={{
+        activated: { backgroundColor: 'var(--psi-row-active, #f5f5dc)' },
+      }}
       data={data}
       columns={tableColumns}
       approxItemHeight={24}

@@ -68,7 +68,7 @@ export function usePeakShapesPath(spectrum: Spectrum1D) {
 
       if (target === 'peakShape') {
         pathBuilder.closePath();
-        fill = 'black';
+        fill = 'var(--psi-plot-fg, black)';
       }
     }
 

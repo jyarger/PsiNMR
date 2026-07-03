@@ -23,7 +23,7 @@ import { useIsInset } from './inset/InsetProvider.js';
 const styles: Record<'text' | 'colorIndicator', CSSProperties> = {
   text: {
     fontSize: '12px',
-    fill: 'black',
+    fill: 'var(--psi-plot-fg, black)',
   },
   colorIndicator: {
     width: '10px',

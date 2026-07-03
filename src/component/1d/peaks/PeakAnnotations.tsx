@@ -103,7 +103,7 @@ function PeakAnnotations(props: PeaksAnnotationsProps) {
               key={peak.id}
               spectrumKey={spectrumKey}
               peak={peak}
-              color="#730000"
+              color="var(--psi-peak-color, #730000)"
               peaksSource={peaksSource}
               format={peakFormat}
               isOverlap={overlapPeaksById[peak.id]}

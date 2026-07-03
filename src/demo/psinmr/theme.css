@@ -53,6 +53,9 @@
   /* Table row hover / selection (matches the sample-library accent) */
   --psi-row-hover: rgb(95 179 167 / 20%);
   --psi-row-active: rgb(95 179 167 / 32%);
+
+  /* Peak annotation labels/markers on the plot */
+  --psi-peak-color: #ff8a80;
 }
 
 [data-psi-theme='light'],
@@ -93,6 +96,9 @@
   /* Table row hover / selection (matches the sample-library accent) */
   --psi-row-hover: rgb(61 143 133 / 16%);
   --psi-row-active: rgb(61 143 133 / 28%);
+
+  /* Peak annotation labels/markers on the plot */
+  --psi-peak-color: #730000;
 }
 
 :root {

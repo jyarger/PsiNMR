@@ -63,7 +63,7 @@ function PeaksShapesSum(props: { vAlign: number }) {
 
   return (
     <path
-      stroke={'darkblue'}
+      stroke={'var(--psi-plot-fg, darkblue)'}
       fill={fill}
       d={path}
       transform={`translate(0,-${props.vAlign})`}

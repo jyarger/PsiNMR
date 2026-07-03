@@ -462,7 +462,7 @@ function AssignmentLabel(props: AssignmentLabelProps) {
             fontWeight={isActive ? 'bold' : 'normal'}
             ref={textRef}
             textAnchor="middle"
-            fill="black"
+            fill="var(--psi-plot-fg, black)"
             style={{ cursor: 'hand' }}
           >
             {assignment}

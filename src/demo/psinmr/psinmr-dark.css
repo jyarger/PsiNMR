@@ -42,6 +42,11 @@
   background-color: var(--psi-plot-surface) !important;
 }
 
+/* Panel table bodies (peaks/integrals/ranges/zones lists) */
+[data-psi-theme='dark'] .nmrium-container .table-container {
+  background-color: var(--psi-plot-surface) !important;
+}
+
 /* Inputs inside NMRium panels */
 [data-psi-theme='dark']
   .nmrium-container

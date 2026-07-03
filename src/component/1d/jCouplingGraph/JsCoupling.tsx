@@ -35,7 +35,7 @@ export default function JsCoupling({ value }: JsCouplingProps) {
           >{`${value.toFixed(1)} Hz`}</text>
           <text
             pointerEvents="none"
-            stroke="black"
+            stroke="var(--psi-plot-fg, black)"
             fontSize="11px"
             dominantBaseline="middle"
             textAnchor="end"

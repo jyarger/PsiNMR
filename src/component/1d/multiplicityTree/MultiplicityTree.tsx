@@ -202,7 +202,7 @@ function Tree(props: TreeProps) {
             y={startY - headTextMargin}
             textAnchor="middle"
             fontSize={headerTextSize}
-            fill="black"
+            fill="var(--psi-plot-fg, black)"
           >
             {multiplicity}
           </text>

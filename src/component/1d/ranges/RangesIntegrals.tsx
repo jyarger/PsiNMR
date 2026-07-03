@@ -36,7 +36,7 @@ function Integral(props: IntegralProps) {
   return (
     <path
       className="line"
-      stroke="black"
+      stroke="var(--psi-plot-fg, black)"
       strokeWidth="1"
       fill="none"
       opacity={opacity}

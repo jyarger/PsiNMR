@@ -61,7 +61,7 @@ export function AssignmentLabel(props: AssignmentLabelProps) {
         <text
           ref={textRef}
           textAnchor="middle"
-          fill="black"
+          fill="var(--psi-plot-fg, black)"
           style={{ cursor: 'hand' }}
           width={width}
           fontSize={12}

@@ -233,7 +233,7 @@ function PeakAnnotation(props: PeakAnnotationProps) {
           dominantBaseline="middle"
           textAnchor="start"
           fontSize="11px"
-          fill="black"
+          fill="var(--psi-plot-fg, black)"
         >
           {formatNumber(value, format)}
         </text>

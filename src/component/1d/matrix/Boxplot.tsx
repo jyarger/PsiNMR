@@ -152,7 +152,7 @@ function InnerBoxplot(props: InnerBoxplotProps) {
         x={x}
         y1={max}
         y2={min}
-        color="black"
+        color="var(--psi-plot-fg, black)"
         scaleRatio={scaleRatio}
         yDomain={yDomain}
       />
@@ -160,7 +160,7 @@ function InnerBoxplot(props: InnerBoxplotProps) {
         x={x}
         y1={q3}
         y2={q1}
-        color="black"
+        color="var(--psi-plot-fg, black)"
         scaleRatio={scaleRatio}
         yDomain={yDomain}
       />
@@ -168,7 +168,7 @@ function InnerBoxplot(props: InnerBoxplotProps) {
       <RenderPath
         x={x}
         y={median}
-        color="black"
+        color="var(--psi-plot-fg, black)"
         scaleRatio={scaleRatio}
         yDomain={yDomain}
       />

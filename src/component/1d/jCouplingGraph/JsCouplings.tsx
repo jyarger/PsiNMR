@@ -26,7 +26,7 @@ export default function JsCouplings(props: JsCouplingsProps) {
               y1={height}
               x2="0"
               y2="0"
-              stroke="black"
+              stroke="var(--psi-plot-fg, black)"
               strokeWidth="1"
             />
             {signal.js?.map((j) => {
