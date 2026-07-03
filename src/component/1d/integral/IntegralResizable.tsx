@@ -14,7 +14,8 @@ import { IntegralIndicator } from './IntegralIndicator.js';
 
 const Group = styled.g<{ isActive: boolean }>`
   rect {
-    fill: ${(props) => (props.isActive ? '#ff6f0057' : 'transparent')};
+    fill: ${(props) =>
+      props.isActive ? 'var(--psi-plot-highlight, #ff6f0057)' : 'transparent'};
   }
 
   .target {

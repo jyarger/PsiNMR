@@ -55,6 +55,14 @@
   color: var(--psi-text-on-chrome);
 }
 
+/* Information-panel search bar (react-science InfoPanel hardcodes a
+   white wrapper around the parameter search input). */
+[data-psi-theme='dark']
+  .nmrium-container
+  div:has(> .bp6-input-group > input[placeholder='Search for a parameter']) {
+  background-color: var(--psi-plot-surface) !important;
+}
+
 /* Chemical structures: OpenChemLib draws black-on-white SVGs that CSS
    variables cannot reach. Invert lightness in dark mode — bonds become
    light while hue-rotate keeps heteroatom colors roughly correct (red O

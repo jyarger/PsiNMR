@@ -31,10 +31,11 @@ import { extractSpectrumSignals } from '../utilities/extractSpectrumSignals.js';
 import { useScale2DX, useScale2DY } from '../utilities/scale.js';
 
 const Rect = styled.rect<{ isActive: boolean }>`
-  fill: ${({ isActive }) => (isActive ? '#ff6f0057' : 'transparent')};
+  fill: ${({ isActive }) =>
+    isActive ? 'var(--psi-plot-highlight, #ff6f0057)' : 'transparent'};
 
   :hover {
-    fill: #ff6f0057;
+    fill: var(--psi-plot-highlight, #ff6f0057);
   }
 `;
 

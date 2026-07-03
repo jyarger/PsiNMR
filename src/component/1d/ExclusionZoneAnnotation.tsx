@@ -17,7 +17,7 @@ interface ExclusionZoneProps {
 
 const Rect = styled.rect`
   :hover {
-    fill: #ff6f0057 !important;
+    fill: var(--psi-plot-highlight, #ff6f0057) !important;
   }
 `;
 

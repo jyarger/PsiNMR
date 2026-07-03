@@ -431,7 +431,14 @@ function AssignmentLabel(props: AssignmentLabelProps) {
 
   return (
     <GroupContainer isMoveActive={isMoveActive}>
-      <polygon points={path} fill={isActive ? '#ff6f0091' : 'black'} />
+      <polygon
+        points={path}
+        fill={
+          isActive
+            ? 'var(--psi-plot-highlight, #ff6f0091)'
+            : 'var(--psi-plot-fg, black)'
+        }
+      />
 
       <g
         style={{

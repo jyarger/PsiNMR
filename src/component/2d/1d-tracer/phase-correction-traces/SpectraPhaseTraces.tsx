@@ -16,7 +16,7 @@ const Rect = styled.rect`
   fill: transparent;
 
   :hover {
-    fill: #ff6f0057;
+    fill: var(--psi-plot-highlight, #ff6f0057);
   }
 `;
 

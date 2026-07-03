@@ -83,7 +83,9 @@ function Zone(props: ZoneProps) {
               width={zoneWidth}
               height={zoneHeight}
               className="integral-area"
-              fill={isActive ? '#ff6f0057' : '#0000000f'}
+              fill={
+                isActive ? 'var(--psi-plot-highlight, #ff6f0057)' : '#0000000f'
+              }
               stroke={reduceOpacity ? '#343a40' : 'darkgreen'}
               strokeWidth={reduceOpacity ? '0' : '1'}
             />

@@ -63,6 +63,9 @@
   /* Processing-panel filter states */
   --psi-filter-active: rgb(95 179 167 / 35%);
   --psi-filter-error: rgb(179 86 77 / 45%);
+
+  /* On-plot hover/selection bands (ranges, integrals, zones) */
+  --psi-plot-highlight: rgb(95 179 167 / 33%);
 }
 
 [data-psi-theme='light'],
@@ -113,6 +116,9 @@
   /* Processing-panel filter states (original NMRium pastels) */
   --psi-filter-active: #c2ea8f;
   --psi-filter-error: #ea8f8f;
+
+  /* On-plot hover/selection bands (original NMRium orange) */
+  --psi-plot-highlight: #ff6f0057;
 }
 
 :root {

@@ -19,7 +19,9 @@ const HighlightedRowStyle: CSSProperties = {
   backgroundColor: 'var(--psi-row-hover, #ff6f0057)',
 };
 
-const ConstantlyHighlightedRowStyle = { backgroundColor: '#f5f5dc' };
+const ConstantlyHighlightedRowStyle = {
+  backgroundColor: 'var(--psi-row-active, #f5f5dc)',
+};
 
 export interface AssignmentsColumnProps {
   rowData: ZoneData;

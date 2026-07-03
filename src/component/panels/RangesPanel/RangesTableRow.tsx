@@ -30,7 +30,7 @@ const HighlightedRowStyle = {
 };
 
 const ConstantlyHighlightedRowStyle = {
-  backgroundColor: '#f5f5dc',
+  backgroundColor: 'var(--psi-row-active, #f5f5dc)',
 };
 
 interface RangesTableRowProps extends TableContextMenuProps {

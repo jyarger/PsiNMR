@@ -197,7 +197,11 @@ function Range(options: RangeProps) {
                   x={-offsetX}
                   width={highlightRectWidth}
                   height="100%"
-                  fill={isHighlighted || isActive ? '#ff6f0057' : 'transparent'}
+                  fill={
+                    isHighlighted || isActive
+                      ? 'var(--psi-plot-highlight, #ff6f0057)'
+                      : 'transparent'
+                  }
                   data-no-export="true"
                 />
                 {signals.map((signal) => (

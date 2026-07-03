@@ -225,7 +225,7 @@ function AdditionalColumnField(props: AdditionalColumnFieldProps) {
         backgroundColor: highlightCommonLinks.isActive
           ? 'var(--psi-row-hover, #ff6f0057)'
           : isInViewColumn || isInViewRow
-            ? '#f5f5dc'
+            ? 'var(--psi-row-active, #f5f5dc)'
             : 'inherit',
       }}
       title={getTitle(commonLinks)}
