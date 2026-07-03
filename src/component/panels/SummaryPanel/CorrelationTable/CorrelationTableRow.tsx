@@ -182,7 +182,7 @@ export default function CorrelationTableRow(props: CorrelationTableRowProps) {
     return {
       style: {
         backgroundColor: highlightRow.isActive
-          ? '#ff6f0057'
+          ? 'var(--psi-row-hover, #ff6f0057)'
           : isInView
             ? '#f5f5dc'
             : 'inherit',

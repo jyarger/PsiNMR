@@ -223,7 +223,7 @@ function AdditionalColumnField(props: AdditionalColumnFieldProps) {
       onSelect={contextMenuHandler}
       style={{
         backgroundColor: highlightCommonLinks.isActive
-          ? '#ff6f0057'
+          ? 'var(--psi-row-hover, #ff6f0057)'
           : isInViewColumn || isInViewRow
             ? '#f5f5dc'
             : 'inherit',

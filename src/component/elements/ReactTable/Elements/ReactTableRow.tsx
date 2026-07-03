@@ -23,10 +23,10 @@ function getRowStyle(
 
   const hoverStyle = disableDefaultRowStyle
     ? (hover as CSSObject)
-    : { backgroundColor: '#ff6f0091', ...hover };
+    : { backgroundColor: 'var(--psi-row-hover, #ff6f0091)', ...hover };
   const activeStyle = disableDefaultRowStyle
     ? (active as CSSObject)
-    : { backgroundColor: '#ff6f0070', ...active };
+    : { backgroundColor: 'var(--psi-row-active, #ff6f0070)', ...active };
   const baseStyle = disableDefaultRowStyle
     ? (base as object)
     : { backgroundColor: 'var(--psi-plot-surface, white)', ...base };
@@ -34,7 +34,10 @@ function getRowStyle(
   return css([
     {
       ...baseStyle,
-      ...(isActive && { backgroundColor: '#ff6f0070', ...activated }),
+      ...(isActive && {
+        backgroundColor: 'var(--psi-row-active, #ff6f0070)',
+        ...activated,
+      }),
     },
     { ':hover': hoverStyle, ':active': activeStyle },
   ]);

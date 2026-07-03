@@ -61,7 +61,7 @@ export function isHighlightEventSource<T extends HighlightEventSourceType>(
 }
 
 const highLightStyle: CSSProperties = {
-  backgroundColor: '#ff6f0091',
+  backgroundColor: 'var(--psi-row-hover, #ff6f0091)',
 };
 
 type HighlightActions = 'HIDE' | 'SHOW' | 'SET_PERMANENT' | 'UNSET_PERMANENT';

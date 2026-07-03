@@ -26,7 +26,7 @@ import SignalDeltaHzColumn from './TableColumns/SignalDeltaHzColumn.js';
 import type { RangeData } from './hooks/useMapRanges.js';
 
 const HighlightedRowStyle = {
-  backgroundColor: '#ff6f0057',
+  backgroundColor: 'var(--psi-row-hover, #ff6f0057)',
 };
 
 const ConstantlyHighlightedRowStyle = {

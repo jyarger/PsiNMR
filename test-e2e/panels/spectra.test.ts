@@ -109,32 +109,34 @@ test('2d spectrum', async ({ page }) => {
   await test.step('Change 1H spectrum color', async () => {
     // Check ColorIndicator initial color
     await expect(
-      nmrium.page.locator('_react=ColorIndicator[display.color="#7c2353"]'),
+      nmrium.page.locator('_react=ColorIndicator[display.color="#FFFFFF"]'),
     ).toBeVisible();
     // Check spectrum initial color match with ColorIndicator
     await expect(
       nmrium.page
         .getByTestId('spectrum-line')
-        .locator('_react=Line[display.color="#7c2353"]'),
+        .locator('_react=Line[display.color="#FFFFFF"]'),
     ).toBeVisible();
 
     // Open Change color modal
     await nmrium.page.click('_react=ColorIndicator');
 
-    // change the color to #e4c0d3
-    await nmrium.page.click('_react=Saturation', {
-      position: { x: 40, y: 20 },
-    });
+    // Pick the amber preset swatch (palette-independent of the
+    // spectrum's starting hue).
+    await nmrium.page
+      .locator('_react=SketchPresetColors')
+      .getByTitle('#FFD54F')
+      .click();
 
     // Check that ColorIndicator color changed
     await expect(
-      nmrium.page.locator('_react=ColorIndicator[display.color="#e4c0d3ff"]'),
+      nmrium.page.locator('_react=ColorIndicator[display.color="#ffd54fff"]'),
     ).toBeVisible();
     // Check that spectrum color changed
     await expect(
       nmrium.page
         .getByTestId('spectrum-line')
-        .locator('_react=Line[display.color="#e4c0d3ff"]'),
+        .locator('_react=Line[display.color="#ffd54fff"]'),
     ).toBeVisible();
 
     // Close color picker
@@ -162,18 +164,18 @@ test('2d spectrum', async ({ page }) => {
     // Check ColorIndicator initial color
     await expect(
       nmrium.page.locator(
-        '_react=ColorIndicator[display.negativeColor="blue"][display.positiveColor="darkblue"]',
+        '_react=ColorIndicator[display.negativeColor="#FF5C5C"][display.positiveColor="#64B5F6"]',
       ),
     ).toBeVisible();
     // Check spectrum initial color match with ColorIndicator
     await expect(
       nmrium.page.locator(
-        '_react=ContoursPaths[sign="positive"][color="darkblue"]',
+        '_react=ContoursPaths[sign="positive"][color="#64B5F6"]',
       ),
     ).toBeVisible();
     await expect(
       nmrium.page.locator(
-        '_react=ContoursPaths[sign="negative"][color="blue"]',
+        '_react=ContoursPaths[sign="negative"][color="#FF5C5C"]',
       ),
     ).toBeHidden();
 
@@ -191,7 +193,7 @@ test('2d spectrum', async ({ page }) => {
     // test is independent of the palette order.
     await nmrium.page
       .locator('_react=SketchPresetColors >> nth=0')
-      .getByTitle('#64B5F6')
+      .getByTitle('#5FB3A7')
       .click();
     await nmrium.page
       .locator('_react=SketchPresetColors >> nth=1')
@@ -201,13 +203,13 @@ test('2d spectrum', async ({ page }) => {
     // Check that ColorIndicator color changed
     await expect(
       nmrium.page.locator(
-        '_react=ColorIndicator[display.negativeColor="#ffd54fff"][display.positiveColor="#64b5f6ff"]',
+        '_react=ColorIndicator[display.negativeColor="#ffd54fff"][display.positiveColor="#5fb3a7ff"]',
       ),
     ).toBeVisible();
     // Check that spectra color changed
     await expect(
       nmrium.page.locator(
-        '_react=ContoursPaths[sign="positive"][color="#64b5f6ff"]',
+        '_react=ContoursPaths[sign="positive"][color="#5fb3a7ff"]',
       ),
     ).toBeVisible();
     await expect(

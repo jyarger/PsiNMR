@@ -15,7 +15,9 @@ import { ZoneAssignmentLabelColumn } from './TableColumns/ZoneAssignmentLabelCol
 import ZoneAssignmentsColumns from './TableColumns/ZoneAssignmentsColumns.js';
 import type { ZoneData } from './hooks/useMapZones.js';
 
-const HighlightedRowStyle: CSSProperties = { backgroundColor: '#ff6f0057' };
+const HighlightedRowStyle: CSSProperties = {
+  backgroundColor: 'var(--psi-row-hover, #ff6f0057)',
+};
 
 const ConstantlyHighlightedRowStyle = { backgroundColor: '#f5f5dc' };
 

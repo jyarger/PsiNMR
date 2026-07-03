@@ -26,11 +26,11 @@ const COLORS_DARK: string[] = [
 ];
 
 const COLORS_LIGHT: string[] = [
-  '#FF5C5C', // red
-  '#4DD0E1', // cyan
-  '#FFD54F', // amber
-  '#81C784', // green
-  '#64B5F6', // blue
+  '#2B3440', // near-black slate (publication-style default)
+  '#2F7268', // Psi teal (strong)
+  '#1E88E5', // blue
+  '#E53935', // red
+  '#43A047', // green
   '#FF8A65', // orange
   '#BA68C8', // purple
   '#F06292', // pink

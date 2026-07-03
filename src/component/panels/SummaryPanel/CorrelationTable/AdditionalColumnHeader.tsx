@@ -94,7 +94,7 @@ function AdditionalColumnHeader(props: AdditionalColumnHeaderProps) {
       style: {
         color: getLabelColor(correlationsData, correlation) || undefined,
         backgroundColor: highlightAdditionalColumn.isActive
-          ? '#ff6f0057'
+          ? 'var(--psi-row-hover, #ff6f0057)'
           : isInView
             ? '#f5f5dc'
             : 'inherit',

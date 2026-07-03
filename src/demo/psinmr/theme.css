@@ -49,6 +49,10 @@
   --psi-footer-bg: #1e242d;
   --psi-footer-label: #93a0ae;
   --psi-footer-value: #e5a29b;
+
+  /* Table row hover / selection (matches the sample-library accent) */
+  --psi-row-hover: rgb(95 179 167 / 20%);
+  --psi-row-active: rgb(95 179 167 / 32%);
 }
 
 [data-psi-theme='light'],
@@ -85,6 +89,10 @@
   --psi-footer-bg: #f7f7f7;
   --psi-footer-label: #4d4d4d;
   --psi-footer-value: #8d0018;
+
+  /* Table row hover / selection (matches the sample-library accent) */
+  --psi-row-hover: rgb(61 143 133 / 16%);
+  --psi-row-active: rgb(61 143 133 / 28%);
 }
 
 :root {
