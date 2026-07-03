@@ -304,7 +304,7 @@ const CompactControls = styled.div`
 `;
 
 const LiveEditBanner = styled.div`
-  background-color: white;
+  background-color: var(--psi-plot-surface, white);
   box-shadow: rgb(0 0 0 / 16%) 0 1px 4px;
   margin-left: -10px;
   margin-right: -10px;

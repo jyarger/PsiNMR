@@ -59,6 +59,10 @@
 
   /* Molecule editor canvas (applied inside its shadow root) */
   --psi-mol-editor-filter: invert(0.88) hue-rotate(180deg);
+
+  /* Processing-panel filter states */
+  --psi-filter-active: rgb(95 179 167 / 35%);
+  --psi-filter-error: rgb(179 86 77 / 45%);
 }
 
 [data-psi-theme='light'],
@@ -105,6 +109,10 @@
 
   /* Molecule editor canvas (no filter on the light theme) */
   --psi-mol-editor-filter: none;
+
+  /* Processing-panel filter states (original NMRium pastels) */
+  --psi-filter-active: #c2ea8f;
+  --psi-filter-error: #ea8f8f;
 }
 
 :root {

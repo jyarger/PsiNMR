@@ -219,10 +219,10 @@ function FiltersInner(props: FiltersInnerProps) {
     const { id, error } = filter;
 
     if (error) {
-      return { backgroundColor: '#ea8f8f' };
+      return { backgroundColor: 'var(--psi-filter-error, #ea8f8f)' };
     }
     if (activeFilterID === id) {
-      return { backgroundColor: '#c2ea8f' };
+      return { backgroundColor: 'var(--psi-filter-active, #c2ea8f)' };
     }
 
     if (

@@ -47,6 +47,14 @@
   background-color: var(--psi-plot-surface) !important;
 }
 
+/* Processing-panel filter rows (react-science Sections headers: sticky
+   divs holding a numbered bp6-tag). No !important here so the inline
+   active/error state colors set by FiltersSectionsPanel still win. */
+[data-psi-theme='dark'] .nmrium-container div[style*='sticky']:has(.bp6-tag) {
+  background-color: var(--psi-chrome-raised);
+  color: var(--psi-text-on-chrome);
+}
+
 /* Chemical structures: OpenChemLib draws black-on-white SVGs that CSS
    variables cannot reach. Invert lightness in dark mode — bonds become
    light while hue-rotate keeps heteroatom colors roughly correct (red O
