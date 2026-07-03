@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   overflow: hidden;
 `;
 
-const Header = styled.div`
+const PageHeader = styled.div`
   border-bottom: 1px solid var(--psi-chrome-border);
   padding: 18px 26px 14px;
 `;
@@ -248,7 +248,7 @@ export default function NmrXivView() {
 
   return (
     <Wrapper>
-      <Header>
+      <PageHeader>
         <Title>
           Browse <span>nmrXiv</span>
         </Title>
@@ -280,7 +280,7 @@ export default function NmrXivView() {
                   : 'Connecting to nmrXiv…'}
           </Status>
         </div>
-      </Header>
+      </PageHeader>
 
       {error ? (
         <Message isError>
