@@ -24,7 +24,8 @@ import { StateError } from './StateError.js';
 import type { NMRiumProps, NMRiumRefAPI } from './index.js';
 
 const NMRiumContainer = styled.div`
-  background-color: white;
+  background-color: var(--psi-plot-surface, white);
+  color: var(--psi-plot-fg, black);
   display: block;
   height: 100%;
   width: 100%;
@@ -104,7 +105,7 @@ export function InnerNMRiumContents(props: InnerNMRiumContentsProps) {
       <Global
         styles={css`
           .actions-buttons-popover {
-            background-color: white;
+            background-color: var(--psi-plot-surface, white);
             border-radius: 10px;
             padding: 5px;
           }
@@ -130,7 +131,7 @@ export function InnerNMRiumContents(props: InnerNMRiumContentsProps) {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                backgroundColor: 'white',
+                backgroundColor: 'var(--psi-plot-surface, white)',
                 width: '100%',
               }}
             >
@@ -168,11 +169,17 @@ export function InnerNMRiumContents(props: InnerNMRiumContentsProps) {
             </div>
           </DropZone>
           <div />
+          {/* Print and export always render light (publication style),
+              whatever the on-screen theme is. */}
           <PrintWrapper>
-            <NMRiumViewer emptyText={emptyText} viewerRef={viewerRef} />
+            <div data-psi-theme="light" style={{ display: 'contents' }}>
+              <NMRiumViewer emptyText={emptyText} viewerRef={viewerRef} />
+            </div>
           </PrintWrapper>
           <ExportManagerController>
-            <NMRiumViewer emptyText={emptyText} viewerRef={viewerRef} />
+            <div data-psi-theme="light" style={{ display: 'contents' }}>
+              <NMRiumViewer emptyText={emptyText} viewerRef={viewerRef} />
+            </div>
           </ExportManagerController>
         </FilterSyncOptionsProvider>
       </NMRiumContainer>

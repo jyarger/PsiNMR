@@ -60,7 +60,14 @@ function BaseLine(props: BaseLineProps) {
     path = `M${sign * tickLength},${x2} H0 V${x1} H${sign * tickLength}`;
   }
 
-  return <path d={path} stroke="black" fill="none" className="domain" />;
+  return (
+    <path
+      d={path}
+      stroke="var(--psi-plot-fg, black)"
+      fill="none"
+      className="domain"
+    />
+  );
 }
 
 function Tickets(props: TicketsProps) {
@@ -128,17 +135,26 @@ function Tickets(props: TicketsProps) {
         className="tick"
       >
         {config.isSecondaryEnabled && isFirst && (
-          <line {...positionSecondaryFirstLineConfig} stroke="black" />
+          <line
+            {...positionSecondaryFirstLineConfig}
+            stroke="var(--psi-plot-fg, black)"
+          />
         )}
 
-        <line {...positionPrimaryLineConfig} stroke="black" />
+        <line
+          {...positionPrimaryLineConfig}
+          stroke="var(--psi-plot-fg, black)"
+        />
 
         {config.isSecondaryEnabled && (
-          <line {...positionSecondaryLineConfig} stroke="black" />
+          <line
+            {...positionSecondaryLineConfig}
+            stroke="var(--psi-plot-fg, black)"
+          />
         )}
 
         <SVGStyledText
-          fill="black"
+          fill="var(--psi-plot-fg, black)"
           {...config.textStyle}
           {...positionTextConfig}
         >
@@ -190,7 +206,7 @@ function PrimaryGrid(props: GridProps<PrimaryGridElementProps>) {
       <SVGStyledLine
         key={position}
         {...getLinePosition(position, axisPosition, gridSize)}
-        stroke="black"
+        stroke="var(--psi-plot-grid, black)"
         strokeDasharray="dashed"
         strokeOpacity={0.1}
         {...gridProps}
@@ -212,7 +228,7 @@ function SecondaryGrid(props: GridProps<SecondaryGridElementProps>) {
       <SVGStyledLine
         key={position}
         {...getLinePosition(position, axisPosition, gridSize)}
-        stroke="black"
+        stroke="var(--psi-plot-grid, black)"
         strokeDasharray="dashed"
         strokeOpacity={0.05}
         {...otherGridProps}
@@ -243,7 +259,7 @@ export const D3Axis = forwardRef<SVGGElement | null, D3AxisProps>(
     return (
       <g
         ref={ref}
-        fontSize="10"
+        fontSize="16"
         textAnchor={isVertical ? 'start' : 'middle'}
         {...otherProps}
       >

@@ -69,8 +69,8 @@ export default function Landing() {
       </Tagline>
       <Cta to="/nmr">INTERACTIVE NMR</Cta>
       <Hint>
-        Open the data panel (top-left) to browse the sample library, drop in
-        zip datasets, or load data from a URL.
+        Open the data panel (top-left) to browse the sample library, drop in zip
+        datasets, or load data from a URL.
       </Hint>
     </Wrapper>
   );

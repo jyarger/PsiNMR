@@ -95,7 +95,15 @@ function UnitLabel(props: UnitLabelProps) {
   const { width, children } = props;
 
   return (
-    <text fill="#000" x={width - 60} y="20" dy="0.71em" textAnchor="end">
+    <text
+      fill="var(--psi-plot-fg, black)"
+      fontSize="18"
+      fontWeight="bold"
+      x={width - 60}
+      y="20"
+      dy="0.71em"
+      textAnchor="end"
+    >
       {children}
     </text>
   );

@@ -45,7 +45,9 @@ const DropArea = styled.div<{ isDragActive: boolean }>`
   align-items: center;
   border: 1.5px dashed
     ${({ isDragActive }) =>
-      isDragActive ? 'var(--psi-accent-on-chrome)' : 'var(--psi-chrome-border)'};
+      isDragActive
+        ? 'var(--psi-accent-on-chrome)'
+        : 'var(--psi-chrome-border)'};
   border-radius: var(--psi-radius);
   color: var(--psi-text-on-chrome-muted);
   cursor: pointer;

@@ -3,8 +3,7 @@ import { expect, test } from '@playwright/test';
 import NmriumPage from '../NmriumPage/index.js';
 
 async function open13CFidSpectrum(nmrium: NmriumPage) {
-  await nmrium.page.click('li >> text=Cytisine');
-  await nmrium.page.click('li >> text=13C FID >> nth=0');
+  await nmrium.openSample('./data/cytisine/13CFID.json');
 }
 
 async function apodizationFilter(
@@ -174,8 +173,7 @@ test('process 13c spectrum with shortcuts', async ({ page }) => {
 test('Processed spectra filters', async ({ page }) => {
   const nmrium = await NmriumPage.create(page);
   await test.step('Open 13c spectrum', async () => {
-    await nmrium.page.click('li >> text=Cytisine');
-    await nmrium.page.click('li >> text=Processed 13C FID');
+    await nmrium.openSample('./data/cytisine/processed13C.json');
 
     // wait spectrum to load
     await expect(nmrium.page.locator('#nmrSVG')).toBeVisible();
@@ -193,8 +191,7 @@ test('Processed spectra filters', async ({ page }) => {
 test('Exclusion zones', async ({ page }) => {
   const nmrium = await NmriumPage.create(page);
   await test.step('Open Coffee example', async () => {
-    await nmrium.page.click('li >> text=Multiple spectra');
-    await nmrium.page.click('li >> text=Coffee');
+    await nmrium.openSample('./data/coffee/Coffee.json');
 
     // wait spectrum to load
     await expect(nmrium.page.locator('#nmrSVG')).toBeVisible();

@@ -48,8 +48,7 @@ async function loadSample(
     throw new Error(`HTTP ${response.status} - ${response.statusText}`);
   }
   const nmriumObject = await response.json();
-  const baseURL =
-    !base || base === './' ? window.location.origin + '/' : base;
+  const baseURL = !base || base === './' ? `${window.location.origin}/` : base;
   return await demoCore.readNMRiumObject(nmriumObject, undefined, { baseURL });
 }
 

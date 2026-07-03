@@ -1,12 +1,54 @@
 /*
  * Psi platform theme.
- * Low-eye-strain palette: warm paper background, deep slate chrome,
- * muted teal accent. All values exposed as --psi-* variables so other
- * Psi apps (PsiXRD, PsiDSC, PsiRaman, ...) can reuse the same shell.
+ * Low-eye-strain palette: deep slate chrome with a muted teal accent.
+ * All values exposed as --psi-* variables so other Psi apps
+ * (PsiXRD, PsiDSC, PsiRaman, ...) can reuse the same shell.
+ *
+ * Two themes, keyed off data-psi-theme on <html> (set by themeStatus.ts).
+ * Dark is the default; light is opt-in via the top-bar toggle.
+ *
+ * The --psi-plot-* variables are consumed inside the NMRium component
+ * (chart background, axes, grid). SVG elements reference them with a
+ * light-theme fallback (e.g. `var(--psi-plot-fg, black)`) so exported /
+ * copied SVGs — which lose the CSS context — always come out
+ * publication-style black-on-white.
  */
 
-:root {
-  /* Surfaces */
+:root,
+[data-psi-theme='dark'],
+:root[data-psi-theme='dark'] {
+  /* Shell surfaces */
+  --psi-bg: #171c23;
+  --psi-surface: #1e242d;
+  --psi-chrome: #232a33;
+  --psi-chrome-raised: #2c3540;
+  --psi-chrome-border: #3a4552;
+
+  /* Text */
+  --psi-text: #d7dde4;
+  --psi-text-muted: #93a0ae;
+  --psi-text-on-chrome: #d7dde4;
+  --psi-text-on-chrome-muted: #93a0ae;
+
+  /* Accent */
+  --psi-accent: #3d8f85;
+  --psi-accent-strong: #2f7268;
+  --psi-accent-soft: rgb(61 143 133 / 14%);
+  --psi-accent-on-chrome: #5fb3a7;
+
+  /* Feedback */
+  --psi-danger: #e5a29b;
+
+  /* NMR plot area (consumed inside the NMRium component) */
+  --psi-plot-bg: #1b2129;
+  --psi-plot-surface: #1e242d;
+  --psi-plot-fg: #c6cfd9;
+  --psi-plot-grid: #93a0ae;
+}
+
+[data-psi-theme='light'],
+:root[data-psi-theme='light'] {
+  /* Shell surfaces */
   --psi-bg: #f6f5f1;
   --psi-surface: #fdfdfb;
   --psi-chrome: #232a33;
@@ -28,7 +70,15 @@
   /* Feedback */
   --psi-danger: #b3564d;
 
-  /* Shape & type */
+  /* NMR plot area */
+  --psi-plot-bg: #fff;
+  --psi-plot-surface: #fff;
+  --psi-plot-fg: #000;
+  --psi-plot-grid: #000;
+}
+
+:root {
+  /* Shape & type (theme-independent) */
   --psi-radius: 8px;
   --psi-font:
     'Inter Variable', 'Inter', -apple-system, blinkmacsystemfont, 'Segoe UI',

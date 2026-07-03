@@ -26,13 +26,17 @@ export default defineConfig({
     },
     trace: 'retain-on-failure',
   },
-  webServer: {
-    command: process.env.CI
-      ? 'node --run test-e2e-server'
-      : 'node --run dev -- --no-open',
-    port: 3000,
-    reuseExistingServer: true,
-  },
+  // When E2E_BASE_URL is set (e.g. an already-running dev server on a
+  // different port), no web server is started by Playwright.
+  webServer: process.env.E2E_BASE_URL
+    ? undefined
+    : {
+        command: process.env.CI
+          ? 'node --run test-e2e-server'
+          : 'node --run dev -- --no-open',
+        port: 3000,
+        reuseExistingServer: true,
+      },
   projects: [
     {
       name: 'chromium',

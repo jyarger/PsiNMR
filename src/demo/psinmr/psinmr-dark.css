@@ -1,0 +1,49 @@
+/*
+ * Dark-theme overrides for NMRium internals that hardcode light styling
+ * (react-science tables, accordions, toolbars). Scoped to
+ * [data-psi-theme='dark'] so the light theme and SVG exports are untouched.
+ */
+
+[data-psi-theme='dark'] .nmrium-container table th {
+  background-color: var(--psi-chrome-raised) !important;
+  color: var(--psi-text-on-chrome) !important;
+}
+
+[data-psi-theme='dark'] .nmrium-container table td {
+  border-color: var(--psi-chrome-border) !important;
+}
+
+[data-psi-theme='dark'] .nmrium-container table {
+  background-color: transparent !important;
+}
+
+/* Accordion / panel headers (react-science renders them as
+   div[role='button'] with a light gradient background-image) */
+[data-psi-theme='dark'] .nmrium-container div[role='button'] {
+  background-color: var(--psi-chrome-raised) !important;
+  background-image: none !important;
+  color: var(--psi-text-on-chrome) !important;
+}
+
+/* NMRium hardcodes inline white backgrounds in many panel bodies;
+   remap them all to the dark plot surface. */
+[data-psi-theme='dark'] .nmrium-container [style*='background-color: white'],
+[data-psi-theme='dark'] .nmrium-container [style*='background: white'] {
+  background-color: var(--psi-plot-surface) !important;
+}
+
+/* Vertical toolbars (left tools strip, right panels bar) ship with a
+   white background from react-science. */
+[data-psi-theme='dark'] .nmrium-container .bp6-button-group.bp6-vertical {
+  background-color: var(--psi-plot-surface) !important;
+}
+
+/* Inputs inside NMRium panels */
+[data-psi-theme='dark']
+  .nmrium-container
+  input:not([type='checkbox'], [type='radio']),
+[data-psi-theme='dark'] .nmrium-container select,
+[data-psi-theme='dark'] .nmrium-container textarea {
+  background-color: var(--psi-chrome-raised);
+  color: var(--psi-text-on-chrome);
+}

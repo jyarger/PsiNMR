@@ -27,7 +27,7 @@ export interface RemoteScanResult {
 }
 
 function extensionOf(path: string) {
-  const clean = path.split(/[?#]/)[0];
+  const clean = path.split(/[?#]/, 1)[0];
   const index = clean.lastIndexOf('.');
   return index === -1 ? '' : clean.slice(index + 1).toLowerCase();
 }
@@ -123,9 +123,7 @@ async function scanDirectoryListing(url: URL): Promise<RemoteScanResult> {
     seen.add(resolved.href);
     datasets.push({
       title: fileTitle(resolved.pathname),
-      entries: [
-        { relativePath: resolved.pathname, baseURL: resolved.origin },
-      ],
+      entries: [{ relativePath: resolved.pathname, baseURL: resolved.origin }],
     });
   }
 

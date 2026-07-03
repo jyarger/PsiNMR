@@ -64,11 +64,11 @@ npm run dev         # Vite dev server on http://localhost:3000
 - **INTERACTIVE NMR** — the primary call-to-action; opens the interactive
   plotting workspace.
 - **Data panel** (top-left toggle):
-  - *Add data* — drop files/zips, or scan a public URL. Recognised sources:
+  - _Add data_ — drop files/zips, or scan a public URL. Recognised sources:
     a direct file link, a GitHub repo/folder (scanned via the GitHub API into
     raw file links), or a plain web directory listing.
-  - *Your data* — everything you've added this session, grouped by source.
-  - *Sample library* — the bundled example spectra.
+  - _Your data_ — everything you've added this session, grouped by source.
+  - _Sample library_ — the bundled example spectra.
 - **Tools menu** — Predict and Simulate (the former Teaching-menu tools).
 - **Ψ engine chip** (top-right) — shows whether contour/FFT work is running on
   `Rust/Wasm` or the `JS` fallback.
@@ -81,12 +81,12 @@ the roadmap).
 
 The Rust crate lives in [`rust/psinmr-core`](rust/psinmr-core) and exposes:
 
-| Function | Purpose |
-| --- | --- |
+| Function                       | Purpose                                                                                                                                                                         |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `conrec_basic` / `ContourGrid` | CONREC contour generation for 2D spectra (a faithful port of `ml-conrec`; `ContourGrid` keeps the matrix resident in Wasm memory so interactive level changes don't re-copy it) |
-| `fft` | Forward/inverse FFT (rustfft, any length, cached plans) |
-| `baseline_polynomial` | Iterative polynomial (ModPoly-style) baseline estimation |
-| `peak_pick` | 1D local-maxima peak picking with parabolic interpolation |
+| `fft`                          | Forward/inverse FFT (rustfft, any length, cached plans)                                                                                                                         |
+| `baseline_polynomial`          | Iterative polynomial (ModPoly-style) baseline estimation                                                                                                                        |
+| `peak_pick`                    | 1D local-maxima peak picking with parabolic interpolation                                                                                                                       |
 
 The TypeScript bridge is [`src/compute/engine.ts`](src/compute/engine.ts).
 It lazily instantiates the module and reports `wasm`/`js` to the UI. The 2D
@@ -100,12 +100,12 @@ In dev builds, `window.__psinmr` exposes comparisons against the JS libraries
 NMRium ships today. Measured in Chrome on an Apple-silicon Mac
 (`benchmarkContours`, warm = interactive re-contour on a resident grid):
 
-| Workload | JS | Wasm (warm) | Speedup |
-| --- | --- | --- | --- |
-| CONREC contours, 1024² | 10.2 ms | 4.6 ms | **2.2×** |
-| CONREC contours, 2048² | 75 ms | 18 ms | **4.1×** |
-| CONREC contours, 4096² | 287 ms | 61 ms | **4.7×** |
-| FFT, 64k points | 62 ms | 40 ms | **1.5×** |
+| Workload               | JS      | Wasm (warm) | Speedup  |
+| ---------------------- | ------- | ----------- | -------- |
+| CONREC contours, 1024² | 10.2 ms | 4.6 ms      | **2.2×** |
+| CONREC contours, 2048² | 75 ms   | 18 ms       | **4.1×** |
+| CONREC contours, 4096² | 287 ms  | 61 ms       | **4.7×** |
+| FFT, 64k points        | 62 ms   | 40 ms       | **1.5×** |
 
 Segment output is verified identical to `ml-conrec`. Run them yourself in the
 browser console:

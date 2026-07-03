@@ -1,5 +1,6 @@
 import type { Spectrum2D } from '@zakodium/nmrium-core';
 import type { NmrData2DFt } from 'cheminfo-types';
+import type { DrawContourResult } from 'ml-conrec';
 import { Conrec } from 'ml-conrec';
 import { xMaxAbsoluteValue } from 'ml-spectra-processing';
 import type { Spectrum } from 'nmr-correlation';
@@ -225,7 +226,7 @@ interface ContoursCalcOptions {
   data: NmrData2DFt['rr'];
 }
 
-function getContours(options: ContoursCalcOptions) {
+function getContours(options: ContoursCalcOptions): DrawContourResult<'basic'> {
   const {
     boundary,
     negative = false,
@@ -265,7 +266,9 @@ function getContours(options: ContoursCalcOptions) {
       timeout,
     });
     if (wasmResult) {
-      return wasmResult as ReturnType<Conrec['drawContour']>;
+      // Float64Array segments are runtime-compatible with number[] here
+      // (indexed access only in the consumers).
+      return wasmResult as unknown as DrawContourResult<'basic'>;
     }
   } catch (error) {
     // eslint-disable-next-line no-console

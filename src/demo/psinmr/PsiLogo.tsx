@@ -57,7 +57,9 @@ export default function PsiLogo(props: PsiLogoProps) {
           Psi
           <span
             style={{
-              color: onChrome ? 'var(--psi-accent-on-chrome)' : 'var(--psi-accent)',
+              color: onChrome
+                ? 'var(--psi-accent-on-chrome)'
+                : 'var(--psi-accent)',
             }}
           >
             NMR

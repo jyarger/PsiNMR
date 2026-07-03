@@ -1,10 +1,19 @@
 import styled from '@emotion/styled';
 import { useEffect, useRef, useState } from 'react';
-import { FaBars, FaCaretDown, FaFlask, FaWaveSquare } from 'react-icons/fa';
+import {
+  FaBars,
+  FaBook,
+  FaCaretDown,
+  FaFlask,
+  FaMoon,
+  FaSun,
+  FaWaveSquare,
+} from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 
 import PsiLogo from './PsiLogo.js';
 import { useEngineBackend } from './engineStatus.js';
+import { togglePsiTheme, usePsiTheme } from './themeStatus.js';
 
 const Bar = styled.header`
   align-items: center;
@@ -146,6 +155,7 @@ export default function TopBar(props: TopBarProps) {
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const backend = useEngineBackend();
+  const theme = usePsiTheme();
 
   useEffect(() => {
     if (!toolsOpen) return;
@@ -197,6 +207,11 @@ export default function TopBar(props: TopBarProps) {
         )}
       </MenuWrapper>
 
+      <MenuButton type="button" onClick={() => go('/docs')}>
+        <FaBook size={12} />
+        Docs
+      </MenuButton>
+
       <Spacer />
 
       <EngineChip
@@ -206,6 +221,16 @@ export default function TopBar(props: TopBarProps) {
         Ψ engine:{' '}
         {backend === 'wasm' ? 'Rust/Wasm' : backend === 'js' ? 'JS' : '…'}
       </EngineChip>
+
+      <IconButton
+        type="button"
+        title={
+          theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
+        }
+        onClick={togglePsiTheme}
+      >
+        {theme === 'dark' ? <FaSun /> : <FaMoon />}
+      </IconButton>
     </Bar>
   );
 }

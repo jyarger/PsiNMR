@@ -1,5 +1,11 @@
 import type { ReactNode } from 'react';
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 
 export interface WebEntry {
   relativePath: string;
@@ -22,7 +28,10 @@ export interface UserSource {
 
 interface UserDataContextValue {
   sources: UserSource[];
-  addSource: (name: string, datasets: Array<Omit<UserDataset, 'id'>>) => UserSource;
+  addSource: (
+    name: string,
+    datasets: Array<Omit<UserDataset, 'id'>>,
+  ) => UserSource;
   removeSource: (id: string) => void;
   findDataset: (id: string) => UserDataset | undefined;
 }

@@ -29,7 +29,7 @@ function getRowStyle(
     : { backgroundColor: '#ff6f0070', ...active };
   const baseStyle = disableDefaultRowStyle
     ? (base as object)
-    : { backgroundColor: 'white', ...base };
+    : { backgroundColor: 'var(--psi-plot-surface, white)', ...base };
 
   return css([
     {

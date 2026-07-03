@@ -11,10 +11,11 @@ import 'react-science/styles/preflight.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
 import '@blueprintjs/icons/lib/css/blueprint-icons.css';
 import '@blueprintjs/select/lib/css/blueprint-select.css';
-import '@fontsource-variable/inter';
+import '@fontsource-variable/inter/index.css';
 
 import './demo/index.css';
 import './demo/psinmr/theme.css';
+import './demo/psinmr/psinmr-dark.css';
 
 const rootElement = document.querySelector('#root');
 if (!rootElement) {

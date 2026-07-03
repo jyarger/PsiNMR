@@ -57,7 +57,9 @@ async function resizeIntegral(nmrium: NmriumPage) {
     '_react=IntegralsSeries >> _react=Integration >> nth=0 >> rect >> nth=0',
   );
   const { width } = (await container.boundingBox()) as BoundingBox;
-  expect(width).toBe(41);
+  // Allow one pixel of tolerance: chart margins depend on axis label
+  // metrics, which vary slightly with the configured font size.
+  expect(Math.abs(width - 41)).toBeLessThanOrEqual(1);
 }
 
 async function deleteIntegral(nmrium: NmriumPage) {

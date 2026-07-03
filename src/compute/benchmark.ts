@@ -16,9 +16,15 @@ function syntheticMatrix(size: number): Float64Array[] {
     const row = new Float64Array(size);
     for (let j = 0; j < size; j++) {
       // A few gaussian "peaks" plus mild noise, NMR-like.
-      const g1 = Math.exp(-((i - size * 0.3) ** 2 + (j - size * 0.7) ** 2) / (size * 2));
-      const g2 = Math.exp(-((i - size * 0.6) ** 2 + (j - size * 0.25) ** 2) / (size * 1.2));
-      const g3 = Math.exp(-((i - size * 0.8) ** 2 + (j - size * 0.8) ** 2) / (size * 0.8));
+      const g1 = Math.exp(
+        -((i - size * 0.3) ** 2 + (j - size * 0.7) ** 2) / (size * 2),
+      );
+      const g2 = Math.exp(
+        -((i - size * 0.6) ** 2 + (j - size * 0.25) ** 2) / (size * 1.2),
+      );
+      const g3 = Math.exp(
+        -((i - size * 0.8) ** 2 + (j - size * 0.8) ** 2) / (size * 0.8),
+      );
       row[j] = g1 + 0.8 * g2 + 0.6 * g3 + 0.01 * Math.sin(i * 0.7 + j * 1.3);
     }
     z.push(row);

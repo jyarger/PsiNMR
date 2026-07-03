@@ -15,10 +15,6 @@ export function setEngineBackend(next: EngineBackend) {
   for (const listener of listeners) listener();
 }
 
-export function getEngineBackend() {
-  return backend;
-}
-
 export function useEngineBackend(): EngineBackend {
   return useSyncExternalStore(
     (listener) => {

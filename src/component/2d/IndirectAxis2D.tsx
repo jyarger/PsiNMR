@@ -109,23 +109,25 @@ interface UnitLabelProps {
 function UnitLabel(props: UnitLabelProps) {
   const { children } = props;
 
-  const { getTextWidth } = useTextMetrics({ labelSize: 10 });
+  const { getTextWidth } = useTextMetrics({ labelSize: 18 });
   const labelHeight = getTextWidth(children);
 
   return (
     <>
       <rect
-        fill="white"
+        fill="var(--psi-plot-bg, white)"
         rx={5}
         ry={5}
-        width={20}
+        width={28}
         height={labelHeight + 10}
-        x={-10}
+        x={-14}
         y={-5}
         opacity={0.8}
       />
       <text
-        fill="#000"
+        fill="var(--psi-plot-fg, black)"
+        fontSize="18"
+        fontWeight="bold"
         transform="rotate(-90)"
         dominantBaseline="middle"
         textAnchor="end"

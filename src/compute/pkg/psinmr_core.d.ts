@@ -1,6 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
-
 /**
  * A 2D intensity grid kept resident in Wasm memory.
  *
@@ -10,10 +7,16 @@
  * copied per call.
  */
 export class ContourGrid {
-    free(): void;
-    [Symbol.dispose](): void;
-    contours(levels: Float64Array, timeout_ms: number): Float64Array;
-    constructor(z: Float64Array, rows: number, cols: number, xs: Float64Array, ys: Float64Array);
+  free(): void;
+  [Symbol.dispose](): void;
+  contours(levels: Float64Array, timeout_ms: number): Float64Array;
+  constructor(
+    z: Float64Array,
+    rows: number,
+    cols: number,
+    xs: Float64Array,
+    ys: Float64Array,
+  );
 }
 
 /**
@@ -21,7 +24,11 @@ export class ContourGrid {
  * Fits a polynomial of `degree` to `y`, then clips points above the fit
  * and refits, `iterations` times. Returns the estimated baseline.
  */
-export function baseline_polynomial(y: Float64Array, degree: number, iterations: number): Float64Array;
+export function baseline_polynomial(
+  y: Float64Array,
+  degree: number,
+  iterations: number,
+): Float64Array;
 
 /**
  * CONREC contour generation, matching ml-conrec's `Conrec` with
@@ -39,7 +46,15 @@ export function baseline_polynomial(y: Float64Array, degree: number, iterations:
  * coordinates (x from `xs`, y from `ys`), identical to
  * `BasicContourDrawer` output with `swapAxes: false`.
  */
-export function conrec_basic(z: Float64Array, rows: number, cols: number, xs: Float64Array, ys: Float64Array, levels: Float64Array, timeout_ms: number): Float64Array;
+export function conrec_basic(
+  z: Float64Array,
+  rows: number,
+  cols: number,
+  xs: Float64Array,
+  ys: Float64Array,
+  levels: Float64Array,
+  timeout_ms: number,
+): Float64Array;
 
 /**
  * In-place FFT (or inverse FFT) of a complex signal given as separate
@@ -55,21 +70,61 @@ export function fft(re: Float64Array, im: Float64Array, inverse: boolean): void;
  */
 export function peak_pick(y: Float64Array, min_height: number): Float64Array;
 
-export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
+export type InitInput =
+  RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
-    readonly memory: WebAssembly.Memory;
-    readonly __wbg_contourgrid_free: (a: number, b: number) => void;
-    readonly baseline_polynomial: (a: number, b: number, c: number, d: number) => [number, number];
-    readonly conrec_basic: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number) => [number, number];
-    readonly contourgrid_contours: (a: number, b: number, c: number, d: number) => [number, number];
-    readonly contourgrid_new: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => number;
-    readonly fft: (a: number, b: number, c: any, d: number, e: number, f: any, g: number) => void;
-    readonly peak_pick: (a: number, b: number, c: number) => [number, number];
-    readonly __wbindgen_externrefs: WebAssembly.Table;
-    readonly __wbindgen_malloc: (a: number, b: number) => number;
-    readonly __wbindgen_free: (a: number, b: number, c: number) => void;
-    readonly __wbindgen_start: () => void;
+  readonly memory: WebAssembly.Memory;
+  readonly __wbg_contourgrid_free: (a: number, b: number) => void;
+  readonly baseline_polynomial: (
+    a: number,
+    b: number,
+    c: number,
+    d: number,
+  ) => [number, number];
+  readonly conrec_basic: (
+    a: number,
+    b: number,
+    c: number,
+    d: number,
+    e: number,
+    f: number,
+    g: number,
+    h: number,
+    i: number,
+    j: number,
+    k: number,
+  ) => [number, number];
+  readonly contourgrid_contours: (
+    a: number,
+    b: number,
+    c: number,
+    d: number,
+  ) => [number, number];
+  readonly contourgrid_new: (
+    a: number,
+    b: number,
+    c: number,
+    d: number,
+    e: number,
+    f: number,
+    g: number,
+    h: number,
+  ) => number;
+  readonly fft: (
+    a: number,
+    b: number,
+    c: any,
+    d: number,
+    e: number,
+    f: any,
+    g: number,
+  ) => void;
+  readonly peak_pick: (a: number, b: number, c: number) => [number, number];
+  readonly __wbindgen_externrefs: WebAssembly.Table;
+  readonly __wbindgen_malloc: (a: number, b: number) => number;
+  readonly __wbindgen_free: (a: number, b: number, c: number) => void;
+  readonly __wbindgen_start: () => void;
 }
 
 export type SyncInitInput = BufferSource | WebAssembly.Module;
@@ -82,7 +137,9 @@ export type SyncInitInput = BufferSource | WebAssembly.Module;
  *
  * @returns {InitOutput}
  */
-export function initSync(module: { module: SyncInitInput } | SyncInitInput): InitOutput;
+export function initSync(
+  module: { module: SyncInitInput } | SyncInitInput,
+): InitOutput;
 
 /**
  * If `module_or_path` is {RequestInfo} or {URL}, makes a request and
@@ -92,4 +149,9 @@ export function initSync(module: { module: SyncInitInput } | SyncInitInput): Ini
  *
  * @returns {Promise<InitOutput>}
  */
-export default function __wbg_init (module_or_path?: { module_or_path: InitInput | Promise<InitInput> } | InitInput | Promise<InitInput>): Promise<InitOutput>;
+export default function __wbg_init(
+  module_or_path?:
+    | { module_or_path: InitInput | Promise<InitInput> }
+    | InitInput
+    | Promise<InitInput>,
+): Promise<InitOutput>;

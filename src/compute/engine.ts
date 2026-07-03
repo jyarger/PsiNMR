@@ -7,7 +7,9 @@
  * `getWasmEngine()` stays `null` and callers use the JS implementation.
  */
 
-type WasmModule = typeof import('./pkg/psinmr_core.js');
+import type * as PsiNmrCore from './pkg/psinmr_core.js';
+
+type WasmModule = typeof PsiNmrCore;
 
 let wasmEngine: WasmModule | null = null;
 let initPromise: Promise<'wasm' | 'js'> | undefined;
@@ -47,7 +49,10 @@ export interface WasmContourResult {
 // instead of copying it across the JS/Wasm boundary on every call.
 // wasm-bindgen frees the Wasm-side memory via FinalizationRegistry once
 // the JS wrapper is garbage collected together with the spectrum data.
-const gridCache = new WeakMap<object, InstanceType<WasmModule['ContourGrid']>>();
+const gridCache = new WeakMap<
+  object,
+  InstanceType<WasmModule['ContourGrid']>
+>();
 
 function getContourGrid(
   engine: WasmModule,
@@ -55,7 +60,7 @@ function getContourGrid(
   xs: number[] | Float64Array,
   ys: number[] | Float64Array,
 ) {
-  const cached = gridCache.get(z as object);
+  const cached = gridCache.get(z);
   if (cached) return cached;
 
   const rows = z.length;
@@ -79,7 +84,7 @@ function getContourGrid(
     Float64Array.from(xs),
     Float64Array.from(ys),
   );
-  gridCache.set(z as object, grid);
+  gridCache.set(z, grid);
   return grid;
 }
 

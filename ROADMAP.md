@@ -36,6 +36,37 @@ web app. No accounts, no server-side state.
 - [ ] Bundle-size work: the vendor chunks are large; split and lazy-load the
       2D/prediction paths.
 
+### Expanded vendor formats (investigated 2026-07)
+
+`@zakodium/nmrium-core` exposes a first-class extension point for this:
+`core.registerPlugin({ supportedExtensions, onFile })` hooks new parsers
+into `processFileCollection` without forking `nmr-load-save`. Plan, in
+order of value:
+
+- [ ] **Magritek Spinsolve `.1d` / `.2d` binaries** — port the reader from
+      nmrglue's `fileio/spinsolve.py` (BSD-3, attribution required) to
+      TypeScript and register it as a plugin. The formats are simple
+      header + float32 arrays; the main work is acquiring reference data
+      to validate against (`acqu.par` + `data.1d`).
+- [ ] **Varian/Agilent 2D `.fid` folders** — extend beyond the current 1D
+      support: parse `procpar` array dimensions and the interleaved 2D
+      block structure (nmrglue `fileio/varian.py` is the reference
+      implementation).
+- [ ] Longer term, nmrglue's fileio module list (Pipe, Sparky, RNMRTK,
+      SIMPSON, …) is the menu to port from. nmrglue itself is Python and
+      cannot run directly in the stateless browser app (Pyodide would add
+      ~30 MB+ runtime); for the Pro server, running nmrglue natively
+      server-side is a reasonable complement to TS ports.
+
+### nmrXiv integration (investigated 2026-07)
+
+The [nmrXiv](https://nmrxiv.org) FAIR repository API is **CORS-open** —
+`GET https://nmrxiv.org/api/v1/list/projects` works directly from the
+browser. A "Browse nmrXiv" source in the data panel is therefore a
+client-only feature: list/search projects → drill into samples →
+feed the dataset download URLs (Bruker zips, JCAMP) into the existing
+`readFromWebSource` path. Moderate effort, no server required.
+
 ## v2 — PsiNMR Pro (accounts + data library)
 
 Adds an optional backend so users can keep a durable, private library of NMR
@@ -63,15 +94,15 @@ processing kernels and plot types.
 
 Planned members:
 
-| App | Technique |
-| --- | --- |
-| **PsiNMR** | Nuclear magnetic resonance |
-| **PsiXRD** | X-ray diffraction |
-| **PsiDSC** | Differential scanning calorimetry |
-| **PsiRaman** | Raman spectroscopy |
-| **PsiIR** | FT-IR |
-| **PsiMS** | Mass spectrometry |
-| **PsiUV** | UV-Vis |
+| App          | Technique                         |
+| ------------ | --------------------------------- |
+| **PsiNMR**   | Nuclear magnetic resonance        |
+| **PsiXRD**   | X-ray diffraction                 |
+| **PsiDSC**   | Differential scanning calorimetry |
+| **PsiRaman** | Raman spectroscopy                |
+| **PsiIR**    | FT-IR                             |
+| **PsiMS**    | Mass spectrometry                 |
+| **PsiUV**    | UV-Vis                            |
 
 Architectural notes for getting there:
 

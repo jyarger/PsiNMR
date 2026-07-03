@@ -1,24 +1,27 @@
+// PsiNMR default spectrum palette: bright, saturated hues chosen for high
+// contrast on the dark plot background while remaining legible on white
+// (light theme and publication exports).
 export const COLORS: string[] = [
-  '#C10020',
-  '#007D34',
-  '#803E75',
-  '#FF6800',
-  '#B32851',
-  '#7F180D',
-  '#232C16',
-  '#A6BDD7',
-  '#CEA262',
-  '#817066',
-  '#FF8E00',
-  '#F6768E',
-  '#00538A',
-  '#FF7A5C',
-  '#53377A',
-  '#FFB300',
-  '#F4C800',
-  '#93AA00',
-  '#593315',
-  '#F13A13',
+  '#FF5C5C', // red
+  '#4DD0E1', // cyan
+  '#FFD54F', // amber
+  '#81C784', // green
+  '#64B5F6', // blue
+  '#FF8A65', // orange
+  '#BA68C8', // purple
+  '#F06292', // pink
+  '#AED581', // lime
+  '#4DB6AC', // teal
+  '#FFB74D', // light orange
+  '#7986CB', // indigo
+  '#E57373', // soft red
+  '#4FC3F7', // sky
+  '#FFF176', // yellow
+  '#9575CD', // violet
+  '#A1887F', // warm gray
+  '#90CAF9', // pale blue
+  '#DCE775', // chartreuse
+  '#F48FB1', // rose
 ];
 
 function percentToHex(p: number): string {

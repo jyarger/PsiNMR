@@ -387,7 +387,7 @@ export default function MoleculePanelHeader(props: MoleculePanelHeaderProps) {
         title: 'Auto label atoms',
         description:
           'Atoms are automatically labeled according to a predefined template database',
-        link: 'https://docs.nmrium.org/help/structure-labelling',
+        link: '#/docs/help/structure-labelling',
       },
       onClick: () => autoLabels(),
     },
@@ -466,7 +466,7 @@ export default function MoleculePanelHeader(props: MoleculePanelHeaderProps) {
                 <TooltipHelpContent
                   title={`${booleanToString(!isActiveAnnotation('custom-labels'), { trueLabel: 'Display' })} custom atom labels`}
                   description="Custom atom labels can be displayed or hidden on the molecule structure"
-                  link="https://docs.nmrium.org/help/structure-labelling/"
+                  link="#/docs/help/structure-labelling/"
                 />
               }
               icon={<FaRegBookmark />}

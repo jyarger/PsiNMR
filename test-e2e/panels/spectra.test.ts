@@ -60,7 +60,7 @@ test('Check change spectrum color, Should be green', async ({ page }) => {
   await nmrium.open1D();
 
   const greenSpectrumLine = nmrium.page.locator(
-    '_react=Line[display.color = "#007d34ff"]',
+    '_react=Line[display.color = "#81c784ff"]',
   );
 
   // There should be no white spectrum line at the beginning.
@@ -68,7 +68,7 @@ test('Check change spectrum color, Should be green', async ({ page }) => {
   // Open Change colour modal.
   await nmrium.page.click('_react=ColorIndicator');
   // Select the green colour preset.
-  await nmrium.page.getByTitle('#007D34').click();
+  await nmrium.page.getByTitle('#81C784').click();
   // The line should now be green.
   await expect(greenSpectrumLine).toBeVisible();
 });
@@ -94,8 +94,7 @@ test('2d spectrum', async ({ page }) => {
   const nmrium = await NmriumPage.create(page);
 
   await test.step('Open COSY ethylbenzene 2D spectrum', async () => {
-    await nmrium.page.click('li >> text=Simple spectra');
-    await nmrium.page.click('li >> text=COSY ethylbenzene');
+    await nmrium.openSample('./data/ethylbenzene/cosy.json');
     // Wait the spectrum to load
     await expect(nmrium.page.locator('#nmrSVG')).toBeVisible();
 
@@ -188,33 +187,32 @@ test('2d spectrum', async ({ page }) => {
       .locator('[class*="-slider-label"]', { hasText: /^0$/ })
       .click();
 
-    await nmrium.page.click(
-      '_react=SketchPresetColors >> nth=0 >> div >> nth=0',
-    );
-
-    // Change colors
-    await nmrium.page.click(
-      '_react=SketchPresetColors >> nth=0 >> div >> nth=0',
-    );
-    await nmrium.page.click(
-      '_react=SketchPresetColors >> nth=1 >> div >> nth=5',
-    );
+    // Change colors: pick preset swatches by their color title so the
+    // test is independent of the palette order.
+    await nmrium.page
+      .locator('_react=SketchPresetColors >> nth=0')
+      .getByTitle('#FF5C5C')
+      .click();
+    await nmrium.page
+      .locator('_react=SketchPresetColors >> nth=1')
+      .getByTitle('#FFD54F')
+      .click();
 
     // Check that ColorIndicator color changed
     await expect(
       nmrium.page.locator(
-        '_react=ColorIndicator[display.negativeColor="#803e75ff"][display.positiveColor="#c10020ff"]',
+        '_react=ColorIndicator[display.negativeColor="#ffd54fff"][display.positiveColor="#ff5c5cff"]',
       ),
     ).toBeVisible();
     // Check that spectra color changed
     await expect(
       nmrium.page.locator(
-        '_react=ContoursPaths[sign="positive"][color="#c10020ff"]',
+        '_react=ContoursPaths[sign="positive"][color="#ff5c5cff"]',
       ),
     ).toBeVisible();
     await expect(
       nmrium.page.locator(
-        '_react=ContoursPaths[sign="negative"][color="#803e75ff"]',
+        '_react=ContoursPaths[sign="negative"][color="#ffd54fff"]',
       ),
     ).toBeVisible();
     // Close color picker
@@ -326,8 +324,7 @@ test('show/hide spectrum', async ({ page }) => {
   const nmrium = await NmriumPage.create(page);
 
   await test.step('Open Coffee spectrum', async () => {
-    await nmrium.page.click('li >> text=Multiple spectra');
-    await nmrium.page.click('li >> text=Coffee');
+    await nmrium.openSample('./data/coffee/Coffee.json');
     // Wait the spectrum to load
     await expect(nmrium.page.locator('#nmrSVG')).toBeVisible();
     await expect(nmrium.page.getByTestId('spectrum-line')).toHaveCount(13);
@@ -409,8 +406,7 @@ test('Multiple spectra analysis', async ({ page }) => {
   const nmrium = await NmriumPage.create(page);
 
   await test.step('Open Coffee spectrum and check 13 spectra', async () => {
-    await nmrium.page.click('li >> text=Multiple spectra');
-    await nmrium.page.click('li >> text=Coffee');
+    await nmrium.openSample('./data/coffee/Coffee.json');
     // Wait the spectrum to load
     await expect(nmrium.page.locator('#nmrSVG')).toBeVisible();
     await expect(nmrium.page.getByTestId('spectrum-line')).toHaveCount(13);
@@ -467,8 +463,7 @@ test('Multiple spectra analysis', async ({ page }) => {
 });
 test('Load JResolv', async ({ page }) => {
   const nmrium = await NmriumPage.create(page);
-  await nmrium.page.click('li >> text=Cytisine');
-  await nmrium.page.click('li >> text=jResolv cytisine');
+  await nmrium.openSample('./data/cytisine/2d/jresolv.json');
 
   await expect(nmrium.page.locator('#nmrSVG')).toBeVisible();
   await expect(nmrium.page.getByTestId('spectrum-line')).toHaveCount(2);

@@ -59,7 +59,15 @@ export function HorizontalAxis1D() {
           allowedUnits={allowedUnits}
           onChange={setUnit}
         >
-          <text fill="#000" x={width - 10} y="30" dy="0.70em" textAnchor="end">
+          <text
+            fill="var(--psi-plot-fg, black)"
+            fontSize="18"
+            fontWeight="bold"
+            x={width - 10}
+            y="26"
+            dy="0.70em"
+            textAnchor="end"
+          >
             {unitLabel}
           </text>
         </AxisUnitPicker>

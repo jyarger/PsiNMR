@@ -87,7 +87,7 @@ export function NMRiumViewer(props: NMRiumViewerProps) {
         width: '100%',
         height: '100%',
         position: 'relative',
-        backgroundColor: 'white',
+        backgroundColor: 'var(--psi-plot-bg, white)',
         ...style,
       }}
     >

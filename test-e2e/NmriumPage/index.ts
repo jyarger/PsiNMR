@@ -11,6 +11,8 @@ interface ToolLocatorOptions {
   caseSensitive?: boolean;
 }
 
+const BASE_URL = process.env.E2E_BASE_URL ?? 'http://localhost:3000';
+
 export default class NmriumPage {
   public readonly page: Page;
   public readonly viewer: NmriumPageViewer;
@@ -23,18 +25,30 @@ export default class NmriumPage {
   }
 
   public static async create(page: Page): Promise<NmriumPage> {
-    await page.goto('http://localhost:3000/#/');
+    // /nmr is the PsiNMR interactive view: an empty NMRium instance with
+    // the drop zone ready for file-based tests.
+    await page.goto(`${BASE_URL}/#/nmr`);
     return new NmriumPage(page);
   }
 
+  public async openSample(file: string) {
+    await this.page.goto(
+      `${BASE_URL}/#/nmr/sample?file=${encodeURIComponent(
+        file,
+      )}&base=${encodeURIComponent('./')}`,
+    );
+  }
+
+  public async openPrediction() {
+    await this.page.goto(`${BASE_URL}/#/tools/predict`);
+  }
+
   public async open1D() {
-    await this.page.click('li >> text=Cytisine');
-    await this.page.click('li >> text=1H spectrum');
+    await this.openSample('./data/cytisine/1H.json');
   }
 
   public async open2D() {
-    await this.page.click('li >> text=Simple spectra');
-    await this.page.click('li >> text=COSY ethylbenzene');
+    await this.openSample('./data/ethylbenzene/cosy.json');
   }
 
   public async clickPanel(title: string, options: ClickOptions = {}) {

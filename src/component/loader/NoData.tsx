@@ -8,23 +8,28 @@ const styles: Record<'container' | 'text', CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: ' rgba(255, 255, 255, 0.25)',
+    backgroundColor: 'transparent',
     flexDirection: 'column',
     userSelect: 'none',
     width: '100%',
     height: '100%',
-    outline: '10px dashed rgba(0, 0, 0, 0.3)',
-    outlineOffset: '-10px',
+    outline: '3px dashed var(--psi-plot-grid, rgba(0, 0, 0, 0.3))',
+    outlineOffset: '-14px',
     paddingLeft: '20px',
     paddingRight: '20px',
   },
   text: {
     padding: '15px 30px',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: '39px',
-    color: 'white',
-    fontSize: 'x-large',
-    fontWeight: 'bold',
+    backgroundColor: 'var(--psi-accent, #3d8f85)',
+    borderRadius: 'var(--psi-radius, 8px)',
+    color: '#fff',
+    fontFamily:
+      "var(--psi-font, 'Inter', -apple-system, 'Segoe UI', sans-serif)",
+    fontSize: 'large',
+    fontWeight: 600,
+    textAlign: 'center',
+    maxWidth: '520px',
+    lineHeight: 1.5,
   },
 };
 
@@ -37,7 +42,7 @@ interface NoDataProps {
 
 function NoData({
   isEmpty = true,
-  emptyText = 'Drag and drop here a JCAMP-DX, Bruker folder, Jeol jdf or NMRium file',
+  emptyText = 'Bruker, Varian, Jeol, or general JCAMP-DX and NMRium Datasets Supported',
   canOpenLoader = true,
   style,
 }: NoDataProps) {

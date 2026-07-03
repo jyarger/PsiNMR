@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import { initComputeEngine } from '../../compute/engine.js';
 
 import DataPanel from './DataPanel.js';
+import DocsView from './DocsView.js';
 import InteractiveView from './InteractiveView.js';
 import Landing from './Landing.js';
 import TopBar from './TopBar.js';
@@ -67,6 +68,7 @@ export default function AppLayout(props: AppLayoutProps) {
                 path="/tools/simulate"
                 element={<InteractiveView workspace="simulation" />}
               />
+              <Route path="/docs/*" element={<DocsView />} />
               <Route path="*" element={<Landing />} />
             </Routes>
           </Content>

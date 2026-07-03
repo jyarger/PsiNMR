@@ -1,9 +1,8 @@
 import type { CSSProperties } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 
-import routes from '../samples.json' with { type: 'json' };
-
 import AppLayout from '../psinmr/AppLayout.js';
+import routes from '../samples.json' with { type: 'json' };
 
 import SingleDisplayerLayout from './SingleDisplayerLayout.js';
 

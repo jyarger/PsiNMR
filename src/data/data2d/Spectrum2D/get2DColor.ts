@@ -70,11 +70,13 @@ export function get2DColor(
 
 type ExperimentType = 'cosy' | 'roesy' | 'noesy' | 'tocsy' | 'hsqc' | 'hmbc';
 
+// PsiNMR 2D contour colors: bright positive/negative pairs with strong
+// mutual contrast, readable on the dark plot background and on white.
 export const color2D: Readonly<Record<ExperimentType, Color2D>> = {
-  cosy: { positiveColor: 'darkblue', negativeColor: 'blue' },
-  roesy: { positiveColor: 'deeppink', negativeColor: 'yellow' },
-  noesy: { positiveColor: 'deeppink', negativeColor: 'yellow' },
-  tocsy: { positiveColor: 'green', negativeColor: 'yellow' },
-  hsqc: { positiveColor: 'black', negativeColor: 'yellow' },
-  hmbc: { positiveColor: 'darkviolet', negativeColor: 'yellow' },
+  cosy: { positiveColor: '#64B5F6', negativeColor: '#FF5C5C' },
+  roesy: { positiveColor: '#F06292', negativeColor: '#FFD54F' },
+  noesy: { positiveColor: '#F06292', negativeColor: '#FFD54F' },
+  tocsy: { positiveColor: '#81C784', negativeColor: '#FFD54F' },
+  hsqc: { positiveColor: '#4DD0E1', negativeColor: '#FF8A65' },
+  hmbc: { positiveColor: '#BA68C8', negativeColor: '#FFD54F' },
 };
