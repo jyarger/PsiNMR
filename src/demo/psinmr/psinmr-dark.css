@@ -2,7 +2,11 @@
  * Dark-theme overrides for NMRium internals that hardcode light styling
  * (react-science tables, accordions, toolbars). Scoped to
  * [data-psi-theme='dark'] so the light theme and SVG exports are untouched.
+ *
+ * Selector order here follows override intent (generic rule, then
+ * state-specific exceptions), not specificity ordering.
  */
+/* stylelint-disable no-descending-specificity */
 
 [data-psi-theme='dark'] .nmrium-container table th {
   background-color: var(--psi-chrome-raised) !important;
