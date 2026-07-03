@@ -7,7 +7,9 @@ import { options } from '../../toolbar/ToolTypes.js';
 
 const styles: Record<'line', CSSProperties> = {
   line: {
-    stroke: 'black',
+    // Follows the plot foreground so the crosshair stays visible on the
+    // dark theme (light line) and the light theme (black line).
+    stroke: 'var(--psi-plot-fg, black)',
     strokeOpacity: 1,
     shapeRendering: 'crispEdges',
     strokeWidth: '1',
