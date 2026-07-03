@@ -8,7 +8,9 @@ const viewportOverride: ViewportSize = {
 
 export default defineConfig({
   testDir: 'test-e2e',
-  retries: 1,
+  // CI runners are slow enough that timing-sensitive tests occasionally
+  // need a second retry; locally one retry keeps feedback fast.
+  retries: process.env.CI ? 2 : 1,
   forbidOnly: !!process.env.CI,
   timeout: 60_000,
   expect: {

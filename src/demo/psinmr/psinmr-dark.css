@@ -55,6 +55,14 @@
   color: var(--psi-text-on-chrome);
 }
 
+/* Expanded filter-section bodies (react-science Sections content: the
+   options form that follows a sticky section header, e.g. Apodization's
+   line-broadening controls). */
+[data-psi-theme='dark'] .nmrium-container div[style*='sticky'] + div {
+  background-color: var(--psi-plot-surface) !important;
+  color: var(--psi-text) !important;
+}
+
 /* Information-panel search bar (react-science InfoPanel hardcodes a
    white wrapper around the parameter search input). */
 [data-psi-theme='dark']

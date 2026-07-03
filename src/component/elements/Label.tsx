@@ -82,7 +82,7 @@ function InnerLabel(props: LabelProps) {
         className={className}
         style={{
           fontSize: '12px',
-          color: '#232323',
+          color: 'var(--psi-text, #232323)',
           paddingRight: '10px',
           width: 'max-content',
           ...style?.label,

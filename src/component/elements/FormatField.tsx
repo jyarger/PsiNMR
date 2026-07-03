@@ -15,7 +15,7 @@ export const fieldLabelStyle: LabelStyle = {
     flex: 4,
     fontSize: '11px',
     fontWeight: 'bold',
-    color: '#232323',
+    color: 'var(--psi-text, #232323)',
   },
   wrapper: {
     flex: 8,
