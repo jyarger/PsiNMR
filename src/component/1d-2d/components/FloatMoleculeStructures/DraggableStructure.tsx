@@ -37,7 +37,7 @@ const ReactRnd = styled(Rnd)`
   }
 
   :hover {
-    background-color: white;
+    background-color: var(--psi-plot-bg, white);
     border: 1px solid #ebecf1;
   }
 
@@ -181,7 +181,9 @@ export function DraggableStructure(props: DraggableStructureProps) {
         dragFloatMoleculeHandler(convertPositionToPercent({ x, y }));
         setIsMoveActive(false);
       }}
-      resizeHandleWrapperStyle={{ backgroundColor: 'white' }}
+      resizeHandleWrapperStyle={{
+        backgroundColor: 'var(--psi-plot-bg, white)',
+      }}
     >
       <ActionsButtonsPopover
         buttons={actionsButtons}

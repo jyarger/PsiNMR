@@ -56,6 +56,9 @@
 
   /* Peak annotation labels/markers on the plot */
   --psi-peak-color: #ff8a80;
+
+  /* Molecule editor canvas (applied inside its shadow root) */
+  --psi-mol-editor-filter: invert(0.88) hue-rotate(180deg);
 }
 
 [data-psi-theme='light'],
@@ -99,6 +102,9 @@
 
   /* Peak annotation labels/markers on the plot */
   --psi-peak-color: #730000;
+
+  /* Molecule editor canvas (no filter on the light theme) */
+  --psi-mol-editor-filter: none;
 }
 
 :root {

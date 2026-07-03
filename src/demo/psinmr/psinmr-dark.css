@@ -47,6 +47,22 @@
   background-color: var(--psi-plot-surface) !important;
 }
 
+/* Chemical structures: OpenChemLib draws black-on-white SVGs that CSS
+   variables cannot reach. Invert lightness in dark mode — bonds become
+   light while hue-rotate keeps heteroatom colors roughly correct (red O
+   stays red, blue N stays blue). Exports serialize the SVG without this
+   screen filter, so saved images remain black-on-white. The :not guard
+   excludes the print/export subtrees that force the light theme. */
+[data-psi-theme='dark'] .nmrium-container .mol-svg-container {
+  background-color: var(--psi-plot-surface) !important;
+}
+
+[data-psi-theme='dark']
+  .nmrium-container
+  svg[id^='molSVG']:not([data-psi-theme='light'] *) {
+  filter: invert(0.88) hue-rotate(180deg);
+}
+
 /* Inputs inside NMRium panels */
 [data-psi-theme='dark']
   .nmrium-container

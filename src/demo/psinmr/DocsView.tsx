@@ -208,7 +208,7 @@ export default function DocsView() {
           </NavLink>
         ))}
       </Toc>
-      {/* eslint-disable-next-line react/no-danger */}
+      {}
       <Content dangerouslySetInnerHTML={{ __html: html }} />
     </Wrapper>
   );

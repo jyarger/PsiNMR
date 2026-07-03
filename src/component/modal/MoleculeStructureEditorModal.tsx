@@ -3,7 +3,6 @@ import { Molecule } from 'openchemlib';
 import { TopicMolecule } from 'openchemlib-utils';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CanvasEditorOnChangeMolecule } from 'react-ocl';
-import { CanvasMoleculeEditor } from 'react-ocl';
 import { useOnOff } from 'react-science/ui';
 
 import type { StateMoleculeExtended } from '../../data/molecules/Molecule.js';
@@ -12,6 +11,7 @@ import { usePreferences } from '../context/PreferencesContext.js';
 import ActionButtons from '../elements/ActionButtons.js';
 import { StandardDialog } from '../elements/StandardDialog.tsx';
 import { StyledDialogBody } from '../elements/StyledDialogBody.js';
+import { ThemedCanvasMoleculeEditor } from '../elements/ThemedCanvasMoleculeEditor.js';
 
 interface MoleculeStructureEditorModalProps {
   onClose?: (element?: string) => void;
@@ -121,7 +121,7 @@ function MoleculeStructureEditorModal(
       style={{ width: 710 }}
     >
       <StyledDialogBody>
-        <CanvasMoleculeEditor
+        <ThemedCanvasMoleculeEditor
           inputFormat="molfile"
           inputValue={initialEnhancedMolfile?.molfile}
           fragment={false}

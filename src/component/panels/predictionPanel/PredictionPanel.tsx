@@ -3,7 +3,6 @@ import { Molecule } from 'openchemlib';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { ResponsiveChart } from 'react-d3-utils';
 import type { CanvasEditorOnChangeMolecule } from 'react-ocl';
-import { CanvasMoleculeEditor } from 'react-ocl';
 import { Button, useAccordionControls } from 'react-science/ui';
 
 import { predictSpectra } from '../../../data/PredictionManager.js';
@@ -13,6 +12,7 @@ import { useDispatch } from '../../context/DispatchContext.js';
 import { useLogger } from '../../context/LoggerContext.js';
 import { useToaster } from '../../context/ToasterContext.js';
 import { NextPrev } from '../../elements/NextPrev.js';
+import { ThemedCanvasMoleculeEditor } from '../../elements/ThemedCanvasMoleculeEditor.js';
 import { usePanelPreferences } from '../../hooks/usePanelPreferences.js';
 import { useMoleculeEditor } from '../../modal/MoleculeStructureEditorModal.js';
 import MoleculeHeader from '../MoleculesPanel/MoleculeHeader.js';
@@ -211,7 +211,7 @@ export default function PredictionPanel() {
 
                           {molIndex === currentIndex && (
                             <Overflow height={height}>
-                              <CanvasMoleculeEditor
+                              <ThemedCanvasMoleculeEditor
                                 width={width}
                                 inputFormat="molfile"
                                 inputValue={mol.molfile}
@@ -225,7 +225,7 @@ export default function PredictionPanel() {
                       ))
                     ) : (
                       <Overflow height={height}>
-                        <CanvasMoleculeEditor
+                        <ThemedCanvasMoleculeEditor
                           inputFormat="molfile"
                           inputValue={initialMolfile}
                           width={width}
