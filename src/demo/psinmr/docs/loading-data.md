@@ -34,6 +34,15 @@ Paste a URL into the data panel's **Add data** field and press **Scan**:
 - **A plain web directory listing** (Apache/nginx autoindex) — scanned for
   NMR file links.
 
+### Browse nmrXiv
+
+The **Browse nmrXiv** button in the data panel opens a searchable catalog
+of the [nmrXiv](https://nmrxiv.org) FAIR NMR repository — nearly 2000
+public samples with structures, molecular formulas and experiment types.
+Search by compound name, formula, experiment (e.g. `cosy`) or identifier,
+then **Open in PsiNMR** to download the sample's spectra archive and load
+it directly. Larger studies can take a moment to download and parse.
+
 ### Sample library
 
 The bundled examples (cytisine, ethylbenzene, and more, including 2D COSY /

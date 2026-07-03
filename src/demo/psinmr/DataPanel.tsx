@@ -5,6 +5,7 @@ import {
   FaChevronDown,
   FaChevronRight,
   FaFileImport,
+  FaFlask,
   FaGlobe,
   FaLayerGroup,
   FaTimes,
@@ -120,6 +121,31 @@ const ErrorText = styled.p`
   color: #e5a29b;
   font-size: 12px;
   margin: 8px 0 0;
+`;
+
+const NmrXivButton = styled.button`
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--psi-chrome-border);
+  border-radius: var(--psi-radius);
+  color: var(--psi-text-on-chrome-muted);
+  cursor: pointer;
+  display: flex;
+  font-family: var(--psi-font);
+  font-size: 12.5px;
+  gap: 8px;
+  padding: 8px 10px;
+  text-align: left;
+  width: 100%;
+
+  svg {
+    color: var(--psi-accent-on-chrome);
+  }
+
+  &:hover {
+    border-color: var(--psi-accent-on-chrome);
+    color: var(--psi-text-on-chrome);
+  }
 `;
 
 const GroupHeader = styled.button`
@@ -316,6 +342,11 @@ export default memo(function DataPanel(props: DataPanelProps) {
           </LoadButton>
         </UrlForm>
         {error && <ErrorText>{error}</ErrorText>}
+        <div style={{ height: 10 }} />
+        <NmrXivButton type="button" onClick={() => void navigate('/nmrxiv')}>
+          <FaFlask />
+          Browse nmrXiv (open FAIR NMR data)
+        </NmrXivButton>
       </Section>
 
       {sources.length > 0 && (

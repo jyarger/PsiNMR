@@ -58,14 +58,14 @@ order of value:
       ~30 MB+ runtime); for the Pro server, running nmrglue natively
       server-side is a reasonable complement to TS ports.
 
-### nmrXiv integration (investigated 2026-07)
+### nmrXiv integration ✅ (shipped 2026-07)
 
-The [nmrXiv](https://nmrxiv.org) FAIR repository API is **CORS-open** —
-`GET https://nmrxiv.org/api/v1/list/projects` works directly from the
-browser. A "Browse nmrXiv" source in the data panel is therefore a
-client-only feature: list/search projects → drill into samples →
-feed the dataset download URLs (Bruker zips, JCAMP) into the existing
-`readFromWebSource` path. Moderate effort, no server required.
+The data panel's **Browse nmrXiv** opens a searchable catalog of the
+FAIR repository's ~2000 public samples (client-only: the nmrXiv API and
+its S3 archives are CORS-open). Selecting a sample streams its spectra
+zip into the standard web-source loading path. Possible follow-ups:
+project-level browsing, dataset-level filtering, and download-size
+hints if the API ever exposes them.
 
 ## v2 — PsiNMR Pro (accounts + data library)
 

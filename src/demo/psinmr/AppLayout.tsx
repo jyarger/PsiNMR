@@ -8,6 +8,7 @@ import DataPanel from './DataPanel.js';
 import DocsView from './DocsView.js';
 import InteractiveView from './InteractiveView.js';
 import Landing from './Landing.js';
+import NmrXivView from './NmrXivView.js';
 import TopBar from './TopBar.js';
 import { setEngineBackend } from './engineStatus.js';
 import { UserDataProvider } from './userData.js';
@@ -69,6 +70,7 @@ export default function AppLayout(props: AppLayoutProps) {
                 element={<InteractiveView workspace="simulation" />}
               />
               <Route path="/docs/*" element={<DocsView />} />
+              <Route path="/nmrxiv" element={<NmrXivView />} />
               <Route path="*" element={<Landing />} />
             </Routes>
           </Content>
