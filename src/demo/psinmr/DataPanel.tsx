@@ -42,6 +42,39 @@ const SectionTitle = styled.div`
   text-transform: uppercase;
 `;
 
+// The Sample library title doubles as a collapse toggle: styled like a
+// SectionTitle but a button, with a leading chevron. Collapsed by default so
+// the panel stays focused on loading the user's own data.
+const SectionToggle = styled.button`
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: var(--psi-text-on-chrome-muted);
+  cursor: pointer;
+  display: flex;
+  font-family: var(--psi-font);
+  font-size: 11px;
+  font-weight: 700;
+  gap: 7px;
+  letter-spacing: 0.09em;
+  margin-bottom: 4px;
+  padding: 2px 0;
+  text-transform: uppercase;
+  width: 100%;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  .chevron {
+    font-size: 9px;
+  }
+
+  &:hover {
+    color: var(--psi-text-on-chrome);
+  }
+`;
+
 const DropArea = styled.div<{ isDragActive: boolean }>`
   align-items: center;
   border: 1.5px dashed
@@ -298,6 +331,7 @@ export default memo(function DataPanel(props: DataPanelProps) {
   const navigate = useNavigate();
   const { sources, addSource, removeSource } = useUserData();
 
+  const [libraryOpen, setLibraryOpen] = useState(false);
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
@@ -485,11 +519,20 @@ export default memo(function DataPanel(props: DataPanelProps) {
       )}
 
       <Section style={{ borderBottom: 'none' }}>
-        <SectionTitle>
-          <FaLayerGroup style={{ marginRight: 6, verticalAlign: '-1px' }} />
+        <SectionToggle
+          type="button"
+          aria-expanded={libraryOpen}
+          onClick={() => setLibraryOpen((open) => !open)}
+        >
+          {libraryOpen ? (
+            <FaChevronDown className="chevron" />
+          ) : (
+            <FaChevronRight className="chevron" />
+          )}
+          <FaLayerGroup />
           Sample library
-        </SectionTitle>
-        {samples.map((group) => renderSampleGroup(group, false))}
+        </SectionToggle>
+        {libraryOpen && samples.map((group) => renderSampleGroup(group, false))}
       </Section>
     </Panel>
   );
