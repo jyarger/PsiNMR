@@ -45,7 +45,7 @@ const psiAxisUnits1DFt: readonly PsiAxisUnit1DFt[] = [...axisUnits1DFt, 'khz'];
 
 export const axisUnitToLabel: Record<PsiAxisUnit, string> = {
   s: 'time [s]',
-  hz: 'frequency [Hz]',
+  hz: 'ν [Hz]',
   khz: 'ν [kHz]',
   ppm: 'δ [ppm]',
   pt: 'index [pt]',
