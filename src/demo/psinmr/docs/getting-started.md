@@ -36,9 +36,9 @@ and a multi-nucleus (¹H/³¹P/⁷⁹Br) probe-setup series. These arrive as raw
 FIDs: open one, then walk the usual 1D workflow — apodization, Fourier
 transform, phasing — exactly as you would for a liquid-state ¹³C spectrum.
 
-After the Fourier transform, a **νr MAS** chip appears at the top-right of
-the plot: it draws sideband guides at δiso ± n·νr to help separate isotropic
-peaks from spinning sidebands. The spinning rate defaults from the
+After the Fourier transform, a **ν<sub>r</sub>** chip appears at the top-right
+of the plot: it draws sideband guides at δiso ± n·νr to help separate
+isotropic peaks from spinning sidebands. The spinning rate defaults from the
 acquisition metadata (when present) but stays editable — adjust νr until
 the guides land on the sidebands and you have measured the actual spinning
 rate. Try it on the ⁷⁹Br KBr spectra, the classic sideband standard.

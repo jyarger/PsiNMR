@@ -16,9 +16,14 @@ const Chip = styled.button`
   color: var(--psi-plot-fg, #333);
   cursor: pointer;
   font-family: var(--psi-font, sans-serif);
-  font-size: 11.5px;
+  font-size: 15px;
+  font-weight: 700;
   opacity: 0.85;
-  padding: 4px 12px;
+  padding: 4px 13px;
+
+  sub {
+    font-size: 0.7em;
+  }
 
   &:hover {
     border-color: var(--psi-accent, #3d8f85);
@@ -133,7 +138,7 @@ export function MasSidebandsControl() {
           title="Show magic-angle-spinning sideband guides (δiso ± n·νr)"
           onClick={open}
         >
-          νr MAS
+          ν<sub>r</sub>
         </Chip>
       </Wrapper>
     );
