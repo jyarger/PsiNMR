@@ -20,6 +20,22 @@ export default () => {
 
   return defineConfig({
     base: './',
+    server: {
+      // Same-origin reverse proxy for the BMRB data server, which sends no
+      // CORS headers (see src/demo/psinmr/bmrb.ts). Mirrored in
+      // docker/nginx.conf for the production container.
+      proxy: {
+        '/bmrb-data': {
+          target: 'https://bmrb.io',
+          changeOrigin: true,
+          rewrite: (path) =>
+            path.replace(
+              /^\/bmrb-data/,
+              '/ftp/pub/bmrb/metabolomics/entry_directories',
+            ),
+        },
+      },
+    },
     build: {
       sourcemap: 'inline',
       rolldownOptions: {

@@ -34,14 +34,26 @@ Paste a URL into the data panel's **Add data** field and press **Scan**:
 - **A plain web directory listing** (Apache/nginx autoindex) — scanned for
   NMR file links.
 
-### Browse nmrXiv
+### Public NMR Data
 
-The **Browse nmrXiv** button in the data panel opens a searchable catalog
-of the [nmrXiv](https://nmrxiv.org) FAIR NMR repository — nearly 2000
-public samples with structures, molecular formulas and experiment types.
-Search by compound name, formula, experiment (e.g. `cosy`) or identifier,
-then **Open in PsiNMR** to download the sample's spectra archive and load
-it directly. Larger studies can take a moment to download and parse.
+The data panel's **Public NMR Data** section connects PsiNMR to open
+repositories:
+
+- **Browse nmrXiv** — a searchable catalog of the
+  [nmrXiv](https://nmrxiv.org) FAIR NMR repository (nearly 2000 public
+  samples with structures, molecular formulas and experiment types).
+  Search by compound name, formula, experiment (e.g. `cosy`) or
+  identifier, then **Open in PsiNMR** to download the sample's spectra
+  archive and load it directly.
+- **Browse BMRB** — search the
+  [Biological Magnetic Resonance Data Bank](https://bmrb.io) metabolomics
+  collection by compound (e.g. `glucose`, `citrate`) and open an entry's
+  Bruker spectrum in one click.
+
+Larger datasets can take a moment to download and parse. BMRB's data
+server does not send CORS headers, so BMRB spectra are fetched through a
+same-origin reverse proxy built into the PsiNMR server (nginx / the dev
+server); no third-party proxy is involved.
 
 ### Sample library
 

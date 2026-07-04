@@ -8,6 +8,7 @@ import type { NMRiumWorkspace } from '../../component/main/index.js';
 import { NMRium } from '../../component/main/index.js';
 import { demoCore } from '../utility/core.js';
 
+import { PsiMark } from './PsiLogo.js';
 import type { UserDataset } from './userData.js';
 import { useUserData } from './userData.js';
 
@@ -136,7 +137,12 @@ export default function InteractiveView(props: InteractiveViewProps) {
   if (loading) {
     return (
       <Frame>
-        <Message>Parsing NMR data…</Message>
+        <Message>
+          <div>
+            <PsiMark size={44} spin="loading" />
+            <div style={{ marginTop: 14 }}>Parsing NMR data…</div>
+          </div>
+        </Message>
       </Frame>
     );
   }

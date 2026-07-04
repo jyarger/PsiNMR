@@ -58,9 +58,9 @@ const Hint = styled.p`
 export default function Landing() {
   return (
     <Wrapper>
-      <PsiMark size={84} />
+      <PsiMark size={84} spin="intro" />
       <Title>
-        Psi<span>NMR</span>
+        Ψ|<span>NMR</span>⟩
       </Title>
       <Tagline>
         Process, analyze and visualize 1D &amp; 2D NMR data directly in your

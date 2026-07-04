@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { FaExternalLinkAlt, FaPlay } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
+import { PsiMark } from './PsiLogo.js';
 import type { NmrXivSample, SamplesProgress } from './nmrxiv.js';
 import {
   getNmrXivSamples,
@@ -287,7 +288,12 @@ export default function NmrXivView() {
           {error} — check your network connection and try again.
         </Message>
       ) : !samples ? (
-        <Message>Fetching the nmrXiv sample catalog…</Message>
+        <Message>
+          <PsiMark size={44} spin="loading" />
+          <div style={{ marginTop: 14 }}>
+            Fetching the nmrXiv sample catalog…
+          </div>
+        </Message>
       ) : filtered.length === 0 ? (
         <Message>No samples match “{query}”.</Message>
       ) : (

@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import { initComputeEngine } from '../../compute/engine.js';
 
+import BmrbView from './BmrbView.js';
 import DataPanel from './DataPanel.js';
 import DocsView from './DocsView.js';
 import InteractiveView from './InteractiveView.js';
@@ -71,6 +72,7 @@ export default function AppLayout(props: AppLayoutProps) {
               />
               <Route path="/docs/*" element={<DocsView />} />
               <Route path="/nmrxiv" element={<NmrXivView />} />
+              <Route path="/bmrb" element={<BmrbView />} />
               <Route path="*" element={<Landing />} />
             </Routes>
           </Content>

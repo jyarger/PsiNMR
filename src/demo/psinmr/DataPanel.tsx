@@ -5,13 +5,13 @@ import {
   FaChevronDown,
   FaChevronRight,
   FaFileImport,
-  FaFlask,
   FaGlobe,
   FaLayerGroup,
   FaTimes,
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
+import { BmrbIcon, NmrXivIcon } from './SourceIcons.js';
 import { resolveRemoteSource } from './remoteData.js';
 import type { UserDataset } from './userData.js';
 import { useUserData } from './userData.js';
@@ -123,28 +123,36 @@ const ErrorText = styled.p`
   margin: 8px 0 0;
 `;
 
-const NmrXivButton = styled.button`
+const Subtitle = styled.div`
+  color: var(--psi-text-on-chrome-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin: 14px 0 6px;
+`;
+
+const SourceButton = styled.button`
   align-items: center;
   background: transparent;
   border: 1px solid var(--psi-chrome-border);
   border-radius: var(--psi-radius);
-  color: var(--psi-text-on-chrome-muted);
+  color: var(--psi-text-on-chrome);
   cursor: pointer;
   display: flex;
   font-family: var(--psi-font);
-  font-size: 12.5px;
-  gap: 8px;
-  padding: 8px 10px;
+  font-size: 13px;
+  gap: 10px;
+  padding: 10px 12px;
   text-align: left;
   width: 100%;
 
-  svg {
-    color: var(--psi-accent-on-chrome);
+  strong {
+    font-weight: 700;
   }
 
   &:hover {
+    background: var(--psi-chrome-raised);
     border-color: var(--psi-accent-on-chrome);
-    color: var(--psi-text-on-chrome);
   }
 `;
 
@@ -329,7 +337,8 @@ export default memo(function DataPanel(props: DataPanelProps) {
           <FaFileImport />
           Drop NMR files or zip datasets here, or click to browse
         </DropArea>
-        <div style={{ height: 10 }} />
+
+        <Subtitle>Load from a URL</Subtitle>
         <UrlForm onSubmit={loadFromUrl}>
           <UrlInput
             value={url}
@@ -342,11 +351,23 @@ export default memo(function DataPanel(props: DataPanelProps) {
           </LoadButton>
         </UrlForm>
         {error && <ErrorText>{error}</ErrorText>}
-        <div style={{ height: 10 }} />
-        <NmrXivButton type="button" onClick={() => void navigate('/nmrxiv')}>
-          <FaFlask />
-          Browse nmrXiv (open FAIR NMR data)
-        </NmrXivButton>
+      </Section>
+
+      <Section>
+        <SectionTitle>Public NMR Data</SectionTitle>
+        <SourceButton type="button" onClick={() => void navigate('/nmrxiv')}>
+          <NmrXivIcon size={18} />
+          <span>
+            Browse <strong>nmrXiv</strong>
+          </span>
+        </SourceButton>
+        <div style={{ height: 8 }} />
+        <SourceButton type="button" onClick={() => void navigate('/bmrb')}>
+          <BmrbIcon size={18} />
+          <span>
+            Browse <strong>BMRB</strong>
+          </span>
+        </SourceButton>
       </Section>
 
       {sources.length > 0 && (
