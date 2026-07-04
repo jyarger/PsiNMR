@@ -27,8 +27,18 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=3072
         run: node --run build-no-minify
       - name: Run E2E tests on ${{ matrix.project }}
-        run: npx playwright test --project ${{ matrix.project }}
+        # Exclude the automatic-assignment test: it calls an external
+        # assignment web service that is intermittently unavailable in CI, so
+        # it runs separately as non-blocking (below) — like the webkit project.
+        run: >-
+          npx playwright test --project ${{ matrix.project }}
+          --grep-invert "automatic assignment panel"
         continue-on-error: ${{ matrix.project == 'webkit' }}
+      - name: Run external-service tests on ${{ matrix.project }} (non-blocking)
+        run: >-
+          npx playwright test --project ${{ matrix.project }}
+          --grep "automatic assignment panel"
+        continue-on-error: true
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
