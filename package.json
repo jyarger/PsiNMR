@@ -45,12 +45,13 @@
     "test-e2e": "playwright test --project=chromium",
     "test-e2e-server": "serve -l tcp://localhost:3000 build"
   },
+  "homepage": "https://psinmr.com",
   "bugs": {
-    "url": "https://github.com/jyarger/nmrium/issues"
+    "url": "https://github.com/jyarger/PsiNMR/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jyarger/nmrium.git"
+    "url": "git+https://github.com/jyarger/PsiNMR.git"
   },
   "peerDependencies": {
     "@blueprintjs/core": "^6.0.0",

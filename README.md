@@ -59,6 +59,15 @@ npm run wasm        # build the Rust compute engine to src/compute/pkg
 npm run dev         # Vite dev server on http://localhost:3000
 ```
 
+### Production deployment
+
+For public, user-facing hosting — Cloudflare Tunnel (recommended), Cloudflare
+proxy + Origin Cert, or Caddy/Let's Encrypt — plus the CI → GHCR image
+pipeline and a VPS walkthrough, see **[DEPLOY.md](DEPLOY.md)**. Production
+images are built by GitHub Actions and published to
+`ghcr.io/jyarger/psinmr`; the server just pulls and runs
+`docker compose -f docker-compose.prod.yml up -d`.
+
 ## Using PsiNMR
 
 - **INTERACTIVE NMR** — the primary call-to-action; opens the interactive

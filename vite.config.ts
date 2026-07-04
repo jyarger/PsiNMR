@@ -37,7 +37,16 @@ export default () => {
       },
     },
     build: {
-      sourcemap: 'inline',
+      // Production bundles ship WITHOUT sourcemaps: inline maps would embed
+      // the full readable source in every JS chunk (large payload + source
+      // exposure). Profiling builds keep inline maps for the React profiler.
+      // Set SOURCEMAP=hidden to emit external .map files (e.g. to upload to
+      // an error tracker) without referencing them from the served bundle.
+      sourcemap: process.env.WITH_PROFILING
+        ? 'inline'
+        : process.env.SOURCEMAP === 'hidden'
+          ? 'hidden'
+          : false,
       rolldownOptions: {
         output: {
           strictExecutionOrder: true,

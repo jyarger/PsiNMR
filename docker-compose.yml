@@ -1,3 +1,13 @@
+# Local / development deployment: builds the image from source and publishes
+# it on localhost over HTTP (8080) and self-signed HTTPS (8443). This is the
+# right file for the "local computer for further development" box.
+#
+#   docker compose up --build      # build + run
+#   open http://localhost:8080
+#
+# For the public, user-facing deployment (Hostinger VPS + Cloudflare Tunnel,
+# pulling a prebuilt image from GHCR) use docker-compose.prod.yml instead.
+# See DEPLOY.md for the full walkthrough.
 services:
   psinmr:
     build:

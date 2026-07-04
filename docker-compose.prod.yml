@@ -1,0 +1,45 @@
+# Production deployment for the public, user-facing instance (e.g. the
+# Hostinger VPS serving psinmr.com).
+#
+# This file PULLS a prebuilt image from GitHub Container Registry (built and
+# pushed by .github/workflows/docker-publish.yml on each release tag) — the
+# VPS never has to run the heavy Rust + node build itself — and exposes it
+# through a Cloudflare Tunnel. No inbound ports are published: cloudflared
+# dials OUT to Cloudflare, which terminates real TLS at the edge and forwards
+# traffic to the container over the private Docker network. Nothing on the VPS
+# is reachable from the public internet directly.
+#
+# Setup (once):
+#   1. cp .env.example .env  and fill in IMAGE_TAG + TUNNEL_TOKEN
+#   2. In the Cloudflare dashboard: Zero Trust → Networks → Tunnels →
+#      create a tunnel, add a public hostname (psinmr.com → http://psinmr:80),
+#      copy the tunnel token into .env as TUNNEL_TOKEN.
+#   3. docker compose -f docker-compose.prod.yml pull
+#      docker compose -f docker-compose.prod.yml up -d
+#
+# Update to a new release:
+#   edit IMAGE_TAG in .env (or keep :latest), then
+#   docker compose -f docker-compose.prod.yml pull && \
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# See DEPLOY.md for alternatives (Cloudflare Origin Cert, Caddy/Let's Encrypt,
+# plain host ports behind a firewall).
+services:
+  psinmr:
+    image: ghcr.io/jyarger/psinmr:${IMAGE_TAG:-latest}
+    container_name: psinmr
+    restart: unless-stopped
+    # No `ports:` — the container is only reachable from cloudflared on the
+    # internal network. Uncomment to expose on the host for local debugging:
+    # ports:
+    #   - '127.0.0.1:8080:80'
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: psinmr-cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:?set TUNNEL_TOKEN in .env}
+    depends_on:
+      - psinmr

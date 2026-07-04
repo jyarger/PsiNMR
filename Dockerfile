@@ -33,8 +33,11 @@ RUN npm run build
 # Stage 3 — serve the static bundle with nginx
 # ---------------------------------------------------------------------------
 FROM nginx:1.27-alpine AS runtime
-RUN apk add --no-cache openssl
+RUN apk add --no-cache openssl \
+    && mkdir -p /var/cache/nginx/bmrb \
+    && chown -R nginx:nginx /var/cache/nginx
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+COPY docker/security-headers.conf /etc/nginx/security-headers.conf
 COPY docker/10-gen-self-signed-cert.sh /docker-entrypoint.d/10-gen-self-signed-cert.sh
 RUN chmod +x /docker-entrypoint.d/10-gen-self-signed-cert.sh
 COPY --from=web /app/build /usr/share/nginx/html
