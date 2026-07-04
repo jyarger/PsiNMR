@@ -26,6 +26,16 @@ the heavy numerics executed by the Ψ compute engine (Rust → WebAssembly).
    double-click to reset the view.
 4. Open the panels on the right (Peaks, Integrals, Ranges) to start analyzing.
 
+## Solid-state NMR
+
+The sample library is organized by state: **Liquids** and **Solids**. The
+Solids section carries magic-angle-spinning (MAS) examples recorded on real
+instruments — ¹H→¹³C cross-polarization (CP-MAS) spectra of adamantane,
+glycine and pharmaceutical compounds, ⁷⁹Br MAS of KBr at two spinning rates,
+and a multi-nucleus (¹H/³¹P/⁷⁹Br) probe-setup series. These arrive as raw
+FIDs: open one, then walk the usual 1D workflow — apodization, Fourier
+transform, phasing — exactly as you would for a liquid-state ¹³C spectrum.
+
 ## Loading your own data
 
 Drag a dataset — a zip of a Bruker/Varian/Jeol folder, a JCAMP-DX file, or a

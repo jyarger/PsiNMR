@@ -257,11 +257,77 @@
     "children": [
       {
         "groupName": "Simple spectra",
-        "children": []
+        "children": [
+          {
+            "file": "./data/solids/simple/1H_13C_Adamantane_10kHz_CPMAS.zip",
+            "title": "1H-13C CP-MAS adamantane (10 kHz)"
+          },
+          {
+            "file": "./data/solids/simple/13C_Adamantane_MAS.zip",
+            "title": "13C MAS adamantane"
+          },
+          {
+            "file": "./data/solids/simple/1H_Adamantane_10kHz_MAS.zip",
+            "title": "1H MAS adamantane (10 kHz)"
+          },
+          {
+            "file": "./data/solids/simple/13C_C13glycine_MAS.zip",
+            "title": "13C MAS glycine (13C enriched)"
+          },
+          {
+            "file": "./data/solids/simple/79Br_KBr_5kHz_MAS.zip",
+            "title": "79Br MAS KBr (5 kHz)"
+          },
+          {
+            "file": "./data/solids/simple/79Br_KBr_10kHz_MAS.zip",
+            "title": "79Br MAS KBr (10 kHz)"
+          },
+          {
+            "file": "./data/solids/simple/1H_13C_CBD_CPMAS.zip",
+            "title": "1H-13C CP-MAS CBD"
+          },
+          {
+            "file": "./data/solids/simple/1H_13C_PVP_CPMAS.zip",
+            "title": "1H-13C CP-MAS PVP"
+          },
+          {
+            "file": "./data/solids/simple/1H_13C_1CBD_1PVP_CPMAS.zip",
+            "title": "1H-13C CP-MAS CBD:PVP 1:1"
+          },
+          {
+            "file": "./data/solids/simple/1H_13C_4CBD_1PVP_CPMAS.zip",
+            "title": "1H-13C CP-MAS CBD:PVP 4:1"
+          },
+          {
+            "file": "./data/solids/simple/1H_13C_Felodipine_CPMAS.zip",
+            "title": "1H-13C CP-MAS felodipine"
+          },
+          {
+            "file": "./data/solids/simple/1H_13C_Nifedipine_CPMAS.zip",
+            "title": "1H-13C CP-MAS nifedipine"
+          }
+        ]
       },
       {
         "groupName": "Multiple spectra",
-        "children": []
+        "children": [
+          {
+            "file": "./data/solids/multiple/1H_13C_Adamantane_HH_CPMAS.zip",
+            "title": "CP setup: Hartmann-Hahn match (adamantane)"
+          },
+          {
+            "file": "./data/solids/multiple/1H_13C_Adamantane_hHX_CPMAS.zip",
+            "title": "CP setup: hHX decoupling (adamantane)"
+          },
+          {
+            "file": "./data/solids/multiple/1H_13C_Adamantane_pwH90_CPMAS.zip",
+            "title": "CP setup: 1H 90-degree pulse (adamantane)"
+          },
+          {
+            "file": "./data/solids/multiple/1H_31P_79Br_4mm_MAS_Setup_Bruker400.zip",
+            "title": "1H / 31P / 79Br 4mm MAS setup (Bruker 400)"
+          }
+        ]
       },
       {
         "groupName": "Various formats",

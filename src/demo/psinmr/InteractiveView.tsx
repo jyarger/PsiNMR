@@ -44,12 +44,19 @@ async function loadSample(
   file: string,
   base?: string | null,
 ): Promise<CoreReadReturn> {
+  const baseURL = !base || base === './' ? `${window.location.origin}/` : base;
+  // Raw data archives (e.g. the solid-state Varian/Bruker sample zips) are
+  // read directly; .json/.nmrium descriptors go through readNMRiumObject.
+  if (/\.zip$/i.test(file)) {
+    return await demoCore.readFromWebSource({
+      entries: [{ relativePath: file.replace(/^\.\//, ''), baseURL }],
+    });
+  }
   const response = await fetch(file);
   if (!response.ok) {
     throw new Error(`HTTP ${response.status} - ${response.statusText}`);
   }
   const nmriumObject = await response.json();
-  const baseURL = !base || base === './' ? `${window.location.origin}/` : base;
   return await demoCore.readNMRiumObject(nmriumObject, undefined, { baseURL });
 }
 
