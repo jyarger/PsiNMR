@@ -210,6 +210,8 @@ test('Multiplicity should be visible', async ({ page }) => {
 });
 
 test('Range state', async ({ page }) => {
+  // Heavy 2D processing + state round-trip; slow on CI runners (firefox).
+  test.slow();
   const nmrium = await NmriumPage.create(page);
   await test.step('Open FULL ethylbenzene 2D spectrum', async () => {
     await nmrium.openSample('./data/50-78-2/linked-jcamp.json');

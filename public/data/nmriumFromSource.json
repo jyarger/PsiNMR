@@ -103,9 +103,7 @@
           "jcamp": {
             "index": 0
           },
-          "files": [
-            "data/multiSpectra.zip/exam1d_1H.dx"
-          ]
+          "files": ["data/multiSpectra.zip/exam1d_1H.dx"]
         }
       },
       {
@@ -136,9 +134,7 @@
           "jcamp": {
             "index": 1
           },
-          "files": [
-            "data/multiSpectra.zip/exam1d_1H.dx"
-          ]
+          "files": ["data/multiSpectra.zip/exam1d_1H.dx"]
         }
       },
       {
@@ -169,9 +165,7 @@
           "jcamp": {
             "index": 0
           },
-          "files": [
-            "data/multiSpectra.zip/exam1d_13C.dx"
-          ]
+          "files": ["data/multiSpectra.zip/exam1d_13C.dx"]
         }
       }
     ],

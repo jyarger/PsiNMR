@@ -3,9 +3,11 @@
   "data": {
     "source": {
       "baseURL": "",
-      "entries": [{ 
-        "relativePath": "data/cytisine/2d/j-resolv.jdx"
-      }]
+      "entries": [
+        {
+          "relativePath": "data/cytisine/2d/j-resolv.jdx"
+        }
+      ]
     },
     "spectra": [
       {

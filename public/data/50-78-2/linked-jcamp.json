@@ -1,1 +1,34 @@
-{"spectra":[{"data":{},"source":{"original":[],"jcamp":null,"jcampURL":"data/50-78-2/1h.dx","jcampSpectrumIndex":0},"display":{"name":"1H","isVisible":true,"isPeaksMarkersVisible":true,"isRealSpectrumVisible":true}},{"data":{},"source":{"original":[],"jcamp":null,"jcampURL":"data/50-78-2/1h.dx","jcampSpectrumIndex":1},"display":{"name":"1H","isVisible":true,"isPeaksMarkersVisible":true,"isRealSpectrumVisible":true}}]}
+{
+  "spectra": [
+    {
+      "data": {},
+      "source": {
+        "original": [],
+        "jcamp": null,
+        "jcampURL": "data/50-78-2/1h.dx",
+        "jcampSpectrumIndex": 0
+      },
+      "display": {
+        "name": "1H",
+        "isVisible": true,
+        "isPeaksMarkersVisible": true,
+        "isRealSpectrumVisible": true
+      }
+    },
+    {
+      "data": {},
+      "source": {
+        "original": [],
+        "jcamp": null,
+        "jcampURL": "data/50-78-2/1h.dx",
+        "jcampSpectrumIndex": 1
+      },
+      "display": {
+        "name": "1H",
+        "isVisible": true,
+        "isPeaksMarkersVisible": true,
+        "isRealSpectrumVisible": true
+      }
+    }
+  ]
+}

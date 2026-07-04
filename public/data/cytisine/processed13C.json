@@ -1,1 +1,221 @@
-{"version":3,"spectra":[{"id":"n4eu7cs22v","display":{"name":"test","isVisible":true,"isPeaksMarkersVisible":true,"isRealSpectrumVisible":true,"isVisibleInDomain":true},"source":{"jcampURL":"https://cheminfo.github.io/nmr-dataset-demo/cytisine/13c.fid.jdx","jcampSpectrumIndex":0},"peaks":{"values":[{"id":"3cq9PasD","width":2.2008036748166613,"originalX":53.51316024637898,"x":54.24,"y":7832575371.121044},{"id":"6WZnyQeX","width":2.2008036748166613,"originalX":53.693497522005735,"x":54.42033727562676,"y":5262058336.356949},{"id":"5CsXfE3N","width":2.2008036748166613,"originalX":53.33287713195534,"x":54.059716885576364,"y":5218453633.357816},{"id":"yycwPP2f","width":1.650602756112496,"originalX":53.874425528676106,"x":54.60126528229713,"y":2912767346.151274},{"id":"cZLNjzeK","width":1.9257032154645788,"originalX":53.88644780372819,"x":54.61328755734921,"y":2869661434.5879717},{"id":"7b8S8VFL","width":2.2008036748166613,"originalX":53.15246770443687,"x":53.879307458057895,"y":2576226261.846418},{"id":"dJjR4g1E","width":1.9257032154608251,"originalX":26.201111367457568,"x":26.92795112107859,"y":2304124678.898118},{"id":"2dCtZvgd","width":1.9257032154608251,"originalX":27.854024190441105,"x":28.580863944062127,"y":2220075572.1025476},{"id":"kreVNS25","width":1.9257032154645788,"originalX":35.570437520574735,"x":36.29727727419576,"y":2169790333.0820847},{"id":"7JaeVA5i","width":1.9257032154645788,"originalX":104.46513994823611,"x":105.19197970185714,"y":2077749332.2890327},{"id":"fggvpdXI","width":1.9257032154645788,"originalX":52.92819689040525,"x":53.655036644026275,"y":2053846103.5822759},{"id":"b2RRnixe","width":2.2008036748166613,"originalX":49.66304170250171,"x":50.38988145612273,"y":2029514468.8540428},{"id":"gU3dU5kh","width":2.2008036748166613,"originalX":116.05996179651858,"x":116.7868015501396,"y":2001240957.057638},{"id":"4ZuR9TOK","width":1.9257032154645788,"originalX":138.65347555434275,"x":139.38031530796377,"y":1815389180.8688667},{"id":"edmK1iUB","width":1.9257032154645788,"originalX":163.21647696659488,"x":163.9433167202159,"y":839867023.090792},{"id":"17O9sqx5","width":1.9257032154645788,"originalX":151.63749055229758,"x":152.3643303059186,"y":761132062.410254}],"options":{}},"integrals":{"values":[],"options":{"isSumConstant":true,"sumAuto":true}},"ranges":{"values":[],"options":{"isSumConstant":true,"sumAuto":true}},"filters":[{"name":"digitalFilter","label":"Digital Filter","value":{"digitalFilterValue":67.9918823242188},"id":"lvmfQAur","flag":true,"isDeleteAllow":false,"error":null},{"name":"apodization","label":"Apodization / Window functions","value":{"lineBroadening":1,"gaussBroadening":0,"lineBroadeningCenter":0},"id":"kCgNpP0y","flag":true,"isDeleteAllow":true,"error":null},{"name":"zeroFilling","label":"Zero Filling","value":131072,"id":"feTNjBaW","flag":true,"isDeleteAllow":true,"error":null},{"name":"fft","label":"FFT","value":{},"id":"i6e5zDU6","flag":true,"isDeleteAllow":true,"error":null},{"name":"phaseCorrection","label":"phase correction","value":{"ph0":158,"ph1":88},"id":"kq0V3lTQ","flag":true,"isDeleteAllow":true,"error":null},{"name":"shiftX","label":"shift X","value":0.7268397536210216,"id":"8ZOlUaeh","flag":true,"isDeleteAllow":true,"error":null}]}],"molecules":[],"correlations":{"values":[],"state":{},"options":{"tolerance":{"C":0.25,"H":0.02,"N":0.25,"F":0.25,"Si":0.25,"P":0.25},"mf":""}},"preferences":{"activeTab":"13C","verticalAlign":"bottom"}}
+{
+  "version": 3,
+  "spectra": [
+    {
+      "id": "n4eu7cs22v",
+      "display": {
+        "name": "test",
+        "isVisible": true,
+        "isPeaksMarkersVisible": true,
+        "isRealSpectrumVisible": true,
+        "isVisibleInDomain": true
+      },
+      "source": {
+        "jcampURL": "https://cheminfo.github.io/nmr-dataset-demo/cytisine/13c.fid.jdx",
+        "jcampSpectrumIndex": 0
+      },
+      "peaks": {
+        "values": [
+          {
+            "id": "3cq9PasD",
+            "width": 2.2008036748166613,
+            "originalX": 53.51316024637898,
+            "x": 54.24,
+            "y": 7832575371.121044
+          },
+          {
+            "id": "6WZnyQeX",
+            "width": 2.2008036748166613,
+            "originalX": 53.693497522005735,
+            "x": 54.42033727562676,
+            "y": 5262058336.356949
+          },
+          {
+            "id": "5CsXfE3N",
+            "width": 2.2008036748166613,
+            "originalX": 53.33287713195534,
+            "x": 54.059716885576364,
+            "y": 5218453633.357816
+          },
+          {
+            "id": "yycwPP2f",
+            "width": 1.650602756112496,
+            "originalX": 53.874425528676106,
+            "x": 54.60126528229713,
+            "y": 2912767346.151274
+          },
+          {
+            "id": "cZLNjzeK",
+            "width": 1.9257032154645788,
+            "originalX": 53.88644780372819,
+            "x": 54.61328755734921,
+            "y": 2869661434.5879717
+          },
+          {
+            "id": "7b8S8VFL",
+            "width": 2.2008036748166613,
+            "originalX": 53.15246770443687,
+            "x": 53.879307458057895,
+            "y": 2576226261.846418
+          },
+          {
+            "id": "dJjR4g1E",
+            "width": 1.9257032154608251,
+            "originalX": 26.201111367457568,
+            "x": 26.92795112107859,
+            "y": 2304124678.898118
+          },
+          {
+            "id": "2dCtZvgd",
+            "width": 1.9257032154608251,
+            "originalX": 27.854024190441105,
+            "x": 28.580863944062127,
+            "y": 2220075572.1025476
+          },
+          {
+            "id": "kreVNS25",
+            "width": 1.9257032154645788,
+            "originalX": 35.570437520574735,
+            "x": 36.29727727419576,
+            "y": 2169790333.0820847
+          },
+          {
+            "id": "7JaeVA5i",
+            "width": 1.9257032154645788,
+            "originalX": 104.46513994823611,
+            "x": 105.19197970185714,
+            "y": 2077749332.2890327
+          },
+          {
+            "id": "fggvpdXI",
+            "width": 1.9257032154645788,
+            "originalX": 52.92819689040525,
+            "x": 53.655036644026275,
+            "y": 2053846103.5822759
+          },
+          {
+            "id": "b2RRnixe",
+            "width": 2.2008036748166613,
+            "originalX": 49.66304170250171,
+            "x": 50.38988145612273,
+            "y": 2029514468.8540428
+          },
+          {
+            "id": "gU3dU5kh",
+            "width": 2.2008036748166613,
+            "originalX": 116.05996179651858,
+            "x": 116.7868015501396,
+            "y": 2001240957.057638
+          },
+          {
+            "id": "4ZuR9TOK",
+            "width": 1.9257032154645788,
+            "originalX": 138.65347555434275,
+            "x": 139.38031530796377,
+            "y": 1815389180.8688667
+          },
+          {
+            "id": "edmK1iUB",
+            "width": 1.9257032154645788,
+            "originalX": 163.21647696659488,
+            "x": 163.9433167202159,
+            "y": 839867023.090792
+          },
+          {
+            "id": "17O9sqx5",
+            "width": 1.9257032154645788,
+            "originalX": 151.63749055229758,
+            "x": 152.3643303059186,
+            "y": 761132062.410254
+          }
+        ],
+        "options": {}
+      },
+      "integrals": {
+        "values": [],
+        "options": { "isSumConstant": true, "sumAuto": true }
+      },
+      "ranges": {
+        "values": [],
+        "options": { "isSumConstant": true, "sumAuto": true }
+      },
+      "filters": [
+        {
+          "name": "digitalFilter",
+          "label": "Digital Filter",
+          "value": { "digitalFilterValue": 67.9918823242188 },
+          "id": "lvmfQAur",
+          "flag": true,
+          "isDeleteAllow": false,
+          "error": null
+        },
+        {
+          "name": "apodization",
+          "label": "Apodization / Window functions",
+          "value": {
+            "lineBroadening": 1,
+            "gaussBroadening": 0,
+            "lineBroadeningCenter": 0
+          },
+          "id": "kCgNpP0y",
+          "flag": true,
+          "isDeleteAllow": true,
+          "error": null
+        },
+        {
+          "name": "zeroFilling",
+          "label": "Zero Filling",
+          "value": 131072,
+          "id": "feTNjBaW",
+          "flag": true,
+          "isDeleteAllow": true,
+          "error": null
+        },
+        {
+          "name": "fft",
+          "label": "FFT",
+          "value": {},
+          "id": "i6e5zDU6",
+          "flag": true,
+          "isDeleteAllow": true,
+          "error": null
+        },
+        {
+          "name": "phaseCorrection",
+          "label": "phase correction",
+          "value": { "ph0": 158, "ph1": 88 },
+          "id": "kq0V3lTQ",
+          "flag": true,
+          "isDeleteAllow": true,
+          "error": null
+        },
+        {
+          "name": "shiftX",
+          "label": "shift X",
+          "value": 0.7268397536210216,
+          "id": "8ZOlUaeh",
+          "flag": true,
+          "isDeleteAllow": true,
+          "error": null
+        }
+      ]
+    }
+  ],
+  "molecules": [],
+  "correlations": {
+    "values": [],
+    "state": {},
+    "options": {
+      "tolerance": {
+        "C": 0.25,
+        "H": 0.02,
+        "N": 0.25,
+        "F": 0.25,
+        "Si": 0.25,
+        "P": 0.25
+      },
+      "mf": ""
+    }
+  },
+  "preferences": { "activeTab": "13C", "verticalAlign": "bottom" }
+}

@@ -6,20 +6,20 @@
       }
     },
     {
-	"source": {
-	  "jcampURL": "data/ethylbenzene/cosy.jdx"
-	}
-      },
-    {
-	"source": {
-	  "jcampURL": "data/ethylbenzene/hsqc.jdx"
-	}
-      },
-    {
-	"source": {
-	  "jcampURL": "data/ethylbenzene/hmbc.jdx"
-	}
+      "source": {
+        "jcampURL": "data/ethylbenzene/cosy.jdx"
       }
+    },
+    {
+      "source": {
+        "jcampURL": "data/ethylbenzene/hsqc.jdx"
+      }
+    },
+    {
+      "source": {
+        "jcampURL": "data/ethylbenzene/hmbc.jdx"
+      }
+    }
   ],
   "molecules": [
     {

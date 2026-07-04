@@ -1,1 +1,28 @@
-{"version":4,"data":{"source":{"baseURL":"","entries":[{"relativePath":"data/aspirin/aspirin-1h.zip"}]},"spectra":[{"display":{"name":"1H","isVisible":true,"isRealSpectrumVisible":true,"isPeaksMarkersVisible":true,"isVisibleInDomain":true},"sourceSelector":{"files":["data/aspirin/aspirin-1h.zip/1/acqu","data/aspirin/aspirin-1h.zip/1/acqus","data/aspirin/aspirin-1h.zip/1/fid","data/aspirin/aspirin-1h.zip/1/pdata/1/procs"]}}]}}
+{
+  "version": 4,
+  "data": {
+    "source": {
+      "baseURL": "",
+      "entries": [{ "relativePath": "data/aspirin/aspirin-1h.zip" }]
+    },
+    "spectra": [
+      {
+        "display": {
+          "name": "1H",
+          "isVisible": true,
+          "isRealSpectrumVisible": true,
+          "isPeaksMarkersVisible": true,
+          "isVisibleInDomain": true
+        },
+        "sourceSelector": {
+          "files": [
+            "data/aspirin/aspirin-1h.zip/1/acqu",
+            "data/aspirin/aspirin-1h.zip/1/acqus",
+            "data/aspirin/aspirin-1h.zip/1/fid",
+            "data/aspirin/aspirin-1h.zip/1/pdata/1/procs"
+          ]
+        }
+      }
+    ]
+  }
+}
