@@ -4,6 +4,7 @@ import { useDropzone } from 'react-dropzone';
 import {
   FaChevronDown,
   FaChevronRight,
+  FaExternalLinkAlt,
   FaFileImport,
   FaGlobe,
   FaLayerGroup,
@@ -270,6 +271,54 @@ const EmptyNote = styled.div`
   padding: 4px 8px 6px 26px;
 `;
 
+const GroupNote = styled.p`
+  color: var(--psi-text-on-chrome-muted);
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 2px 8px 6px 26px;
+`;
+
+const ToolLink = styled.a`
+  border-radius: 6px;
+  color: var(--psi-text-on-chrome);
+  display: block;
+  font-family: var(--psi-font);
+  padding: 6px 8px 6px 26px;
+  text-decoration: none;
+
+  .row {
+    align-items: center;
+    display: flex;
+    gap: 6px;
+  }
+
+  .name {
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  .row svg {
+    color: var(--psi-text-on-chrome-muted);
+    font-size: 9px;
+  }
+
+  .desc {
+    color: var(--psi-text-on-chrome-muted);
+    display: block;
+    font-size: 11px;
+    margin-top: 1px;
+  }
+
+  &:hover {
+    background: var(--psi-accent-soft);
+  }
+
+  &:hover .name,
+  &:hover .row svg {
+    color: var(--psi-accent-on-chrome);
+  }
+`;
+
 const RemoveButton = styled.button`
   background: transparent;
   border: none;
@@ -290,6 +339,11 @@ interface SampleItem {
   view?: string;
   children?: SampleItem[];
   groupName?: string;
+  // External-tool link items (e.g. ssNMR simulation packages) and an optional
+  // introductory note rendered above a group's contents.
+  url?: string;
+  description?: string;
+  note?: string;
 }
 
 function Group({
@@ -413,29 +467,46 @@ export default memo(function DataPanel(props: DataPanelProps) {
       );
     }
     const items = group.children.filter((item) => item.file && !item.view);
-    if (items.length === 0 && !nested) return null;
+    const links = group.children.filter((item) => item.url);
+    const isEmpty = items.length === 0 && links.length === 0 && !group.note;
+    if (isEmpty && !nested) return null;
     return (
       <Group key={group.groupName} title={group.groupName}>
-        {items.length === 0 ? (
-          <EmptyNote>Examples coming soon</EmptyNote>
-        ) : (
-          items.map((item) => (
-            <Item
-              key={item.file}
-              type="button"
-              title={item.title}
-              onClick={() =>
-                void navigate(
-                  `/nmr/sample?file=${encodeURIComponent(
-                    item.file as string,
-                  )}&base=${encodeURIComponent(baseURL)}`,
-                )
-              }
-            >
-              {item.title}
-            </Item>
-          ))
-        )}
+        {group.note && <GroupNote>{group.note}</GroupNote>}
+        {items.map((item) => (
+          <Item
+            key={item.file}
+            type="button"
+            title={item.title}
+            onClick={() =>
+              void navigate(
+                `/nmr/sample?file=${encodeURIComponent(
+                  item.file as string,
+                )}&base=${encodeURIComponent(baseURL)}`,
+              )
+            }
+          >
+            {item.title}
+          </Item>
+        ))}
+        {links.map((link) => (
+          <ToolLink
+            key={link.url}
+            href={link.url}
+            target="_blank"
+            rel="noreferrer noopener"
+            title={link.description ?? link.title}
+          >
+            <span className="row">
+              <span className="name">{link.title}</span>
+              <FaExternalLinkAlt />
+            </span>
+            {link.description && (
+              <span className="desc">{link.description}</span>
+            )}
+          </ToolLink>
+        ))}
+        {isEmpty && <EmptyNote>Examples coming soon</EmptyNote>}
       </Group>
     );
   }

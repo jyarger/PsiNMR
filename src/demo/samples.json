@@ -190,39 +190,39 @@
         "children": [
           {
             "file": "./data/tests/simulated/d2-5-8-changingAll.json",
-            "title": "\u03b4=2,5,8 Integration test"
+            "title": "δ=2,5,8 Integration test"
           },
           {
             "file": "./data/tests/simulated/d2-changingHeigh.json",
-            "title": "\u03b4=2 Variable height"
+            "title": "δ=2 Variable height"
           },
           {
             "file": "./data/tests/simulated/d2-5-8-changingNbPoints.json",
-            "title": "\u03b4=2,5,8 Variable nbPoints"
+            "title": "δ=2,5,8 Variable nbPoints"
           },
           {
             "file": "./data/tests/simulated/d1-2-3-4-5-6-7-8.json",
-            "title": "\u03b4=1,2,3,4,5,6,7,8"
+            "title": "δ=1,2,3,4,5,6,7,8"
           },
           {
             "file": "./data/tests/simulated/d1-2-3-4-5-6-7-8HR.json",
-            "title": "\u03b4=1,2,3,4,5,6,7,8 HR"
+            "title": "δ=1,2,3,4,5,6,7,8 HR"
           },
           {
             "file": "./data/tests/simulated/d1-1.2_j7.json",
-            "title": "\u03b4=1,1.2 J=7"
+            "title": "δ=1,1.2 J=7"
           },
           {
             "file": "./data/tests/simulated/d1-2_j7.json",
-            "title": "\u03b4=1,2 J=7"
+            "title": "δ=1,2 J=7"
           },
           {
             "file": "./data/tests/simulated/d1-2-3_j16-10-2.json",
-            "title": "\u03b4=1,2,3 J=2,10,16"
+            "title": "δ=1,2,3 J=2,10,16"
           },
           {
             "file": "./data/tests/simulated/d1-7_j7.json",
-            "title": "\u03b4=1,7 J=7"
+            "title": "δ=1,7 J=7"
           },
           {
             "file": "./data/tests/simulated/d1-2-3-4-5-6-7-8_baseline.json",
@@ -335,7 +335,24 @@
       },
       {
         "groupName": "Simulation",
-        "children": []
+        "children": [
+          {
+            "title": "MRSimulator",
+            "description": "Fast solid-state NMR lineshape simulation (Python)",
+            "url": "https://github.com/deepanshs/mrsimulator"
+          },
+          {
+            "title": "SIMPSON",
+            "description": "General NMR spin-dynamics simulation",
+            "url": "https://inano.au.dk/about/research-centers-and-projects/nmr/software/simpson"
+          },
+          {
+            "title": "Spinach",
+            "description": "Large spin-system simulation library (MATLAB)",
+            "url": "https://spindynamics.org/?page_id=12"
+          }
+        ],
+        "note": "Solid-state NMR simulation is coming soon. For advanced ssNMR simulations today, these established tools are recommended:"
       }
     ]
   }
