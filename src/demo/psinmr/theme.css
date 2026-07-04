@@ -66,6 +66,11 @@
 
   /* On-plot hover/selection bands (ranges, integrals, zones) */
   --psi-plot-highlight: rgb(95 179 167 / 33%);
+
+  /* Logs-history severity row tints */
+  --psi-log-info: rgb(67 160 71 / 25%);
+  --psi-log-warn: rgb(255 213 79 / 20%);
+  --psi-log-error: rgb(179 86 77 / 38%);
 }
 
 [data-psi-theme='light'],
@@ -119,6 +124,11 @@
 
   /* On-plot hover/selection bands (original NMRium orange) */
   --psi-plot-highlight: #ff6f0057;
+
+  /* Logs-history severity row tints (original) */
+  --psi-log-info: lightgreen;
+  --psi-log-warn: lightyellow;
+  --psi-log-error: pink;
 }
 
 :root {

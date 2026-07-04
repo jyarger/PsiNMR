@@ -23,11 +23,11 @@ const logsDataFormat = new Intl.DateTimeFormat('default', {
 
 function handleRowStyle(data: any) {
   const level = (data?.original as LogEntry).level;
-  let backgroundColor = 'lightgreen';
+  let backgroundColor = 'var(--psi-log-info, lightgreen)';
   if (level > 40) {
-    backgroundColor = 'pink';
+    backgroundColor = 'var(--psi-log-error, pink)';
   } else if (level === 40) {
-    backgroundColor = 'lightyellow';
+    backgroundColor = 'var(--psi-log-warn, lightyellow)';
   }
 
   return { base: { backgroundColor } };

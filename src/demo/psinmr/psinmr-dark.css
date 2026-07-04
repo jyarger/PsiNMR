@@ -63,6 +63,30 @@
   color: var(--psi-text) !important;
 }
 
+/* --- Blueprint dialogs (portal to <body>, so scope from <html>) --------
+   The dialog frame gets Blueprint's dark styling via bp6-dark on <body>,
+   but NMRium's dialog bodies and tables hardcode white. */
+html[data-psi-theme='dark'] .bp6-dialog-body {
+  background-color: var(--psi-plot-surface);
+  color: var(--psi-text);
+}
+
+html[data-psi-theme='dark'] .bp6-dialog thead,
+html[data-psi-theme='dark'] .bp6-dialog th {
+  background-color: var(--psi-chrome-raised);
+  color: var(--psi-text-on-chrome);
+}
+
+html[data-psi-theme='dark'] .bp6-dialog table td {
+  border-color: var(--psi-chrome-border);
+}
+
+/* Any element inside a dialog still hardcoding a white background. */
+html[data-psi-theme='dark'] .bp6-dialog [style*='background-color: white'],
+html[data-psi-theme='dark'] .bp6-dialog [style*='background: white'] {
+  background-color: var(--psi-plot-surface) !important;
+}
+
 /* Information-panel search bar (react-science InfoPanel hardcodes a
    white wrapper around the parameter search input). */
 [data-psi-theme='dark']

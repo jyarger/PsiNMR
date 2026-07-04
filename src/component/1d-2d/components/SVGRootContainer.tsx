@@ -77,7 +77,7 @@ export function SVGRootContainer(props: SVGRootContainerProps) {
           height={innerHeight}
           x={margin.left}
           y={margin.top}
-          stroke="black"
+          stroke="var(--psi-plot-fg, black)"
           strokeWidth="1"
           fill="transparent"
         />

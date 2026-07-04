@@ -344,7 +344,7 @@ function OptionsSection(options: OptionsSectionProps) {
           autoFocus={autoFocus}
         />
       }
-      headerStyle={{ backgroundColor: 'white' }}
+      headerStyle={{ backgroundColor: 'var(--psi-plot-surface, white)' }}
     >
       <Sections.Body>
         <div style={{ display: 'flex', flexDirection: 'column' }}>

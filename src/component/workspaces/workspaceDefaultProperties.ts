@@ -78,7 +78,7 @@ export const workspaceDefaultProperties: RequiredWorkspacePreferences = {
 
   axis: {
     secondaryTicks: { enabled: true },
-    primaryTicks: { textStyle: { fontSize: 10 } },
+    primaryTicks: { textStyle: { fontSize: 16 } },
     gridlines1D: {
       primary: {
         enabled: true,
@@ -176,12 +176,12 @@ export const workspaceDefaultProperties: RequiredWorkspacePreferences = {
     visible: false,
     nameStyle: {
       fontSize: 11,
-      fill: 'black',
+      fill: 'var(--psi-plot-fg, black)',
       fontWeight: 'bold',
     },
     valueStyle: {
       fontSize: 12,
-      fill: 'black',
+      fill: 'var(--psi-plot-fg, black)',
     },
     fields: [
       { label: 'Name', jpath: ['info', 'name'], visible: true, format: '' },
@@ -257,7 +257,7 @@ export const workspaceDefaultProperties: RequiredWorkspacePreferences = {
     },
   },
   spectraColors: {
-    highlightColor: '#ffd70080',
+    highlightColor: '#00c85380',
     indicatorLineColor: '#2FFF0085',
     oneDimension: [],
     twoDimensions: [
@@ -357,7 +357,7 @@ export const workspaceDefaultProperties: RequiredWorkspacePreferences = {
     fields: [{ jpath: ['info', 'name'], visible: true, format: '' }],
     valueStyle: {
       fontSize: 12,
-      fill: 'black',
+      fill: 'var(--psi-plot-fg, black)',
     },
   },
 };
