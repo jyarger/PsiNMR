@@ -90,9 +90,8 @@ export default function Landing() {
         </Ket>
       </Hero>
       <Tagline>
-        Process, analyze and visualize 1D &amp; 2D NMR data directly in your
-        browser — drag in your datasets, or point PsiNMR at a public data
-        repository.
+        NMR data directly in your browser — Process, Analyze, Predict, Simulate,
+        and Visualize
       </Tagline>
       <Cta to="/nmr">INTERACTIVE NMR</Cta>
       <Hint>

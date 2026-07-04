@@ -183,7 +183,7 @@ export default function TopBar(props: TopBarProps) {
         <FaBars />
       </IconButton>
       <BrandLink to="/">
-        <PsiLogo size={30} spin="intro" />
+        <PsiLogo size={30} spin="intro" wordmark="ketmark" />
       </BrandLink>
 
       <PrimaryAction to="/nmr">INTERACTIVE NMR</PrimaryAction>

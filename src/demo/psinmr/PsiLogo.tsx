@@ -2,7 +2,7 @@ import { css, keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
 type SpinMode = 'intro' | 'loading' | false;
-type Wordmark = 'psinmr' | 'greek' | 'ket';
+type Wordmark = 'psinmr' | 'greek' | 'ket' | 'ketmark';
 
 interface PsiLogoProps {
   size?: number;
@@ -109,6 +109,16 @@ function WordmarkText({
     return (
       <>
         <span style={{ color: base }}>Ψ|</span>
+        <span style={{ color: accent }}>NMR</span>
+        <span style={{ color: base }}>⟩</span>
+      </>
+    );
+  }
+  if (variant === 'ketmark') {
+    // Pairs with the Ψ mark to read Ψ|NMR⟩ (the icon supplies the Ψ).
+    return (
+      <>
+        <span style={{ color: base }}>|</span>
         <span style={{ color: accent }}>NMR</span>
         <span style={{ color: base }}>⟩</span>
       </>
