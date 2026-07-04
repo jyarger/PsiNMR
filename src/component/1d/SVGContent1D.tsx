@@ -12,6 +12,7 @@ import SpectraTracker from './SpectraLegends.js';
 import DatabaseElements from './database/DatabaseElements.js';
 import IntegralsSeries from './integral/IntegralsSeries.js';
 import JGraph from './jCouplingGraph/JGraph.js';
+import SpinningSidebands from './mas/SpinningSidebands.js';
 import { Boxplot } from './matrix/Boxplot.js';
 import { Stocsy } from './matrix/Stocsy.js';
 import MultiAnalysisRanges from './multiAnalysis/MultiAnalysisRanges.js';
@@ -44,6 +45,7 @@ export function SVGContent1D() {
         <Boxplot />
         <SpectraTracker />
         <SpectrumInfoBlock />
+        <SpinningSidebands />
 
         <SimilarityTree />
       </ClipPathContainer>

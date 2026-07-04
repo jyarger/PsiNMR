@@ -4,6 +4,7 @@ import { useDeferredValue, useEffect } from 'react';
 import { FloatPublicationString } from '../1d/FloatPublicationString.js';
 import { Viewer1D } from '../1d/Viewer1D.js';
 import { SpectraInsets } from '../1d/inset/SpectraInsets.js';
+import { MasSidebandsControl } from '../1d/mas/MasSidebandsControl.js';
 import { FloatingRanges } from '../1d/ranges/FloatingRanges.tsx';
 import { FloatMolecules } from '../1d-2d/components/FloatMoleculeStructures/FloatMolecules.js';
 import { SVGRootContainer } from '../1d-2d/components/SVGRootContainer.js';
@@ -96,6 +97,7 @@ export function NMRiumViewer(props: NMRiumViewerProps) {
       <FloatPublicationString />
       <SpectraInsets />
       <FloatMolecules />
+      <MasSidebandsControl />
     </div>
   );
 }
