@@ -43,6 +43,15 @@ acquisition metadata (when present) but stays editable — adjust νr until
 the guides land on the sidebands and you have measured the actual spinning
 rate. Try it on the ⁷⁹Br KBr spectra, the classic sideband standard.
 
+With the νr tool on, any peaks you pick are labelled against the grid — **iso**
+for the isotropic line and **±1, ±2, …** for the spinning sidebands of that
+site — so the real (chemically distinct) peaks are easy to tell apart from
+sidebands.
+
+**MAS parameters.** When a spectrum carries acquisition metadata, the
+Information panel gains a **Solid-state NMR (MAS)** section listing the pulse
+sequence, MAS rate, and (for cross-polarization) the CP contact time.
+
 **Frequency axis.** Right-click the x-axis unit label to switch a
 transformed spectrum between **δ [ppm]** and **ν [kHz]**. Solid-state
 spectra are routinely plotted in frequency (kHz), where sideband spacings
