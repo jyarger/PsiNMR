@@ -12,6 +12,7 @@ import useSpectrum from '../../hooks/useSpectrum.js';
 import { booleanToString } from '../../utility/booleanToString.js';
 
 import { InformationEditionModal } from './InformationEditionModal.js';
+import { getMasInfo } from './masInfo.js';
 
 const emptyData = { info: {}, meta: {} };
 
@@ -44,14 +45,18 @@ export function InformationPanel() {
   const { dialog, openDialog, closeDialog } = useDialogToggle({
     informationModal: false,
   });
-  const data: InfoPanelData[] = useMemo(
-    () => [
+  const data: InfoPanelData[] = useMemo(() => {
+    const masInfo = getMasInfo(meta);
+    return [
       { description: 'Custom information', data: customInfo || {} },
       { description: 'Spectrum information', data: info || {} },
+      // Solid-state NMR readout, shown only when MAS metadata is present.
+      ...(Object.keys(masInfo).length > 0
+        ? [{ description: 'Solid-state NMR (MAS)', data: masInfo }]
+        : []),
       { description: 'Other spectrum parameters', data: meta || {} },
-    ],
-    [customInfo, info, meta],
-  );
+    ];
+  }, [customInfo, info, meta]);
 
   const tooltipProps: Omit<TooltipProps, 'content'> = {
     intent: !activeSpectra ? 'danger' : 'none',
