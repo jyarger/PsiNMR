@@ -1,7 +1,7 @@
 {
   "name": "psinmr",
   "description": "PsiNMR (\u03a8NMR) \u2014 web application to display and process nuclear magnetic resonance (NMR) spectra. Based on NMRium.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "type": "module",
   "exports": {
