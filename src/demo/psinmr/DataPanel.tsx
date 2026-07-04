@@ -214,6 +214,29 @@ const SourceHeader = styled.div`
   }
 `;
 
+// Category headers (Liquids / Solids) — styled as subheadings of the
+// Sample library section, one level above the sample groups.
+const CategoryHeader = styled(GroupHeader)`
+  color: var(--psi-text-on-chrome-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-top: 6px;
+  text-transform: uppercase;
+`;
+
+const Indent = styled.div`
+  padding-left: 12px;
+`;
+
+const EmptyNote = styled.div`
+  color: var(--psi-text-on-chrome-muted);
+  font-size: 12px;
+  font-style: italic;
+  opacity: 0.7;
+  padding: 4px 8px 6px 26px;
+`;
+
 const RemoveButton = styled.button`
   background: transparent;
   border: none;
@@ -241,20 +264,23 @@ function Group({
   children,
   defaultOpen = false,
   action,
+  variant = 'group',
 }: {
   title: string;
   children: React.ReactNode;
   defaultOpen?: boolean;
   action?: React.ReactNode;
+  variant?: 'group' | 'category';
 }) {
   const [open, setOpen] = useState(defaultOpen);
+  const Header = variant === 'category' ? CategoryHeader : GroupHeader;
   return (
     <div>
       <SourceHeader>
-        <GroupHeader type="button" onClick={() => setOpen(!open)}>
+        <Header type="button" onClick={() => setOpen(!open)}>
           {open ? <FaChevronDown /> : <FaChevronRight />}
           {title}
-        </GroupHeader>
+        </Header>
         {action}
       </SourceHeader>
       {open && children}
@@ -326,6 +352,58 @@ export default memo(function DataPanel(props: DataPanelProps) {
     } finally {
       setLoading(false);
     }
+  }
+
+  // Renders one node of the sample library. Categories (Liquids / Solids)
+  // hold sample groups as children and render as uppercase subheadings;
+  // groups hold loadable spectra. Empty groups inside a category stay
+  // visible with a placeholder (the Solids scaffold), while empty top-level
+  // groups are skipped as before.
+  function renderSampleGroup(group: SampleItem, nested: boolean) {
+    if (!group.children || !group.groupName) return null;
+    const subGroups = group.children.filter(
+      (child) => child.groupName && child.children,
+    );
+    if (subGroups.length > 0) {
+      return (
+        <Group
+          key={group.groupName}
+          title={group.groupName}
+          variant="category"
+          defaultOpen
+        >
+          <Indent>
+            {subGroups.map((sub) => renderSampleGroup(sub, true))}
+          </Indent>
+        </Group>
+      );
+    }
+    const items = group.children.filter((item) => item.file && !item.view);
+    if (items.length === 0 && !nested) return null;
+    return (
+      <Group key={group.groupName} title={group.groupName}>
+        {items.length === 0 ? (
+          <EmptyNote>Examples coming soon</EmptyNote>
+        ) : (
+          items.map((item) => (
+            <Item
+              key={item.file}
+              type="button"
+              title={item.title}
+              onClick={() =>
+                void navigate(
+                  `/nmr/sample?file=${encodeURIComponent(
+                    item.file as string,
+                  )}&base=${encodeURIComponent(baseURL)}`,
+                )
+              }
+            >
+              {item.title}
+            </Item>
+          ))
+        )}
+      </Group>
+    );
   }
 
   return (
@@ -411,33 +489,7 @@ export default memo(function DataPanel(props: DataPanelProps) {
           <FaLayerGroup style={{ marginRight: 6, verticalAlign: '-1px' }} />
           Sample library
         </SectionTitle>
-        {samples.map((group) => {
-          if (!group.children || !group.groupName) return null;
-          const items = group.children.filter(
-            (item) => item.file && !item.view,
-          );
-          if (items.length === 0) return null;
-          return (
-            <Group key={group.groupName} title={group.groupName}>
-              {items.map((item) => (
-                <Item
-                  key={item.file}
-                  type="button"
-                  title={item.title}
-                  onClick={() =>
-                    void navigate(
-                      `/nmr/sample?file=${encodeURIComponent(
-                        item.file as string,
-                      )}&base=${encodeURIComponent(baseURL)}`,
-                    )
-                  }
-                >
-                  {item.title}
-                </Item>
-              ))}
-            </Group>
-          );
-        })}
+        {samples.map((group) => renderSampleGroup(group, false))}
       </Section>
     </Panel>
   );

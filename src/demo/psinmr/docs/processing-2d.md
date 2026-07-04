@@ -7,7 +7,7 @@ memory — interactive contour changes stay fast even for 4096×4096 grids.
 
 ## Viewing 2D spectra
 
-Load a 2D dataset (e.g. _Sample library → Cytisine → 2D cosy_). Projections
+Load a 2D dataset (e.g. _Sample library → Liquids → Simple spectra → COSY cytisine_). Projections
 of matching 1D spectra are shown along both axes when they are loaded
 together with the 2D experiment.
 

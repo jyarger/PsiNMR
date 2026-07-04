@@ -5,7 +5,7 @@ correct the baseline, then pick peaks / integrate / define ranges.
 
 ## Fourier transform
 
-Load a raw FID (e.g. _Sample library → Cytisine → 13C FID_) and open the
+Load a raw FID (e.g. _Sample library → Liquids → Simple spectra → 13C FID cytisine_) and open the
 **Processing** panel. Apply apodization (exponential is typical for 13C),
 zero filling, then the Fourier transform. Each step is recorded in the
 processing history and can be toggled or removed.

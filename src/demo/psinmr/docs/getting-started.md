@@ -20,8 +20,8 @@ the heavy numerics executed by the Ψ compute engine (Rust → WebAssembly).
 
 ## Your first spectrum
 
-1. Open the data panel and expand **Sample library → Cytisine**.
-2. Click **1H spectrum**. The proton spectrum opens in the viewer.
+1. Open the data panel and expand **Sample library → Liquids → Simple spectra**.
+2. Click **1H cytisine**. The proton spectrum opens in the viewer.
 3. Scroll to zoom the x-axis; press `Shift` and scroll to change intensity;
    double-click to reset the view.
 4. Open the panels on the right (Peaks, Integrals, Ranges) to start analyzing.
