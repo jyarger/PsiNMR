@@ -1,16 +1,16 @@
 import styled from '@emotion/styled';
-import type { AxisUnit } from '@zakodium/nmrium-core';
 import type { ReactNode } from 'react';
 import { assert } from 'react-science/ui';
 
 import type { ContextMenuItem } from '../../elements/ContextMenuBluePrint.tsx';
 import { ContextMenu } from '../../elements/ContextMenuBluePrint.tsx';
+import type { PsiAxisUnit } from '../../hooks/use_axis_unit.ts';
 import { axisUnitToLabel } from '../../hooks/use_axis_unit.ts';
 
 interface AxisUnitPickerProps {
-  unit: AxisUnit;
-  allowedUnits: AxisUnit[];
-  onChange: (unit: AxisUnit) => void;
+  unit: PsiAxisUnit;
+  allowedUnits: readonly PsiAxisUnit[];
+  onChange: (unit: PsiAxisUnit) => void;
   children: ReactNode;
 }
 
@@ -49,5 +49,5 @@ const ContextMenuStyled = styled(ContextMenu)`
 `;
 
 interface Data {
-  unit: AxisUnit;
+  unit: PsiAxisUnit;
 }

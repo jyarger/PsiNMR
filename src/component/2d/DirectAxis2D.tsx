@@ -1,3 +1,4 @@
+import type { AxisUnit } from '@zakodium/nmrium-core';
 import { memo, useRef } from 'react';
 import { useLinearPrimaryTicks } from 'react-d3-utils';
 
@@ -81,7 +82,12 @@ function Unit(props: UnitProps) {
   const label = axisUnitToLabel[unit];
 
   return (
-    <AxisUnitPicker unit={unit} allowedUnits={allowedUnits} onChange={setUnit}>
+    <AxisUnitPicker
+      unit={unit}
+      allowedUnits={allowedUnits}
+      // 2D axes never offer the PsiNMR 'khz' unit, so the core setter is safe.
+      onChange={(nextUnit) => setUnit(nextUnit as AxisUnit)}
+    >
       <UnitLabel width={width}>{label}</UnitLabel>
     </AxisUnitPicker>
   );

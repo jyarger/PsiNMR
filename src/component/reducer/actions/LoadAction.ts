@@ -2,6 +2,7 @@ import type {
   MoleculeView,
   NmriumState,
   SpectraColors,
+  Spectrum1D,
   Spectrum,
   ViewState,
 } from '@zakodium/nmrium-core';
@@ -214,6 +215,37 @@ function setData(draft: Draft<State>, input: InputProps | InitiateProps) {
   }
 }
 
+/**
+ * Works around a nucleus-normalization bug for Varian data: nmr-processing's
+ * normalizeNucleus matches "element+mass" names by mass number alone, so
+ * tn="Br79" comes back as "79Se" (Se-79 wins the lookup). The original tn
+ * parameter is preserved on spectrum.meta, so rebuild the nucleus from its
+ * element symbol and only override when the mass agrees but the element
+ * diverges.
+ */
+function fixVarianNucleus(spectrum: Spectrum) {
+  // The Varian loader only produces 1D spectra (nucleus is a string).
+  if (spectrum.info.dimension !== 1) return;
+  const spectrum1D = spectrum as Spectrum1D;
+  const tn = (spectrum1D.meta as Record<string, unknown> | undefined)?.tn;
+  const raw = Array.isArray(tn) ? tn[0] : tn;
+  if (typeof raw !== 'string') return;
+  const parts = /^(?<symbol>[A-Za-z]{1,2})(?<mass>\d{1,3})$/.exec(raw.trim());
+  const groups = parts?.groups;
+  if (!groups) return;
+  const { symbol, mass } = groups;
+  const element = symbol[0].toUpperCase() + symbol.slice(1).toLowerCase();
+  const corrected = `${mass}${element}`;
+  const { nucleus } = spectrum1D.info;
+  if (
+    typeof nucleus === 'string' &&
+    nucleus !== corrected &&
+    nucleus.startsWith(mass)
+  ) {
+    spectrum1D.info = { ...spectrum1D.info, nucleus: corrected };
+  }
+}
+
 function initSpectra(
   inputSpectra: Spectrum[],
   options: {
@@ -225,6 +257,7 @@ function initSpectra(
   const spectra: any = [];
   const { usedColors, molecules, spectraColors } = options;
   for (const spectrum of inputSpectra) {
+    fixVarianNucleus(spectrum);
     const { info } = spectrum;
     if (info.dimension === 1) {
       spectra.push(

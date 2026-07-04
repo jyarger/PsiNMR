@@ -33,9 +33,20 @@ import { useActiveSpectra } from './useActiveSpectra.ts';
 import useSpectrum from './useSpectrum.ts';
 import { useVisibleSpectra1D } from './use_visible_spectra_1d.ts';
 
-export const axisUnitToLabel: Record<AxisUnit, string> = {
+/**
+ * PsiNMR extends the stock unit set with kHz: solid-state spectra are
+ * routinely plotted in frequency (kHz), where MAS sideband spacings and
+ * wideline patterns read directly.
+ */
+export type PsiAxisUnit = AxisUnit | 'khz';
+type PsiAxisUnit1DFt = AxisUnit1DFt | 'khz';
+
+const psiAxisUnits1DFt: readonly PsiAxisUnit1DFt[] = [...axisUnits1DFt, 'khz'];
+
+export const axisUnitToLabel: Record<PsiAxisUnit, string> = {
   s: 'time [s]',
   hz: 'frequency [Hz]',
+  khz: 'ν [kHz]',
   ppm: 'δ [ppm]',
   pt: 'index [pt]',
 };
@@ -66,52 +77,38 @@ export function useHorizontalAxisUnit() {
   const mode: keyof Nucleus1DUnit['horizontal'] = firstActiveSpectrum?.info.isFt
     ? 'ft'
     : 'fid';
-  const unit: AxisUnit1DFid | AxisUnit1DFt = nucleusUnits.horizontal[mode];
-  const allowedUnits: AxisUnit1DFid[] | AxisUnit1DFt[] =
-    mode === 'ft' ? axisUnits1DFt : axisUnits1DFid;
+  const unit: AxisUnit1DFid | PsiAxisUnit1DFt = nucleusUnits.horizontal[mode];
+  const allowedUnits: readonly AxisUnit1DFid[] | readonly PsiAxisUnit1DFt[] =
+    mode === 'ft' ? psiAxisUnits1DFt : axisUnits1DFid;
 
   const domain = useMemo(() => {
-    function getPtDomain() {
+    // nmrium-core's view-state type doesn't model PsiNMR's 'khz', so match on
+    // the widened unit with plain conditionals rather than ts-pattern.
+    const psiUnit = unit as PsiAxisUnit;
+
+    if (psiUnit === 'pt') {
       const maxPt = firstActiveSpectrum?.data.x.length ?? 0;
       const ppmToPoint = scaleLinear(originXDomain, [0, maxPt]);
-
       return scaleX()
         .domain()
         .map((v) => ppmToPoint(v));
     }
 
-    return match(mode)
-      .with('fid', () =>
-        match(unit)
-          .with('s', () => undefined)
-          .with('pt', getPtDomain)
-          .with('hz', 'ppm', (unit) => {
-            assertUnreachable(unit as never);
-          })
-          .exhaustive(),
-      )
-      .with('ft', () =>
-        match(unit)
-          .with('ppm', () => undefined)
-          .with('pt', getPtDomain)
-          .with('hz', () => {
-            if (!firstActiveSpectrum) return undefined;
+    if (mode === 'ft' && (psiUnit === 'hz' || psiUnit === 'khz')) {
+      if (!firstActiveSpectrum) return undefined;
+      // δ(ppm) × observe frequency (MHz) = frequency offset in Hz (÷1000 → kHz).
+      const divider = psiUnit === 'khz' ? 1000 : 1;
+      return scaleX()
+        .domain()
+        .map((v) => (v * firstActiveSpectrum.info.originFrequency) / divider);
+    }
 
-            const scale = scaleX();
-            return scale
-              .domain()
-              .map((v) => v * firstActiveSpectrum.info.originFrequency);
-          })
-          .with('s', (unit) => {
-            assertUnreachable(unit as never);
-          })
-          .exhaustive(),
-      )
-      .exhaustive();
+    // 's' (fid) and 'ppm' (ft) both use the natural scale domain.
+    return undefined;
   }, [firstActiveSpectrum, mode, originXDomain, scaleX, unit]);
 
   const setUnit = useCallback(
-    (unit: AxisUnit) => {
+    (unit: PsiAxisUnit) => {
       match(mode)
         .with('fid', (mode) => {
           assertIn(unit, axisUnits1DFid);
@@ -121,10 +118,11 @@ export function useHorizontalAxisUnit() {
           });
         })
         .with('ft', (mode) => {
-          assertIn(unit, axisUnits1DFt);
+          assertIn(unit, psiAxisUnits1DFt as PsiAxisUnit[]);
           return dispatch({
             type: 'SET_AXIS_UNIT_1D_HORIZONTAL',
-            payload: { nucleus, mode, unit },
+            // The view state stores the extended PsiNMR unit ('khz').
+            payload: { nucleus, mode, unit: unit as AxisUnit1DFt },
           });
         })
         .exhaustive();

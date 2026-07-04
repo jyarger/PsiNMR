@@ -43,6 +43,11 @@ acquisition metadata (when present) but stays editable — adjust νr until
 the guides land on the sidebands and you have measured the actual spinning
 rate. Try it on the ⁷⁹Br KBr spectra, the classic sideband standard.
 
+**Frequency axis.** Right-click the x-axis unit label to switch a
+transformed spectrum between **δ [ppm]** and **ν [kHz]**. Solid-state
+spectra are routinely plotted in frequency (kHz), where sideband spacings
+equal the spinning rate directly and wideline patterns are easiest to read.
+
 ## Loading your own data
 
 Drag a dataset — a zip of a Bruker/Varian/Jeol folder, a JCAMP-DX file, or a
