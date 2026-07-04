@@ -5,7 +5,7 @@ import { Sections } from '../../../elements/Sections.js';
 export const StickyHeader = styled(Sections.Header)`
   position: sticky;
   top: 40px;
-  background-color: white;
+  background-color: var(--psi-plot-surface, white);
   box-shadow: rgb(0 0 0 / 16%) 0 1px 4px;
   z-index: 1;
 `;

@@ -94,7 +94,9 @@ function MultipleSpectraAnalysisPreferences(
 
   return (
     <FormProvider {...methods}>
-      <PreferencesContainer style={{ backgroundColor: 'white' }}>
+      <PreferencesContainer
+        style={{ backgroundColor: 'var(--psi-plot-surface, white)' }}
+      >
         <GroupPane
           text="Legends"
           style={{

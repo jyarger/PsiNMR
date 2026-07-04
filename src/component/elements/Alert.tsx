@@ -33,7 +33,7 @@ const ButtonsGroup = styled.div`
 `;
 
 const Body = styled(DialogBody)`
-  background-color: white;
+  background-color: var(--psi-plot-surface, white);
   padding: 25px;
 
   p {

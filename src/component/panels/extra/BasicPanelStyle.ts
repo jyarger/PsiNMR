@@ -16,7 +16,7 @@ export const TablePanel = styled.div<{ isFlipped?: boolean }>`
     overflow: auto;
     height: 100%;
     display: block;
-    background-color: white;
+    background-color: var(--psi-plot-surface, white);
 
     ${(props) =>
       props.isFlipped &&

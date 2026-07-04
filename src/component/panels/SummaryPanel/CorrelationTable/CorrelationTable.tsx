@@ -26,7 +26,7 @@ const Container = styled.div`
   th {
     position: sticky;
     top: 0;
-    background-color: white;
+    background-color: var(--psi-plot-surface, white);
   }
 
   th,

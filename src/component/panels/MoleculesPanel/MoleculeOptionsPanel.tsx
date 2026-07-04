@@ -31,7 +31,7 @@ const InnerContainer = styled.div`
   overflow: auto;
   height: 100%;
   display: block;
-  background-color: white;
+  background-color: var(--psi-plot-surface, white);
 `;
 const boundingBoxSchema: Yup.ObjectSchema<BoundingBox> = Yup.object({
   width: Yup.number().required().min(0, 'Width must be positive'),

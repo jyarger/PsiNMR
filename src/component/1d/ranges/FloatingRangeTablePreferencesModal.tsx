@@ -143,7 +143,7 @@ function InnerFloatingRangeTablePreferencesModal(
 
   return (
     <>
-      <DialogBody style={{ backgroundColor: 'white' }}>
+      <DialogBody style={{ backgroundColor: 'var(--psi-plot-surface, white)' }}>
         {nuclei?.map((n) => (
           <NucleusPreferences
             key={n}

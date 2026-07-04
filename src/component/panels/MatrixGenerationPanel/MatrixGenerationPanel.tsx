@@ -39,7 +39,7 @@ const StickyFooter = styled.div({
   padding: '5px',
   bottom: 0,
   width: '100%',
-  backgroundColor: 'white',
+  backgroundColor: 'var(--psi-plot-surface, white)',
   display: 'flex',
   flexDirection: 'row',
 });
@@ -196,7 +196,10 @@ function InnerMatrixGenerationPanel() {
       <FormProvider {...methods}>
         <div className="inner-container" style={{ position: 'relative' }}>
           <PreferencesContainer
-            style={{ backgroundColor: 'white', padding: 0 }}
+            style={{
+              backgroundColor: 'var(--psi-plot-surface, white)',
+              padding: 0,
+            }}
           >
             <GroupPane
               text="Filters"

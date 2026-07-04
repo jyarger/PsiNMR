@@ -30,7 +30,7 @@ const Overlay = styled.div`
 const MessageContainer = styled.div<{ show: boolean }>`
   align-items: center;
   animation: ${fadeIn} 0.3s ease;
-  background-color: white;
+  background-color: var(--psi-plot-surface, white);
   border-radius: 5px;
   box-shadow: 0 2px 10px rgb(0 0 0 / 10%);
   display: ${({ show }) => (show ? 'flex' : 'none')};

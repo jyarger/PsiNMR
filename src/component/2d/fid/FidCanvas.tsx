@@ -93,7 +93,7 @@ export function FidCanvas() {
         ref={canvasRef}
         width={canvasWidth}
         height={canvasHeight}
-        style={{ backgroundColor: 'white' }}
+        style={{ backgroundColor: 'var(--psi-plot-bg, white)' }}
       />
     </foreignObject>
   );

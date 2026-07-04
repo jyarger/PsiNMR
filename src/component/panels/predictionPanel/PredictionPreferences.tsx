@@ -34,7 +34,9 @@ export default forwardRef<SettingsRef | null>(
     );
 
     return (
-      <PreferencesContainer style={{ backgroundColor: 'white' }}>
+      <PreferencesContainer
+        style={{ backgroundColor: 'var(--psi-plot-surface, white)' }}
+      >
         <PredictionOptionsPanel
           onSave={saveHandler}
           options={predictionPreferences}

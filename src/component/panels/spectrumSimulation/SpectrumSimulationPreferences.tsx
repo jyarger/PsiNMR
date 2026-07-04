@@ -39,7 +39,9 @@ function SpectrumSimulationPreferences(
   useSettingImperativeHandle(ref, handleSubmit, onSave);
 
   return (
-    <PreferencesContainer style={{ backgroundColor: 'white' }}>
+    <PreferencesContainer
+      style={{ backgroundColor: 'var(--psi-plot-surface, white)' }}
+    >
       <Label title="Frequency" style={labelStyle}>
         <Select2Controller
           control={control}

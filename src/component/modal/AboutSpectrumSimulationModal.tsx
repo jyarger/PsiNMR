@@ -6,7 +6,7 @@ import { StandardDialog } from '../elements/StandardDialog.tsx';
 import { StyledDialogBody } from '../elements/StyledDialogBody.js';
 
 const DialogBody = styled(StyledDialogBody)`
-  background-color: white;
+  background-color: var(--psi-plot-surface, white);
 
   ul {
     list-style-type: disc;

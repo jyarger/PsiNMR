@@ -95,7 +95,7 @@ const MolecularFormula = styled.div<{ color?: string }>`
 const SearchContainer = styled.div`
   padding: 1.2rem;
   margin-bottom: 1.5rem;
-  background-color: white;
+  background-color: var(--psi-plot-surface, white);
   border-bottom: 1px solid #e0e0e0;
   position: sticky;
   top: 0;

@@ -87,7 +87,9 @@ function InnerSaveAsModal(props: InnerSaveAsModalProps) {
       style={{ width: 600 }}
     >
       <AppForm form={form} layout="inline">
-        <DialogBody style={{ backgroundColor: 'white' }}>
+        <DialogBody
+          style={{ backgroundColor: 'var(--psi-plot-surface, white)' }}
+        >
           <form.Section title="General information">
             <form.AppField name="name">
               {(field) => <field.Input label="Name" required autoFocus />}

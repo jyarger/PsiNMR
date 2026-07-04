@@ -28,7 +28,7 @@ const Table = styled.table`
   th {
     position: sticky;
     top: 0;
-    background-color: white;
+    background-color: var(--psi-plot-surface, white);
     z-index: 1;
   }
 

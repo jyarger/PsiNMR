@@ -10,7 +10,7 @@ const styles = {
     padding: '5px',
     borderRadius: '5px',
     margin: '10px 0px',
-    backgroundColor: 'white',
+    backgroundColor: 'var(--psi-plot-surface, white)',
   },
   header: {
     borderBottom: '1px solid #e8e8e8',

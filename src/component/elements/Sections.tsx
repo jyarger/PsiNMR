@@ -50,7 +50,7 @@ const DropIndicator = styled.div<DropIndicatorProps>`
 `;
 
 const Preview = styled.div`
-  background-color: #f4f5f7;
+  background-color: var(--psi-chrome-raised, #f4f5f7);
   border-radius: 4px;
   max-width: 360px;
   overflow: hidden;
@@ -101,7 +101,7 @@ const Container = styled.div<{
   matchContentHeight: boolean;
 }>(
   ({ isOverflow, matchContentHeight }) => `
-  border: 1px solid #ddd;
+  border: 1px solid var(--psi-chrome-border, #ddd);
   display: flex;
   flex-direction: column;
   height: ${matchContentHeight ? 'auto' : '100%'};
@@ -127,8 +127,8 @@ const Active = styled(Tag, {
   },
 })<ActiveProps>(
   ({ isOpen }) => `
-background-color: ${isOpen ? '#4CAF50' : '#ccc'};
-color: ${isOpen ? 'white' : 'black'};
+background-color: ${isOpen ? '#4CAF50' : 'var(--psi-chrome-border, #ccc)'};
+color: ${isOpen ? 'white' : 'var(--psi-text, black)'};
 flex-shrink: 0;
 margin-right: 10px;
 `,
@@ -161,7 +161,7 @@ const OpenIcon = styled(Icon, {
 
 const ContentWrapper = styled.div<ActiveProps>(
   ({ isOpen, isOverflow }) => `
-  background-color: white;
+  background-color: var(--psi-plot-surface, white);
   display: ${isOpen ? 'flex' : 'none'};
   flex: ${isOpen ? (isOverflow ? '1' : '1 1 1px') : 'none'};
   flex-direction:column;
@@ -185,24 +185,24 @@ const ElementsContainer = styled.div`
 
 const Header = styled.div`
   align-items: center;
-  background-color: #f5f5f5;
+  background-color: var(--psi-chrome-raised, #f5f5f5);
   display: flex;
   justify-content: space-between;
   padding: 5px 10px;
 
   :hover {
-    background-color: #e0e0e0;
+    background-color: var(--psi-chrome-border, #e0e0e0);
   }
 
   :active {
-    background-color: #d0d0d0;
+    background-color: var(--psi-chrome-border, #d0d0d0);
   }
 `;
 
 const InnerHeader = styled.div`
-  background-color: white;
-  border-bottom: 1px solid #ddd;
-  border-top: 1px solid #ddd;
+  background-color: var(--psi-plot-surface, white);
+  border-bottom: 1px solid var(--psi-chrome-border, #ddd);
+  border-top: 1px solid var(--psi-chrome-border, #ddd);
   padding: 5px;
 `;
 

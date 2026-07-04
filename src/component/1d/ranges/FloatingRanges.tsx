@@ -35,7 +35,7 @@ const ReactRnd = styled(Rnd)`
   border: 1px solid transparent;
 
   :hover {
-    background-color: white;
+    background-color: var(--psi-plot-surface, white);
     border: 1px solid #ebecf1;
 
     button {
@@ -469,7 +469,9 @@ function DraggableRanges(props: DraggablePublicationStringProps) {
           handleChangeInsetBounding({ x, y });
           setIsMoveActive(false);
         }}
-        resizeHandleWrapperStyle={{ backgroundColor: 'white' }}
+        resizeHandleWrapperStyle={{
+          backgroundColor: 'var(--psi-plot-surface, white)',
+        }}
       >
         <ActionsButtonsPopover
           buttons={actionButtons}
