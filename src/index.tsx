@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 
 import Main from './demo/layouts/Main.js';
+import EmbedDemoView from './demo/psinmr/EmbedDemoView.js';
 import EmbedView from './demo/psinmr/EmbedView.js';
 import TestHighlight from './demo/test/TestHighlight.js';
 import Test from './demo/views/Test.js';
@@ -33,6 +34,8 @@ root.render(
       </Route>
       {/* Chrome-less iframe target for external apps (postMessage bridge). */}
       <Route path="embed" element={<EmbedView />} />
+      {/* Live host-page demo of the embed bridge. */}
+      <Route path="embed-demo" element={<EmbedDemoView />} />
       <Route path="*" element={<Main />} />
     </Routes>
   </HashRouter>,

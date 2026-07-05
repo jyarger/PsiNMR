@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="205" height="40" viewBox="0 0 205 40" role="img" aria-label="Open in PsiNMR">
+  <rect width="205" height="40" rx="9" fill="#f4f6f3" stroke="#d5dcd7" stroke-width="1"/>
+  <rect x="8" y="8" width="24" height="24" rx="6" fill="#2f7268"/>
+  <text x="20" y="27" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-weight="bold" fill="#ffffff" text-anchor="middle">Ψ</text>
+  <text x="42" y="25.5" font-family="'Segoe UI', system-ui, sans-serif" font-size="14" fill="#2b3440">Open in <tspan font-weight="700">Ψ|</tspan><tspan fill="#2f7268" font-weight="700">NMR</tspan><tspan font-weight="700">⟩</tspan></text>
+</svg>

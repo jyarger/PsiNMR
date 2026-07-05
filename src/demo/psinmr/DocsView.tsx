@@ -9,6 +9,7 @@ import embedding from './docs/embedding.md?raw';
 import faq from './docs/faq.md?raw';
 import gettingStarted from './docs/getting-started.md?raw';
 import loadingData from './docs/loading-data.md?raw';
+import piping from './docs/piping.md?raw';
 import processing1d from './docs/processing-1d.md?raw';
 import processing2d from './docs/processing-2d.md?raw';
 import structures from './docs/structures.md?raw';
@@ -28,6 +29,7 @@ const PAGES: DocPage[] = [
   { slug: 'analysis', title: 'Peaks, integrals & ranges', source: analysis },
   { slug: 'structures', title: 'Structures & assignment', source: structures },
   { slug: 'tools', title: 'Predict & Simulate', source: tools },
+  { slug: 'piping', title: 'Pipe to Ψ|NMR⟩', source: piping },
   { slug: 'embedding', title: 'Embedding PsiNMR', source: embedding },
   {
     slug: 'compute-engine',

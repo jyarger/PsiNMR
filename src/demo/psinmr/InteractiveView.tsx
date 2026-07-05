@@ -75,6 +75,21 @@ async function loadSample(
   return await demoCore.readNMRiumObject(nmriumObject, undefined, { baseURL });
 }
 
+// Opens data straight from one or more comma-separated data URLs — the target
+// of an "Open in Ψ|NMR⟩" link a host app or notebook can point users at.
+async function loadFromDataUrls(urls: string): Promise<CoreReadReturn> {
+  const entries = urls
+    .split(',')
+    .map((url) => url.trim())
+    .filter(Boolean)
+    .map((url) => {
+      const parsed = new URL(url);
+      return { relativePath: parsed.pathname, baseURL: parsed.origin };
+    });
+  if (entries.length === 0) throw new Error('No data URL provided.');
+  return demoCore.readFromWebSource({ entries });
+}
+
 async function loadUserDataset(dataset: UserDataset): Promise<CoreReadReturn> {
   if (dataset.kind === 'files' && dataset.files) {
     const collection = new FileCollection();
@@ -97,13 +112,14 @@ export default function InteractiveView(props: InteractiveViewProps) {
   const [searchParams] = useSearchParams();
   const file = searchParams.get('file');
   const base = searchParams.get('base');
+  const url = searchParams.get('url');
   const { findDataset } = useUserData();
 
   const [data, setData] = useState<CoreReadReturn>();
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(false);
 
-  const contentKey = file || id || workspace || 'default';
+  const contentKey = url || file || id || workspace || 'default';
 
   useEffect(() => {
     let cancelled = false;
@@ -113,7 +129,10 @@ export default function InteractiveView(props: InteractiveViewProps) {
     async function load() {
       try {
         let result: CoreReadReturn | undefined;
-        if (file) {
+        if (url) {
+          setLoading(true);
+          result = await loadFromDataUrls(url);
+        } else if (file) {
           setLoading(true);
           result = await loadSample(file, base);
         } else if (id) {
@@ -146,7 +165,7 @@ export default function InteractiveView(props: InteractiveViewProps) {
     };
     // findDataset changes identity with the sources list; the dataset id is stable.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [file, base, id]);
+  }, [file, base, id, url]);
 
   if (error) {
     return (

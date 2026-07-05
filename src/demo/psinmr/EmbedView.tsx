@@ -131,6 +131,24 @@ export default function EmbedView() {
     };
   }, [handleLoad, handleAction]);
 
+  // Zero-JS embed: `?url=` on the iframe src auto-loads data on mount, so a
+  // host can embed a spectrum with only an <iframe> tag.
+  useEffect(() => {
+    const initialUrls = searchParams.get('url');
+    const activeTab = searchParams.get('activeTab') ?? undefined;
+    if (initialUrls) {
+      const list = initialUrls
+        .split(',')
+        .map((url) => url.trim())
+        .filter(Boolean);
+      if (list.length > 0) {
+        void handleLoad({ type: 'url', data: list, activeTab });
+      }
+    }
+    // Only on first mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleChange = useCallback<NMRiumChangeCb>((state, source) => {
     triggerEmbedEvent('data-change', { state, source });
   }, []);
