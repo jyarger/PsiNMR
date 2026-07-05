@@ -7,8 +7,6 @@ import { StandardDialog } from '../../elements/StandardDialog.tsx';
 import { StyledDialogBody } from '../../elements/StyledDialogBody.js';
 import { CoreSlot } from '../../utility/CoreSlot.tsx';
 
-import AboutUsZakodium from './AboutUsZakodium.js';
-
 const FallbackDialogContents = styled.div`
   display: flex;
   flex-direction: column;
@@ -30,23 +28,47 @@ const FallbackDialogContents = styled.div`
   }
 
   span.title {
-    color: #ea580c;
+    color: var(--psi-accent, #ea580c);
     font-weight: bold;
   }
 
-  span.content {
-    color: #2b143e;
+  span.content,
+  div.content {
+    color: var(--psi-text, #2b143e);
     font-size: 14px;
     text-align: left;
   }
 
+  /* Highlighted tagline — larger and in the accent colour so it's clearly
+     visible in either theme. */
+  span.tagline {
+    color: var(--psi-accent, #3d8f85);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  p.credit {
+    color: var(--psi-text, #2b143e);
+    font-size: 14.5px;
+    margin: 0;
+  }
+
+  p.fineprint {
+    color: var(--psi-text-muted, #7a7a7a);
+    font-size: 11.5px;
+    line-height: 1.45;
+    margin: 6px 0 0;
+  }
+
   a {
-    color: #969696;
+    color: var(--psi-accent, #969696);
   }
 
   a:hover,
   a:focus {
-    color: #00bcd4;
+    color: var(--psi-accent-strong, #00bcd4);
   }
 `;
 
@@ -70,44 +92,41 @@ const modalContentFallback = (
       Version <VersionInfo />
       <Separator />
       <a
-        href="https://github.com/jyarger/nmrium"
+        href="https://github.com/jyarger/PsiNMR"
         target="_blank"
         rel="noreferrer"
       >
-        GitHub ( https://github.com/jyarger/nmrium )
+        GitHub ( github.com/jyarger/PsiNMR )
       </a>
     </InfoBlock>
     <InfoBlock>
       <Separator />
     </InfoBlock>
-    <span className="content">
+    <span className="tagline">
       PsiNMR (ΨNMR) is part of the Psi scientific-data platform: process,
       analyze and visualize NMR data directly in your browser.
     </span>
     <InfoBlock>
       <Separator />
-      <span className="title">Built on open source</span>
-      <Separator />
     </InfoBlock>
     <div className="content">
-      <ul>
-        <li>
-          PsiNMR is based on{' '}
-          <a
-            href="https://github.com/cheminfo/nmrium"
-            target="_blank"
-            rel="noreferrer"
-          >
-            NMRium
-          </a>{' '}
-          (MIT license), developed by Zakodium Sàrl (Switzerland), the
-          University of Cologne (Germany), Johannes Gutenberg University Mainz
-          (Germany) and Universidad del Valle (Colombia).
-        </li>
-        <li>
-          <AboutUsZakodium />
-        </li>
-      </ul>
+      <p className="credit">
+        PsiNMR (MIT License) developed by Prof. Jeff Yarger (
+        <a href="mailto:jyarger@proton.me">jyarger@proton.me</a>)
+      </p>
+      <p className="fineprint">
+        development started with open source code from{' '}
+        <a
+          href="https://github.com/cheminfo/nmrium"
+          target="_blank"
+          rel="noreferrer"
+        >
+          NMRium
+        </a>{' '}
+        (MIT license), developed by Zakodium Sàrl (Switzerland), the University
+        of Cologne (Germany), Johannes Gutenberg University Mainz (Germany),
+        Universidad del Valle (Colombia) and Zakodium Sàrl (Switzerland).
+      </p>
     </div>
   </FallbackDialogContents>
 );
