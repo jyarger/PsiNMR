@@ -48,10 +48,12 @@ order of value:
       TypeScript and register it as a plugin. The formats are simple
       header + float32 arrays; the main work is acquiring reference data
       to validate against (`acqu.par` + `data.1d`).
-- [ ] **Varian/Agilent 2D `.fid` folders** — extend beyond the current 1D
-      support: parse `procpar` array dimensions and the interleaved 2D
-      block structure (nmrglue `fileio/varian.py` is the reference
-      implementation).
+- [ ] **Varian/Agilent 2D `.fid` folders** — open item (deferred). Single-FID
+      and _arrayed 1D_ Varian now load (see the ssNMR section); true 2D still
+      needs the interleaved block structure + hypercomplex/States handling,
+      which is genuinely harder and distinct from the arrayed-1D splitter.
+      Blocked on acquiring liquids (COSY/HSQC) and solids 2D test datasets;
+      nmrglue `fileio/varian.py` is the reference implementation.
 - [ ] Longer term, nmrglue's fileio module list (Pipe, Sparky, RNMRTK,
       SIMPSON, …) is the menu to port from. nmrglue itself is Python and
       cannot run directly in the stateless browser app (Pyodide would add
@@ -82,6 +84,12 @@ Shipped (2026-07):
 - [x] **ν [Hz] / ν [kHz]** frequency axis; **Solid-state NMR (MAS)** readout in
       the Information panel (rate, CP contact time, pulse sequence).
 - [x] Fixed the Varian `Br79` → `79Se` nucleus-normalization bug.
+- [x] **Arrayed 1D Varian/Agilent `.fid`** (multi-FID) — split into one
+      spectrum per array element, labelled by the arrayed parameter value.
+- [x] **Apply processing to all spectra** — replay the active spectrum's
+      pipeline onto the whole array (identical FT/apodization/phase).
+- [x] **Skyline display** — a VnmrJ `dssh`-style diagonal stacked mode
+      (overlay → vertical stack → skyline via the stack toolbar button).
 
 Planned:
 
