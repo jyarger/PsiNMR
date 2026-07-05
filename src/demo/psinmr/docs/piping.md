@@ -80,7 +80,7 @@ page. See it running on the **[live embed demo](#/embed-demo)**.
 ## Option 4 — the React component
 
 If your app is React and you'd rather embed the component than an iframe, the
-underlying NMRium component is available from the `psinmr` package
+underlying NMR component is available from the `psinmr` package
 (`state` / `aggregator` props in, `onChange` out, plus a ref API).
 
 ## Which should I use?

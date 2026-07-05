@@ -33,5 +33,5 @@ await window.__psinmr.benchmarkContours(2048, 20);
 await window.__psinmr.benchmarkFft(65536, 50);
 ```
 
-Both compare the Wasm engine against the same JavaScript libraries NMRium
-uses, and verify the outputs match.
+Both compare the Wasm engine against the equivalent JavaScript libraries, and
+verify the outputs match.

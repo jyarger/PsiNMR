@@ -5,7 +5,6 @@
 **Process, analyze and visualize NMR spectra in your browser.**
 
 PsiNMR is a modernized, Docker-deployable web application for 1D & 2D NMR,
-built on the open-source [NMRium](https://github.com/cheminfo/nmrium) engine
 with heavy numerical work offloaded to a Rust → WebAssembly compute core.
 
 </div>
@@ -105,8 +104,8 @@ tries the Wasm engine first and falls back to `ml-conrec` on any error.
 
 ### Benchmarks
 
-In dev builds, `window.__psinmr` exposes comparisons against the JS libraries
-NMRium ships today. Measured in Chrome on an Apple-silicon Mac
+In dev builds, `window.__psinmr` exposes comparisons against the equivalent
+JavaScript libraries. Measured in Chrome on an Apple-silicon Mac
 (`benchmarkContours`, warm = interactive re-contour on a resident grid):
 
 | Workload               | JS      | Wasm (warm) | Speedup  |
@@ -128,7 +127,7 @@ await window.__psinmr.benchmarkFft(65536, 50);
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│  React / TypeScript UI  (Psi shell + NMRium component)   │
+│  React / TypeScript UI  (Psi shell + NMR component)      │
 │    TopBar · DataPanel · InteractiveView · Landing        │
 └───────────────┬──────────────────────────┬──────────────┘
                 │ light UI + orchestration  │ heavy math
@@ -151,13 +150,14 @@ docker/               nginx config for the runtime image
 
 ## Relationship to NMRium
 
-PsiNMR is a downstream project of NMRium and remains **MIT-licensed**. The
-original copyright is retained in [`LICENSE`](LICENSE), the upstream README is
+PsiNMR began as a fork of NMRium and is now developed independently; it
+remains **MIT-licensed**. As the MIT license requires, NMRium's original
+copyright is retained in [`LICENSE`](LICENSE), the original README is
 preserved as [`README_NMRium_upstream.md`](README_NMRium_upstream.md), and the
-About dialog credits the upstream authors (Zakodium, University of Cologne,
-JGU Mainz, Universidad del Valle). Improvements here — the Wasm compute core,
-the data hub, the Psi shell and theming, and the Docker packaging — are
-additive.
+About dialog credits the original authors (Zakodium, University of Cologne,
+JGU Mainz, Universidad del Valle). PsiNMR no longer tracks NMRium upstream —
+the Wasm compute core, the data hub, the Psi shell and theming, the
+solid-state NMR support and the Docker packaging are developed here.
 
 See [ROADMAP.md](ROADMAP.md) for where this is going: a Pro version with
 accounts and a data library, and generalizing the shell into a **Psi**

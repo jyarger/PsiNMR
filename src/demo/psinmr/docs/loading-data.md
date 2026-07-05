@@ -11,7 +11,7 @@ parsed locally; your data never leaves your machine in the stateless version.
 | Varian / Agilent   | `.fid` folders with `procpar` (1D) — zipped or dropped                         |
 | Jeol               | `.jdf` files                                                                   |
 | JCAMP-DX           | `.dx`, `.jdx`, `.jcamp` (1D and 2D, FID or processed)                          |
-| PsiNMR / NMRium    | `.nmrium` files (data + processing state + assignments)                        |
+| PsiNMR             | `.nmrium` files (data + processing state + assignments)                        |
 | Magritek Spinsolve | JCAMP-DX exports (`.dx`) — native `.1d`/`.2d` binary support is on the roadmap |
 
 ## Ways to load

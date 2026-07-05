@@ -6,10 +6,10 @@ specialized per technique. This document tracks the intended evolution.
 
 ## v1 — Stateless PsiNMR ✅ (current)
 
-A rebrand and modernization of NMRium into a self-contained, Docker-deployable
-web app. No accounts, no server-side state.
+A self-contained, Docker-deployable web app for NMR. No accounts, no
+server-side state.
 
-- [x] Rebrand NMRium → PsiNMR (Ψ), new favicon/logo/About.
+- [x] PsiNMR (Ψ) identity: favicon, logo and About dialog.
 - [x] New app shell: top bar with **INTERACTIVE NMR** action and a **Tools**
       menu (Predict, Simulate). Features / Pricing / Teaching and all
       "Request a license" affordances removed.
@@ -69,10 +69,11 @@ zip into the standard web-source loading path. Possible follow-ups:
 project-level browsing, dataset-level filtering, and download-size
 hints if the API ever exposes them.
 
-### Solid-state NMR (ssNMR) — expanding beyond NMRium's implicit liquid-state scope
+### Solid-state NMR (ssNMR) — first-class solid-state support
 
-NMRium was built for liquid-state NMR; a core reason for PsiNMR is to make
-solid-state NMR (and, later, other magnetic-resonance techniques) first-class.
+Browser-based NMR tools have historically centered on liquid-state work; a
+core goal of PsiNMR is to make solid-state NMR (and, later, other
+magnetic-resonance techniques) first-class.
 
 Shipped (2026-07):
 
@@ -102,7 +103,7 @@ Planned:
 
 For advanced simulation the app currently links out to
 [MRSimulator](https://github.com/deepanshs/mrsimulator), SIMPSON and Spinach
-(Solids → Simulation). The liquid-oriented NMRium simulation component is not
+(Solids → Simulation). The current liquid-oriented simulation component is not
 suited to MAS/CSA/quadrupolar lineshapes, so in-app ssNMR simulation is a
 deliberate future item — and a strong fit for the existing Rust→Wasm engine:
 running it **client-side keeps the stateless Lite model**, and low latency

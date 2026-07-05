@@ -1,4 +1,4 @@
-# General information for NMRium development
+# General information for PsiNMR development
 
 ## Useful Visual Studio Code plugins
 
@@ -71,7 +71,7 @@ You can run all unit tests with `node --run test-only`.
 
 ### End-to-end tests
 
-End-to-end (e2e) tests are written in the [`test-e2e` directory](https://github.com/cheminfo/nmrium/tree/HEAD/test-e2e).
+End-to-end (e2e) tests are written in the [`test-e2e` directory](https://github.com/jyarger/PsiNMR/tree/HEAD/test-e2e).
 
 We use [Playwright](https://playwright.dev/docs/intro/) to write and run the tests
 in real browsers.
@@ -118,5 +118,5 @@ PWDEBUG=1 npx playwright test --grep "my test"
 
 You can also enable the `slowMo` mode, so that the actions are executed slower.
 
-To do this, edit [`playwright.config.ts`](https://github.com/cheminfo/nmrium/blob/e01fceebfcc37d725f46d7059409b45ea285490b/playwright.config.ts#L17)
+To do this, edit [`playwright.config.ts`](https://github.com/jyarger/PsiNMR/blob/HEAD/playwright.config.ts)
 and uncomment the `slowMo` option.

@@ -176,7 +176,7 @@ function VersionInfo() {
   } else if (version.startsWith('git-')) {
     return (
       <a
-        href={`https://github.com/cheminfo/nmrium/tree/${version.slice(4)}`}
+        href={`https://github.com/jyarger/PsiNMR/tree/${version.slice(4)}`}
         target="_blank"
         rel="noreferrer"
       >
@@ -186,7 +186,7 @@ function VersionInfo() {
   } else {
     return (
       <a
-        href={`https://github.com/cheminfo/nmrium/tree/${version}`}
+        href={`https://github.com/jyarger/PsiNMR/tree/${version}`}
         target="_blank"
         rel="noreferrer"
       >

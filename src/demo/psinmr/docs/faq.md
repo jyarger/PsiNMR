@@ -31,7 +31,8 @@ Open an issue at
 
 ## How does PsiNMR relate to NMRium?
 
-PsiNMR is built on the open-source (MIT) NMRium processing engine and React
-component, with a new shell, theme, data hub, Rust/WebAssembly compute core
-and Docker packaging. The upstream copyright and credits are retained — see
-the About dialog (Ψ button in the viewer toolbar).
+PsiNMR began as a fork of the open-source (MIT) NMRium project and is now
+developed independently, with its own shell, theme, data hub, solid-state NMR
+support, Rust/WebAssembly compute core and Docker packaging. As the MIT
+license requires, NMRium's copyright and credits are retained — see the About
+dialog (Ψ button in the viewer toolbar).
