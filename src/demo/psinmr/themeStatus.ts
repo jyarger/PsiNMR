@@ -33,7 +33,7 @@ function apply(next: PsiTheme) {
 // Apply immediately on module load so there is no light flash.
 apply(theme);
 
-function setPsiTheme(next: PsiTheme) {
+export function setPsiTheme(next: PsiTheme) {
   theme = next;
   apply(next);
   try {

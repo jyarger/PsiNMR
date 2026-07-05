@@ -1,6 +1,9 @@
+import styled from '@emotion/styled';
 import type { CoreReadReturn } from '@zakodium/nmrium-core';
 import { FileCollection } from 'file-collection';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { FaMoon, FaSun } from 'react-icons/fa';
+import { useSearchParams } from 'react-router-dom';
 
 import type {
   NMRiumChangeCb,
@@ -9,8 +12,52 @@ import type {
 import { NMRium } from '../../component/main/index.js';
 import { demoCore } from '../utility/core.js';
 
+import PsiLogo from './PsiLogo.js';
 import type { ActionRequest, LoadData } from './embedEvents.js';
 import { onEmbedEvent, triggerEmbedEvent } from './embedEvents.js';
+import { setPsiTheme, togglePsiTheme, usePsiTheme } from './themeStatus.js';
+
+const Overlay = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  z-index: 10;
+`;
+
+const ThemeButton = styled.button`
+  align-items: center;
+  background: var(--psi-chrome-raised);
+  border: 1px solid var(--psi-chrome-border);
+  border-radius: 6px;
+  color: var(--psi-text-on-chrome);
+  cursor: pointer;
+  display: flex;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+
+  &:hover {
+    color: var(--psi-accent-on-chrome);
+  }
+`;
+
+const BrandLink = styled.a`
+  align-items: center;
+  background: var(--psi-chrome);
+  border: 1px solid var(--psi-chrome-border);
+  border-radius: 999px;
+  display: flex;
+  opacity: 0.85;
+  padding: 3px 10px 3px 5px;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
 
 /**
  * Chrome-less embed target (route `#/embed`): the NMRium component driven
@@ -21,6 +68,14 @@ export default function EmbedView() {
   const [data, setData] = useState<CoreReadReturn>();
   const [loadKey, setLoadKey] = useState(0);
   const apiRef = useRef<NMRiumRefAPI>(null);
+  const theme = usePsiTheme();
+  const [searchParams] = useSearchParams();
+
+  // Honour an initial theme set by the host via the iframe URL (?theme=light).
+  useEffect(() => {
+    const requested = searchParams.get('theme');
+    if (requested === 'light' || requested === 'dark') setPsiTheme(requested);
+  }, [searchParams]);
 
   const handleLoad = useCallback(async (payload: LoadData) => {
     try {
@@ -81,7 +136,26 @@ export default function EmbedView() {
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100vh' }}>
+    <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
+      <Overlay>
+        <ThemeButton
+          type="button"
+          title={
+            theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
+          }
+          onClick={togglePsiTheme}
+        >
+          {theme === 'dark' ? <FaSun /> : <FaMoon />}
+        </ThemeButton>
+        <BrandLink
+          href={`${window.location.origin}${window.location.pathname}`}
+          target="_blank"
+          rel="noreferrer noopener"
+          title="Open the full app at PsiNMR"
+        >
+          <PsiLogo size={20} spin="intro" wordmark="ketmark" />
+        </BrandLink>
+      </Overlay>
       <NMRium
         key={loadKey}
         ref={apiRef}
