@@ -11,6 +11,7 @@ import { demoCore } from '../utility/core.js';
 import { PsiMark } from './PsiLogo.js';
 import type { UserDataset } from './userData.js';
 import { useUserData } from './userData.js';
+import { readVarianArrayedZip } from './varianArray.js';
 
 const Frame = styled.div`
   display: flex;
@@ -48,8 +49,22 @@ async function loadSample(
   // Raw data archives (e.g. the solid-state Varian/Bruker sample zips) are
   // read directly; .json/.nmrium descriptors go through readNMRiumObject.
   if (/\.zip$/i.test(file)) {
+    const relativePath = file.replace(/^\.\//, '');
+    // Arrayed 1D Varian data (multi-FID .fid) isn't handled by the stock
+    // loader; try the PsiNMR splitter first, then fall back to normal reading.
+    try {
+      const response = await fetch(new URL(relativePath, baseURL));
+      if (response.ok) {
+        const arrayed = await readVarianArrayedZip(
+          await response.arrayBuffer(),
+        );
+        if (arrayed) return arrayed;
+      }
+    } catch {
+      // Ignore and fall through to the standard web-source path.
+    }
     return await demoCore.readFromWebSource({
-      entries: [{ relativePath: file.replace(/^\.\//, ''), baseURL }],
+      entries: [{ relativePath, baseURL }],
     });
   }
   const response = await fetch(file);
