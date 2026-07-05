@@ -57,6 +57,14 @@ transformed spectrum between **δ [ppm]** and **ν [kHz]**. Solid-state
 spectra are routinely plotted in frequency (kHz), where sideband spacings
 equal the spinning rate directly and wideline patterns are easiest to read.
 
+**Arrayed data & stacked display.** Arrayed 1D Varian/Agilent acquisitions
+(one `.fid` holding a series of FIDs — a CP Hartmann–Hahn or pulse-width
+array, e.g. the Solids → Multiple spectra CP-setup samples) load as one
+spectrum per array element, labelled by the arrayed parameter value. With
+several spectra of one nucleus shown, the **stack** toolbar button cycles the
+display: overlay → vertical stack → **skyline** — the VnmrJ `dssh`-style
+diagonal stack that offsets each trace up and to the right.
+
 ## Loading your own data
 
 Drag a dataset — a zip of a Bruker/Varian/Jeol folder, a JCAMP-DX file, or a

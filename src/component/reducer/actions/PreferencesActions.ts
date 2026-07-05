@@ -1,4 +1,4 @@
-import type { Spectrum1D } from '@zakodium/nmrium-core';
+import type { Spectrum1D, ViewState } from '@zakodium/nmrium-core';
 import type { Draft } from 'immer';
 
 import { isSpectrum1D } from '../../../data/data1d/Spectrum1D/index.js';
@@ -63,7 +63,10 @@ function changeSpectrumVerticalAlignment(
           }
         }
       } else {
-        draft.view.verticalAlign[nucleus] = verticalAlign;
+        // 'skyline' is a PsiNMR-added alignment; nmrium-core's ViewState type
+        // only enumerates bottom/center/stack, so cast to store the value.
+        draft.view.verticalAlign[nucleus] =
+          verticalAlign as ViewState['verticalAlign'][string];
       }
     }
   }

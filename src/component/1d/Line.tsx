@@ -22,7 +22,7 @@ interface LineProps {
 }
 
 function Line({ data, id, display, index }: LineProps) {
-  const { scaleX, scaleY, shiftY } = useScaleChecked();
+  const { scaleX, scaleY, shiftY, shiftX } = useScaleChecked();
   const xyReduce = useXYReduce('XAxis');
   const { opacity } = useActiveSpectrumStyleOptions(id);
   const { id: insetKey = 'primary' } = useInsetOptions() || {};
@@ -65,7 +65,7 @@ function Line({ data, id, display, index }: LineProps) {
       fill="none"
       strokeOpacity={pathOpacity}
       d={paths}
-      transform={`translate(0,-${shiftY * index})`}
+      transform={`translate(${shiftX * index},-${shiftY * index})`}
     />
   );
 }

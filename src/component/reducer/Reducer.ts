@@ -187,7 +187,11 @@ export const getInitialState = (): State => ({
 
 export const initialState = getInitialState();
 
-export type VerticalAlignment = 'bottom' | 'center' | 'stack';
+// 'skyline' is a PsiNMR addition: a VnmrJ dssh-style stacked display that
+// offsets each trace both vertically and horizontally (a diagonal "skyline"),
+// ideal for arrayed/multi-FID series. It behaves like 'stack' everywhere a
+// mode is treated as "stacked" (see isStackedAlign).
+export type VerticalAlignment = 'bottom' | 'center' | 'stack' | 'skyline';
 
 export interface State {
   /**

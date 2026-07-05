@@ -30,6 +30,7 @@ import useSpectrum from '../hooks/useSpectrum.js';
 import { useVerticalAlign } from '../hooks/useVerticalAlign.js';
 import MultipletAnalysisModal from '../modal/MultipletAnalysisModal.js';
 import { sortRange } from '../reducer/helper/getRange.js';
+import { isStackedAlign } from '../reducer/helper/getVerticalAlign.js';
 import type { Tool } from '../toolbar/ToolTypes.js';
 import { options } from '../toolbar/ToolTypes.js';
 import Events from '../utility/Events.js';
@@ -286,7 +287,7 @@ export function BrushTracker1D({ children }: Required<PropsWithChildren>) {
                   width,
                   height,
                   ...brushDetectionOptions,
-                  ...(align === 'stack' && { thresholdSize: 0 }),
+                  ...(isStackedAlign(align) && { thresholdSize: 0 }),
                 }).type,
               },
             });
@@ -543,7 +544,7 @@ export function BrushTracker1D({ children }: Required<PropsWithChildren>) {
         onZoom={handleZoom}
         brushDetectionOptions={{
           ...brushDetectionOptions,
-          ...(align === 'stack' && { thresholdSize: 0 }),
+          ...(isStackedAlign(align) && { thresholdSize: 0 }),
         }}
         style={{
           width: '100%',

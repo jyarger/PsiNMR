@@ -50,6 +50,7 @@ import { ImportPublicationStringModal } from '../modal/ImportPublicationStringMo
 import { LoadJCAMPModal } from '../modal/LoadJCAMPModal.js';
 import SaveAsModal from '../modal/SaveAsModal.js';
 import { MetaImportationModal } from '../modal/metaImportation/MetaImportationModal.js';
+import { isStackedAlign } from '../reducer/helper/getVerticalAlign.js';
 
 import type { MainTool } from './ToolTypes.js';
 import { options } from './ToolTypes.js';
@@ -438,17 +439,21 @@ export default function NMRToolbar() {
     {
       id: 'spectraStackAlignments',
       tooltip: {
-        title: options.spectraStackAlignments.label,
+        title:
+          verticalAlign === 'stack'
+            ? 'Stacked — click for skyline'
+            : verticalAlign === 'skyline'
+              ? 'Skyline (dssh) — click for overlay'
+              : options.spectraStackAlignments.label,
         shortcuts: ['s'],
         description:
-          'Toggle between stack mode and all the spectra aligned at the bottom.',
+          'Cycle the spectra display: overlay → stack → skyline (dssh, offset diagonally).',
       },
-      icon:
-        verticalAlign === 'stack' ? (
-          <SvgNmrOverlay3Aligned />
-        ) : (
-          <SvgNmrOverlay3 />
-        ),
+      icon: isStackedAlign(verticalAlign) ? (
+        <SvgNmrOverlay3Aligned />
+      ) : (
+        <SvgNmrOverlay3 />
+      ),
       isVisible: ftCounter > 1,
       onClick: changeDisplayViewModeHandler,
     },

@@ -11,6 +11,7 @@ import {
 } from '../1d/utilities/scale.js';
 import { useSpectraBottomMargin } from '../hooks/useSpectraBottomMargin.js';
 import { useVerticalAlign } from '../hooks/useVerticalAlign.js';
+import { isStackedAlign } from '../reducer/helper/getVerticalAlign.js';
 
 import { useChartData } from './ChartContext.js';
 
@@ -26,12 +27,14 @@ interface ScaleState {
   scaleX: ScaleLinearNumberFunction | null;
   scaleY: ScaleLinearNumberFunction | null;
   shiftY: number;
+  shiftX: number;
   spectraBottomMargin: number;
 }
 const scaleInitialState: ScaleState = {
   scaleX: null,
   scaleY: null,
   shiftY: 0,
+  shiftX: 0,
   spectraBottomMargin: 10,
 };
 
@@ -107,20 +110,29 @@ export function ScaleProvider({ children }: Required<PropsWithChildren>) {
 
   const scaleState = useMemo(() => {
     let shiftY = 0;
+    let shiftX = 0;
 
-    if (verticalAlign === 'stack' && !isInset) {
-      shiftY = height / (Object.keys(yDomains).length + 2);
-    } else {
-      shiftY = 0;
+    const count = Object.keys(yDomains).length;
+    if (isStackedAlign(verticalAlign) && !isInset) {
+      shiftY = height / (count + 2);
+      // Skyline (VnmrJ dssh) also offsets each trace horizontally. Spread the
+      // series across ~45% of the plot width so it reads as a diagonal stack
+      // without pushing later traces off the data.
+      if (verticalAlign === 'skyline') {
+        const innerWidth = width - margin.left - margin.right;
+        shiftX = (innerWidth * 0.45) / (count + 2);
+      }
     }
 
-    return { scaleX, scaleY, shiftY, spectraBottomMargin };
+    return { scaleX, scaleY, shiftY, shiftX, spectraBottomMargin };
   }, [
     verticalAlign,
     isInset,
     scaleX,
     scaleY,
     height,
+    width,
+    margin,
     yDomains,
     spectraBottomMargin,
   ]);

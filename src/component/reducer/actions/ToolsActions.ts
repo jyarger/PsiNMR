@@ -16,7 +16,7 @@ import type { Tool } from '../../toolbar/ToolTypes.js';
 import { options as Tools } from '../../toolbar/ToolTypes.js';
 import { getSpectraByNucleus } from '../../utility/getSpectraByNucleus.js';
 import groupByInfoKey from '../../utility/groupByInfoKey.js';
-import type { State } from '../Reducer.js';
+import type { State, VerticalAlignment } from '../Reducer.js';
 import { MARGIN } from '../core/Constants.js';
 import type { ZoomType } from '../helper/Zoom1DManager.js';
 import { setZoom, toScaleRatio, wheelZoom } from '../helper/Zoom1DManager.js';
@@ -196,8 +196,16 @@ function setSpectraVerticalAlign(draft: Draft<State>) {
 
 function handleChangeSpectrumDisplayMode(draft: Draft<State>) {
   const currentVerticalAlign = getVerticalAlign(draft);
-  const verticalAlign = currentVerticalAlign === 'stack' ? 'bottom' : 'stack';
-  changeSpectrumVerticalAlignment(draft, { verticalAlign });
+  // Cycle the stack button through overlay → stack → skyline (VnmrJ dssh).
+  const nextVerticalAlign: Record<VerticalAlignment, VerticalAlignment> = {
+    bottom: 'stack',
+    center: 'stack',
+    stack: 'skyline',
+    skyline: 'bottom',
+  };
+  changeSpectrumVerticalAlignment(draft, {
+    verticalAlign: nextVerticalAlign[currentVerticalAlign],
+  });
 }
 
 function handleToggleRealImaginaryVisibility(draft: Draft<State>) {

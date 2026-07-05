@@ -5,6 +5,7 @@ import { useChartData } from '../context/ChartContext.tsx';
 import { usePreferences } from '../context/PreferencesContext.tsx';
 import { useScaleChecked } from '../context/ScaleContext.tsx';
 import { useVerticalAlign } from '../hooks/useVerticalAlign.ts';
+import { isStackedAlign } from '../reducer/helper/getVerticalAlign.ts';
 import { getValueByPath } from '../utility/getValueByPath.ts';
 
 export function SpectrumLabel({
@@ -14,7 +15,7 @@ export function SpectrumLabel({
   index: number;
   spectrum: Spectrum;
 }) {
-  const { spectraBottomMargin, shiftY } = useScaleChecked();
+  const { spectraBottomMargin, shiftY, shiftX } = useScaleChecked();
   const {
     height,
     margin,
@@ -25,7 +26,7 @@ export function SpectrumLabel({
   const { fields, visible, valueStyle } = current.spectraLabel;
 
   if (
-    verticalAlign !== 'stack' ||
+    !isStackedAlign(verticalAlign) ||
     selectedTool !== 'zoom' ||
     !Array.isArray(fields) ||
     fields.length === 0 ||
@@ -41,7 +42,9 @@ export function SpectrumLabel({
     <SVGStyledText
       {...valueStyle}
       dy={-5}
-      transform={`translate(${margin.left},${innerHeight - shiftY * index})`}
+      transform={`translate(${margin.left + shiftX * index},${
+        innerHeight - shiftY * index
+      })`}
     >
       {label}
     </SVGStyledText>

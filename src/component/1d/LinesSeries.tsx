@@ -8,6 +8,7 @@ import { useActiveSpectra } from '../hooks/useActiveSpectra.js';
 import { useSetActiveSpectrumAction } from '../hooks/useSetActiveSpectrumAction.js';
 import { useVerticalAlign } from '../hooks/useVerticalAlign.js';
 import { useVisibleSpectra1D } from '../hooks/use_visible_spectra_1d.ts';
+import { isStackedAlign } from '../reducer/helper/getVerticalAlign.js';
 
 import Line from './Line.js';
 import { SpectrumLabel } from './SpectrumLabel.tsx';
@@ -61,14 +62,14 @@ function HeadlightRectStackMode(props: HeadlightRectStackModeProps) {
     height,
     toolOptions: { selectedTool },
   } = useChartData();
-  const { shiftY, spectraBottomMargin } = useScaleChecked();
+  const { shiftY, shiftX, spectraBottomMargin } = useScaleChecked();
   const verticalAlign = useVerticalAlign();
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.bottom - spectraBottomMargin;
   const { setActiveSpectrum } = useSetActiveSpectrumAction();
 
   if (
-    verticalAlign !== 'stack' ||
+    !isStackedAlign(verticalAlign) ||
     selectedTool !== 'zoom' ||
     step === 'brushing'
   ) {
@@ -78,8 +79,8 @@ function HeadlightRectStackMode(props: HeadlightRectStackModeProps) {
   return (
     <Rect
       y={innerHeight - shiftY * index - BOX_SIZE / 2}
-      x={margin.left}
-      width={`${innerWidth}px`}
+      x={margin.left + shiftX * index}
+      width={`${innerWidth - shiftX * index}px`}
       height={`${BOX_SIZE}px`}
       onClick={(event) => {
         setActiveSpectrum(event, spectrumID);
