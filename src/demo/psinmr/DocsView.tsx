@@ -5,6 +5,7 @@ import { NavLink, useParams } from 'react-router-dom';
 
 import analysis from './docs/analysis.md?raw';
 import computeEngine from './docs/compute-engine.md?raw';
+import embedding from './docs/embedding.md?raw';
 import faq from './docs/faq.md?raw';
 import gettingStarted from './docs/getting-started.md?raw';
 import loadingData from './docs/loading-data.md?raw';
@@ -27,6 +28,7 @@ const PAGES: DocPage[] = [
   { slug: 'analysis', title: 'Peaks, integrals & ranges', source: analysis },
   { slug: 'structures', title: 'Structures & assignment', source: structures },
   { slug: 'tools', title: 'Predict & Simulate', source: tools },
+  { slug: 'embedding', title: 'Embedding PsiNMR', source: embedding },
   {
     slug: 'compute-engine',
     title: 'The Ψ compute engine',
