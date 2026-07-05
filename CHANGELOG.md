@@ -2,7 +2,7 @@
 
 All notable changes to PsiNMR are documented here. Dates are ISO-8601.
 
-## Unreleased
+## 0.3.0 — 2026-07-04
 
 - Solid-state NMR support: the sample library is split into **Liquids** and
   **Solids** with real MAS/CP-MAS datasets; a νr sideband tool with editable
@@ -19,6 +19,9 @@ All notable changes to PsiNMR are documented here. Dates are ISO-8601.
 - Fix Varian nucleus normalization (⁷⁹Br was read as ⁷⁹Se).
 - About dialog: new authorship and attribution; fix a tagline that was
   invisible against the dark dialog.
+- Documentation reflects that PsiNMR is now developed independently rather
+  than tracking NMRium upstream, while retaining the attribution the MIT
+  license requires.
 
 ## 0.2.2 — 2026-07-03
 
