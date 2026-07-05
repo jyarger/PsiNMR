@@ -36,6 +36,11 @@
   --psi-accent-soft: rgb(61 143 133 / 14%);
   --psi-accent-on-chrome: #5fb3a7;
 
+  /* Brand Ψ mark — a teal badge + white Ψ; the shade switches per theme so
+     it stays vivid on any surface. */
+  --psi-mark-bg: #3d8f85;
+  --psi-mark-fg: #fff;
+
   /* Feedback */
   --psi-danger: #e5a29b;
 
@@ -93,6 +98,10 @@
   --psi-accent-strong: #2f7268;
   --psi-accent-soft: rgb(61 143 133 / 14%);
   --psi-accent-on-chrome: #5fb3a7;
+
+  /* Brand Ψ mark — deeper teal in light mode for contrast on pale surfaces. */
+  --psi-mark-bg: #2f7268;
+  --psi-mark-fg: #fff;
 
   /* Feedback */
   --psi-danger: #b3564d;

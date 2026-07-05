@@ -70,15 +70,15 @@ export function PsiMark({ size = 28, spin = false }: PsiMarkProps) {
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
       >
-        <rect width="64" height="64" rx="14" fill="var(--psi-chrome-raised)" />
+        <rect width="64" height="64" rx="14" fill="var(--psi-mark-bg)" />
         <text
           x="32"
-          y="46"
+          y="47"
           fontFamily="var(--psi-font-serif)"
-          fontSize="42"
+          fontSize="48"
           fontWeight="bold"
           textAnchor="middle"
-          fill="var(--psi-accent-on-chrome)"
+          fill="var(--psi-mark-fg)"
         >
           Ψ
         </text>
