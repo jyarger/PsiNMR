@@ -124,8 +124,8 @@ const modalContentFallback = (
           NMRium
         </a>{' '}
         (MIT license), developed by Zakodium Sàrl (Switzerland), the University
-        of Cologne (Germany), Johannes Gutenberg University Mainz (Germany),
-        Universidad del Valle (Colombia) and Zakodium Sàrl (Switzerland).
+        of Cologne (Germany), Johannes Gutenberg University Mainz (Germany) and
+        Universidad del Valle (Colombia).
       </p>
     </div>
   </FallbackDialogContents>
