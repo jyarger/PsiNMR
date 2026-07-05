@@ -60,8 +60,11 @@ equal the spinning rate directly and wideline patterns are easiest to read.
 **Arrayed data & stacked display.** Arrayed 1D Varian/Agilent acquisitions
 (one `.fid` holding a series of FIDs — a CP Hartmann–Hahn or pulse-width
 array, e.g. the Solids → Multiple spectra CP-setup samples) load as one
-spectrum per array element, labelled by the arrayed parameter value. With
-several spectra of one nucleus shown, the **stack** toolbar button cycles the
+spectrum per array element, labelled by the arrayed parameter value. Process
+one element (apodization, Fourier transform, phase), then use the **copy
+button** in the Spectra panel header to _apply that processing to every
+spectrum_ — Fourier-transforming the whole array with identical parameters.
+With the transformed series shown, the **stack** toolbar button cycles the
 display: overlay → vertical stack → **skyline** — the VnmrJ `dssh`-style
 diagonal stack that offsets each trace up and to the right.
 

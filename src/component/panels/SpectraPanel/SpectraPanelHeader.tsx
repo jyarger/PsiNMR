@@ -9,7 +9,7 @@ import type {
 import { SvgNmrResetScale, SvgNmrSameTop } from 'cheminfo-font';
 import { memo, useCallback } from 'react';
 import { AiOutlineApi } from 'react-icons/ai';
-import { FaCreativeCommonsSamplingPlus } from 'react-icons/fa';
+import { FaCopy, FaCreativeCommonsSamplingPlus } from 'react-icons/fa';
 import { IoColorPaletteOutline } from 'react-icons/io5';
 import { MdFormatColorFill, MdOutlineFormatColorText } from 'react-icons/md';
 
@@ -218,6 +218,10 @@ function SpectraPanelHeaderInner({
     dispatch({ type: 'RESET_SPECTRA_SCALE' });
   }
 
+  function applyProcessingToAllHandler() {
+    dispatch({ type: 'APPLY_PROCESSING_TO_ALL_SPECTRA' });
+  }
+
   function defaultReColorSpectraHandler() {
     dispatch({
       type: 'RECOLOR_SPECTRA_COLOR',
@@ -337,6 +341,12 @@ function SpectraPanelHeaderInner({
         icon: <SvgNmrSameTop />,
         tooltip: 'Same top',
         onClick: setSameTopHandler,
+      },
+      {
+        icon: <FaCopy />,
+        tooltip:
+          "Apply the active spectrum's processing to all spectra (e.g. FT a whole arrayed set with the same parameters)",
+        onClick: applyProcessingToAllHandler,
       },
     );
   }

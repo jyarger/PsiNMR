@@ -275,6 +275,9 @@ export type FiltersActions =
       | 'APPLY_MANUAL_PHASE_CORRECTION_TOW_DIMENSION_FILTER'
       | 'TOGGLE_ADD_PHASE_CORRECTION_TRACE_TO_BOTH_DIRECTIONS'
       | 'APPLY_AUTO_PHASE_CORRECTION_TOW_DIMENSION_FILTER'
+      // PsiNMR: copy the active spectrum's processing pipeline to every other
+      // 1D spectrum of the same nucleus (arrayed-data processing).
+      | 'APPLY_PROCESSING_TO_ALL_SPECTRA'
     >;
 
 const DEFAULT_FILTER_DOMAIN_UPDATE_RULES: FilterDomainUpdateRules = {
@@ -748,6 +751,55 @@ function updateView(
   setDomain(draft, { updateXDomain, updateYDomain });
   setMode(draft);
   changeSpectrumVerticalAlignment(draft, { verticalAlign: 'auto-check' });
+}
+
+// PsiNMR: replay the active spectrum's processing pipeline onto every other
+// 1D spectrum of the same nucleus. Because each spectrum is recomputed from
+// its own FID, the whole arrayed series is Fourier-transformed (and apodized,
+// phased, …) with identical parameters — the prerequisite for a stacked /
+// skyline display of arrayed data.
+export function handleApplyProcessingToAllSpectra(draft: Draft<State>) {
+  const activeSpectrum = getActiveSpectrum(draft);
+  if (!activeSpectrum) return;
+
+  const reference = draft.data[activeSpectrum.index];
+  if (!isSpectrum1D(reference)) return;
+
+  const referenceFilters = current(reference).filters;
+  if (referenceFilters.length === 0) return;
+  const { nucleus } = reference.info;
+
+  // Copy only the pipeline definition (name/value/enabled); the filters'
+  // ids and transient state are per-spectrum, so a fresh set is built for
+  // each target spectrum, which is then recomputed from its own FID.
+  function buildFilters(): Filter1DEntry[] {
+    // name/value stay correlated at runtime (both from the same filter); the
+    // cast is only needed because the mapped object widens the discriminated
+    // union.
+    return referenceFilters.map((filter) => ({
+      name: filter.name,
+      value: structuredClone(filter.value),
+      enabled: filter.enabled ?? true,
+    })) as Filter1DEntry[];
+  }
+
+  for (const spectrum of draft.data) {
+    if (
+      spectrum.id === reference.id ||
+      !isSpectrum1D(spectrum) ||
+      spectrum.info.nucleus !== nucleus
+    ) {
+      continue;
+    }
+    // Recompute the target from its own raw FID with the reference pipeline;
+    // forceReapply makes this idempotent (re-clicking re-derives, not stacks).
+    spectrum.filters = [];
+    Filters1DManager.applyFilters(spectrum, buildFilters(), {
+      forceReapply: true,
+    });
+  }
+
+  updateView(draft, { updateXDomain: true, updateYDomain: true });
 }
 
 function disableLivePreview(draft: Draft<State>, id: string) {

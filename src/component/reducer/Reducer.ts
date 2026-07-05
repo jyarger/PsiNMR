@@ -529,6 +529,8 @@ function innerSpectrumReducer(draft: Draft<State>, action: Action) {
         );
       case 'APPLY_FFT_FILTER':
         return FiltersActions.handleApplyFFTFilter(draft);
+      case 'APPLY_PROCESSING_TO_ALL_SPECTRA':
+        return FiltersActions.handleApplyProcessingToAllSpectra(draft);
       case 'APPLY_FFT_DIMENSION_1_FILTER':
         return FiltersActions.handleApplyFFtDimension1Filter(draft);
       case 'APPLY_FFT_DIMENSION_2_FILTER':
