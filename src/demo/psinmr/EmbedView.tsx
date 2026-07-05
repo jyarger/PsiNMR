@@ -81,7 +81,9 @@ export default function EmbedView() {
     try {
       let result: CoreReadReturn;
       if (payload.type === 'nmrium') {
-        result = await demoCore.readNMRiumObject(payload.data);
+        result = await demoCore.readNMRiumObject(payload.data, undefined, {
+          baseURL: `${window.location.origin}/`,
+        });
       } else if (payload.type === 'file') {
         const collection = await new FileCollection().appendFileList(
           payload.data,

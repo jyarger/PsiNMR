@@ -111,10 +111,30 @@ const LogItem = styled.div`
   }
 `;
 
-const SAMPLES = {
-  '¹³C MAS adamantane': '/data/solids/simple/13C_Adamantane_MAS.zip',
-  '⁷⁹Br MAS KBr': '/data/solids/simple/79Br_KBr_10kHz_MAS.zip',
-};
+interface DemoSample {
+  label: string;
+  kind: 'nmrium' | 'url';
+  path: string;
+}
+
+// A recognizable liquid-state ¹H spectrum as the headline demo (loaded as a
+// full .nmrium object), plus one URL-loaded dataset to show that path too.
+// NB: the .nmrium load path triggers a harmless `process is not defined` in the
+// Vite dev server only (a dependency logs via process.env); the production
+// build defines it away, so this works on the deployed app — verify against the
+// production build, not `npm run dev`.
+const SAMPLES: DemoSample[] = [
+  {
+    label: 'ibuprofen ¹H (600 MHz)',
+    kind: 'nmrium',
+    path: '/data/ibuprofen.json',
+  },
+  {
+    label: '⁷⁹Br MAS KBr (from URL)',
+    kind: 'url',
+    path: '/data/solids/simple/79Br_KBr_10kHz_MAS.zip',
+  },
+];
 
 export default function EmbedDemoView() {
   const frameRef = useRef<HTMLIFrameElement>(null);
@@ -148,11 +168,20 @@ export default function EmbedDemoView() {
     frameRef.current?.contentWindow?.postMessage(data, '*');
   }
 
-  function loadSample(path: string) {
-    post({
-      type: 'nmr-wrapper:load',
-      data: { type: 'url', data: [window.location.origin + path] },
-    });
+  async function loadSample(sample: DemoSample) {
+    if (sample.kind === 'nmrium') {
+      const response = await fetch(window.location.origin + sample.path);
+      const nmrium = await response.json();
+      post({
+        type: 'nmr-wrapper:load',
+        data: { type: 'nmrium', data: nmrium },
+      });
+    } else {
+      post({
+        type: 'nmr-wrapper:load',
+        data: { type: 'url', data: [window.location.origin + sample.path] },
+      });
+    }
   }
 
   return (
@@ -161,9 +190,13 @@ export default function EmbedDemoView() {
         <PsiLogo size={26} wordmark="ketmark" />
         <Title>Live embed demo — driving the iframe over postMessage</Title>
         <Controls>
-          {Object.entries(SAMPLES).map(([label, path]) => (
-            <Btn key={path} type="button" onClick={() => loadSample(path)}>
-              Load {label}
+          {SAMPLES.map((sample) => (
+            <Btn
+              key={sample.path}
+              type="button"
+              onClick={() => void loadSample(sample)}
+            >
+              Load {sample.label}
             </Btn>
           ))}
           <Btn
