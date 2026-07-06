@@ -1,0 +1,6 @@
+# Generated native projects (created locally with `npx cap add ios|android`)
+ios/
+android/
+
+# Node
+node_modules/

@@ -1,0 +1,19 @@
+{
+  "name": "PsiNMR",
+  "short_name": "PsiNMR",
+  "description": "Process, analyze and visualize NMR spectra on your phone.",
+  "start_url": "/#/m",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#232a33",
+  "theme_color": "#232a33",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ]
+}

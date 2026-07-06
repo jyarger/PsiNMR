@@ -148,6 +148,18 @@ src/demo/psinmr/      Psi app shell (TopBar, DataPanel, InteractiveView, theme)
 docker/               nginx config for the runtime image
 ```
 
+## Beyond the browser — mobile & desktop
+
+- **On your phone:** a touch-first mobile view lives at
+  [`psinmr.com/#/m`](https://psinmr.com/#/m) — full-screen spectrum, pinch to
+  zoom, installable as a PWA.
+- **Native apps:** thin [desktop](desktop/) (Tauri) and [mobile](mobile/)
+  (Capacitor) shells load the hosted app, so web updates — and eventually the
+  Pro version — reach them automatically, with no rebuild. See
+  [planning/AUTO_UPDATE.md](planning/AUTO_UPDATE.md).
+- **Self-host:** one command on a fresh Linux box with
+  [`scripts/install.sh`](scripts/install.sh); full guide in [DEPLOY.md](DEPLOY.md).
+
 ## Relationship to NMRium
 
 PsiNMR began as a fork of NMRium and is now developed independently; it

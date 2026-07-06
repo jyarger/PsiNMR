@@ -1,6 +1,8 @@
 # Planning: standalone installable PsiNMR (Linux / macOS / Windows)
 
-**Status:** planning / feasibility. Nothing here is built yet.
+**Status:** scaffolded — a Tauri project is in [`../desktop/`](../desktop/)
+(thin-client + auto-update wired), not yet built into installers. See
+[AUTO_UPDATE.md](AUTO_UPDATE.md) for how updates reach it automatically.
 **Goal:** a downloadable, installable desktop PsiNMR — double-click to launch,
 works offline, installs via each platform's standard package manager.
 **TL;DR:** Highly viable. Wrap the existing static app in **Tauri** (Rust +

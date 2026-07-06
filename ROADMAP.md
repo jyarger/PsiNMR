@@ -131,10 +131,16 @@ self-contained it is; check for an existing emscripten/Pyodide wheel.
 validated numerically against MRSimulator's reference output. (4) Expand
 methods/interactions; keep the external-tool links as the escape hatch.
 
-### Native clients — desktop & mobile (planning)
+### Native clients — desktop & mobile (scaffolded)
 
-Two planning documents scope PsiNMR beyond the browser tab, both reusing the
-existing static app + Rust/Wasm core rather than rewriting the UI:
+Both are **thin native shells that load the hosted web app**, so every web
+deploy — features, fixes, and eventually the Pro backend/login — reaches them
+automatically, with no rebuild or store resubmission (see
+[planning/AUTO_UPDATE.md](planning/AUTO_UPDATE.md)). Shipped so far: the
+touch-first mobile web view at `#/m`, a Tauri scaffold in [`desktop/`](desktop/),
+a Capacitor scaffold in [`mobile/`](mobile/), and a one-line server installer
+(`scripts/install.sh`). Two planning documents carry the fuller plans, both
+reusing the existing static app + Rust/Wasm core rather than rewriting the UI:
 
 - **[planning/DESKTOP_APP.md](planning/DESKTOP_APP.md)** — a standalone,
   installable desktop app (Linux/macOS/Windows) via **Tauri**, distributed

@@ -1,0 +1,21 @@
+{
+  "name": "psinmr-mobile",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Capacitor iOS/Android shell for PsiNMR (loads the hosted mobile web app).",
+  "scripts": {
+    "sync": "cap sync",
+    "add:ios": "cap add ios",
+    "add:android": "cap add android",
+    "open:ios": "cap open ios",
+    "open:android": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6",
+    "@capacitor/core": "^6",
+    "@capacitor/ios": "^6"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6"
+  }
+}

@@ -1,0 +1,9 @@
+# Rust / Tauri build output
+src-tauri/target/
+src-tauri/gen/
+
+# Generated app icons (run `npm run tauri icon <source.png>`)
+src-tauri/icons/
+
+# Node
+node_modules/

@@ -4,6 +4,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 import Main from './demo/layouts/Main.js';
 import EmbedDemoView from './demo/psinmr/EmbedDemoView.js';
 import EmbedView from './demo/psinmr/EmbedView.js';
+import MobileView from './demo/psinmr/MobileView.js';
 import TestHighlight from './demo/test/TestHighlight.js';
 import Test from './demo/views/Test.js';
 
@@ -36,6 +37,8 @@ root.render(
       <Route path="embed" element={<EmbedView />} />
       {/* Live host-page demo of the embed bridge. */}
       <Route path="embed-demo" element={<EmbedDemoView />} />
+      {/* Touch-first mobile view (also what the Capacitor app wraps). */}
+      <Route path="m" element={<MobileView />} />
       <Route path="*" element={<Main />} />
     </Routes>
   </HashRouter>,

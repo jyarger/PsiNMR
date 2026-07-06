@@ -1,0 +1,14 @@
+{
+  "name": "psinmr-desktop",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Thin native desktop shell for PsiNMR (loads the hosted app).",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}

@@ -1,6 +1,8 @@
 # Planning: PsiNMR on phones — mobile web → iOS/Android app
 
-**Status:** planning / design. Nothing here is built yet.
+**Status:** the touch-first mobile web view ships at route `#/m` (Phase A0);
+a Capacitor scaffold is in [`../mobile/`](../mobile/). See
+[AUTO_UPDATE.md](AUTO_UPDATE.md) for how updates reach it automatically.
 **Goal:** a phone-first way to process and visualize NMR, delivered first as a
 **mobile web experience** (a second UI component of the cloud app) and
 ultimately as **native iOS and Android apps**.

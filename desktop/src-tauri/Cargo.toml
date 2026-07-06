@@ -1,0 +1,20 @@
+[package]
+name = "psinmr-desktop"
+version = "0.3.0"
+description = "PsiNMR desktop shell — a thin native window around the hosted app"
+edition = "2021"
+rust-version = "1.77"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-updater = "2"
+tauri-plugin-shell = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[features]
+# by default Tauri runs in production mode; enable this for `tauri dev`.
+custom-protocol = ["tauri/custom-protocol"]

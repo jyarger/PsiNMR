@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>PsiNMR</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: #232a33;
+        color: #cdd6e0;
+        font-family: system-ui, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      a {
+        color: #3d8f85;
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+      Offline fallback only. At runtime Capacitor loads https://psinmr.com/#/m
+      (capacitor.config.ts `server.url`), so the live mobile web view — and
+      future Pro features — is what users see when online.
+    -->
+    <div>
+      <h1>PsiNMR</h1>
+      <p>
+        You appear to be offline. Reconnect to use
+        <a href="https://psinmr.com/#/m">psinmr.com</a>.
+      </p>
+    </div>
+  </body>
+</html>
