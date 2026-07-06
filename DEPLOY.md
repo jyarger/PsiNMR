@@ -19,6 +19,7 @@ option, with a recommended path for the public `psinmr.com` deployment.
   - [A. Node dev server (fastest iteration)](#a-node-dev-server-fastest-iteration)
   - [B. Docker, built locally (production parity)](#b-docker-built-locally-production-parity)
 - [Building & publishing the image (CI → GHCR)](#building--publishing-the-image-ci--ghcr)
+- [Fresh Linux server, start to finish](#fresh-linux-server-start-to-finish)
 - [Production deployment](#production-deployment)
   - [Option 1 — Cloudflare Tunnel (recommended)](#option-1--cloudflare-tunnel-recommended)
   - [Option 2 — Cloudflare proxy + Origin Certificate](#option-2--cloudflare-proxy--origin-certificate)
@@ -26,6 +27,7 @@ option, with a recommended path for the public `psinmr.com` deployment.
   - [Option 4 — Direct host ports behind a firewall](#option-4--direct-host-ports-behind-a-firewall)
 - [Cloudflare DNS for psinmr.com](#cloudflare-dns-for-psinmrcom)
 - [Updating a running deployment](#updating-a-running-deployment)
+- [Alternative packaging & install options](#alternative-packaging--install-options)
 - [Configuration reference](#configuration-reference)
 - [Security headers & CSP](#security-headers--csp)
 - [Health, logs & monitoring](#health-logs--monitoring)
@@ -142,6 +144,119 @@ echo "$GHCR_PAT" | docker login ghcr.io -u jyarger --password-stdin
 docker build -t ghcr.io/jyarger/psinmr:latest .
 docker push ghcr.io/jyarger/psinmr:latest
 ```
+
+---
+
+## Fresh Linux server, start to finish
+
+This is the zero-to-live walkthrough for a **brand-new Linux VPS** (e.g. a
+Hostinger Ubuntu 24.04 LTS box) that has nothing installed. At the end you have
+a public, HTTPS `https://psinmr.com` with no inbound ports open. Commands are
+for Debian/Ubuntu (`apt`); RHEL/Fedora notes (`dnf`) are inline.
+
+### 1. Log in and update the base system
+
+```bash
+ssh root@YOUR_SERVER_IP
+apt update && apt upgrade -y            # dnf upgrade -y on RHEL/Fedora
+```
+
+### 2. Create a non-root sudo user
+
+Don't run day-to-day as root. Create a user, grant sudo, and copy your SSH key
+so you can log in as them:
+
+```bash
+adduser psi
+usermod -aG sudo psi                    # -aG wheel on RHEL/Fedora
+rsync --archive --chown=psi:psi ~/.ssh /home/psi
+# from now on: ssh psi@YOUR_SERVER_IP
+```
+
+### 3. Lock down the firewall
+
+With the Cloudflare Tunnel path below you need **no** inbound web ports —
+`cloudflared` dials outward. Allow only SSH:
+
+```bash
+apt install -y ufw
+ufw allow OpenSSH
+ufw enable
+```
+
+(If you instead terminate TLS on the box — [Options 2–3](#option-2--cloudflare-proxy--origin-certificate) — also `ufw allow 80,443/tcp`.)
+
+### 4. Install Docker Engine + Compose plugin
+
+Docker's official convenience script works across Ubuntu/Debian/Fedora:
+
+```bash
+curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker $USER           # run docker without sudo
+newgrp docker                           # apply the group now (or re-login)
+docker --version && docker compose version
+```
+
+### 5. Install git and clone PsiNMR
+
+```bash
+sudo apt install -y git                 # dnf install -y git
+git clone https://github.com/jyarger/PsiNMR.git
+cd PsiNMR
+```
+
+You do **not** build on the server. Cloning only fetches the compose files,
+`.env.example`, and `docker/` config; the actual app is the prebuilt image
+pulled from GHCR (see [Building & publishing](#building--publishing-the-image-ci--ghcr)).
+
+### 6. Configure the environment
+
+```bash
+cp .env.example .env
+nano .env
+#   IMAGE_TAG=v0.3.0     # pin a release (recommended), or `latest`
+#   TUNNEL_TOKEN=…       # filled in the next step
+```
+
+### 7. Create the Cloudflare Tunnel (public URL + HTTPS, no certs on the box)
+
+In the Cloudflare dashboard: **Zero Trust → Networks → Tunnels → Create a
+tunnel → Cloudflared**, name it `psinmr`, and copy the **tunnel token**. Then in
+the tunnel's **Public Hostname** tab add:
+
+- **Domain** `psinmr.com` (subdomain blank for the apex; add a second entry for
+  `www` if you want it)
+- **Service** `HTTP` → `psinmr:80`
+
+Paste the token into `.env` as `TUNNEL_TOKEN=…`. (Full detail and the
+alternatives are in [Option 1](#option-1--cloudflare-tunnel-recommended) below.)
+
+### 8. Launch
+
+```bash
+docker compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml ps      # both services healthy?
+```
+
+Visit <https://psinmr.com>. Cloudflare creates the DNS record automatically and
+terminates TLS at its edge — the VPS never handles a certificate and needs no
+open web ports. **Done.**
+
+### 9. Keep it running and patched
+
+`restart: unless-stopped` already brings both containers back after a reboot.
+Add automatic security updates:
+
+```bash
+sudo apt install -y unattended-upgrades
+sudo dpkg-reconfigure -plow unattended-upgrades
+```
+
+To update PsiNMR later, see [Updating a running deployment](#updating-a-running-deployment)
+(two commands). For a one-command version of steps 4–8, or a template that runs
+this automatically on first boot, see
+[Alternative packaging & install options](#alternative-packaging--install-options).
 
 ---
 
@@ -293,6 +408,105 @@ docker image prune -f          # optional: reclaim old layers
 
 Roll back by setting `IMAGE_TAG` to a previous version and repeating. Pinning
 an explicit tag (rather than `latest`) is recommended for reproducibility.
+
+---
+
+## Alternative packaging & install options
+
+The Docker image is the canonical artifact, but because PsiNMR is a single
+static container, it repackages easily for different audiences. These range
+from "ready today" to "recommended to build next"; each is flagged.
+
+### 1. Bare Docker one-liner — _ready today_
+
+No compose, no domain — for a quick look on any machine with Docker:
+
+```bash
+docker run --rm -p 8080:80 ghcr.io/jyarger/psinmr:latest
+# open http://localhost:8080
+```
+
+### 2. One-line bootstrap script — _recommended to add (`scripts/install.sh`)_
+
+A single idempotent script that performs steps 4–8 of the fresh-server
+walkthrough, so a new box goes live with one command:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/jyarger/PsiNMR/main/scripts/install.sh | bash -s -- --tag v0.3.0 --token <CF_TUNNEL_TOKEN>
+```
+
+Sketch of what it does (install Docker if missing → clone → write `.env` →
+`compose pull && up -d`):
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+command -v docker >/dev/null || curl -fsSL https://get.docker.com | sh
+[ -d PsiNMR ] || git clone https://github.com/jyarger/PsiNMR.git
+cd PsiNMR
+cp -n .env.example .env
+sed -i "s/^IMAGE_TAG=.*/IMAGE_TAG=${TAG:-latest}/" .env
+sed -i "s/^TUNNEL_TOKEN=.*/TUNNEL_TOKEN=${TOKEN}/" .env
+docker compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml up -d
+```
+
+Piping a remote script to `bash` is convenient but asks users to trust the URL;
+document the option and let cautious operators download-then-run. (Say the word
+and I'll add a hardened, flag-parsing version of this to the repo.)
+
+### 3. cloud-init template — _recommended for auto-provisioned VMs_
+
+Most clouds (and Proxmox, Multipass, Hetzner, DigitalOcean, AWS/GCP/Azure)
+accept a **cloud-init** `user-data` file that runs on first boot — the basis of
+a reusable "spin up your own PsiNMR" template with zero manual steps:
+
+```yaml
+#cloud-config
+package_update: true
+packages: [git]
+runcmd:
+  - curl -fsSL https://get.docker.com | sh
+  - git clone https://github.com/jyarger/PsiNMR.git /opt/PsiNMR
+  - cp /opt/PsiNMR/.env.example /opt/PsiNMR/.env
+  - sed -i 's/^IMAGE_TAG=.*/IMAGE_TAG=latest/' /opt/PsiNMR/.env
+  - sed -i 's/^TUNNEL_TOKEN=.*/TUNNEL_TOKEN=REPLACE_ME/' /opt/PsiNMR/.env
+  - docker compose -f /opt/PsiNMR/docker-compose.prod.yml up -d
+```
+
+### 4. Self-contained public stack, no Cloudflare — _config exists ([Option 3](#option-3--caddy--lets-encrypt-cloudflare-independent))_
+
+For a public HTTPS site with **only a DNS `A` record** and no third-party edge,
+run the bundled Caddy stack — Caddy fetches and renews Let's Encrypt certs
+automatically:
+
+```bash
+docker compose -f docker-compose.caddy.yml up -d   # ports 80/443 open
+```
+
+This is the most portable "public web + reverse proxy + HTTPS in one file"
+appliance. Traefik is an equivalent label-driven alternative.
+
+### 5. Prebuilt VM appliance (OVA / qcow2) — _proposed_
+
+For operators who don't want to touch a shell at all, export a configured VM as
+an **OVA** (VirtualBox/VMware) or **qcow2** (KVM/Proxmox) image: a small Ubuntu
+base + Docker + the compose files, first-boot cloud-init prompting only for the
+tunnel token. Build reproducibly with **HashiCorp Packer** so each release can
+ship a matching appliance. Heavier to host and distribute (hundreds of MB) than
+a script, so best reserved for on-prem/air-gapped labs.
+
+### 6. Provider marketplace "1-click" — _proposed_
+
+The Packer image from #5 can be submitted to the **DigitalOcean / Linode / AWS**
+marketplaces as a one-click PsiNMR droplet/instance. Highest reach, but each
+marketplace has its own review and image-format requirements — worth it only
+once there's external demand.
+
+**Recommended order to build:** the `install.sh` (#2) and cloud-init (#3)
+templates cover ~95% of self-hosters for near-zero effort and reuse the existing
+image; VM appliances and marketplace listings (#5–6) are worth it only if
+non-technical or on-prem adoption picks up.
 
 ---
 

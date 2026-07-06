@@ -131,6 +131,23 @@ self-contained it is; check for an existing emscripten/Pyodide wheel.
 validated numerically against MRSimulator's reference output. (4) Expand
 methods/interactions; keep the external-tool links as the escape hatch.
 
+### Native clients — desktop & mobile (planning)
+
+Two planning documents scope PsiNMR beyond the browser tab, both reusing the
+existing static app + Rust/Wasm core rather than rewriting the UI:
+
+- **[planning/DESKTOP_APP.md](planning/DESKTOP_APP.md)** — a standalone,
+  installable desktop app (Linux/macOS/Windows) via **Tauri**, distributed
+  through Homebrew / winget / Flathub. Unlocks native folder access, `.nmrium`
+  file associations and true offline use for instrument PCs. Verdict:
+  high-viability "wrap and sign"; the recurring cost is code-signing, not
+  engineering.
+- **[planning/MOBILE_APP.md](planning/MOBILE_APP.md)** — a touch-first mobile
+  web view (PWA) as a second UI component, then a **Capacitor**-wrapped iOS and
+  Android app reusing that same view. Verdict: viable and high-impact, but a
+  genuine interaction-design project (every desktop gesture is overloaded);
+  ship the PWA first, wrap for the stores second.
+
 ## v2 — PsiNMR Pro (accounts + data library)
 
 Adds an optional backend so users can keep a durable, private library of NMR
