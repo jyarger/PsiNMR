@@ -221,27 +221,57 @@ nano .env
 ### 7. Create the Cloudflare Tunnel (public URL + HTTPS, no certs on the box)
 
 In the Cloudflare dashboard: **Zero Trust → Networks → Tunnels → Create a
-tunnel → Cloudflared**, name it `psinmr`, and copy the **tunnel token**. Then in
-the tunnel's **Public Hostname** tab add:
+tunnel → Cloudflared**, name it `psinmr`. The next screen ("Install and run a
+connector" / "Choose your environment") shows install commands for Debian,
+Docker, etc. **Don't run any of them** — the `cloudflared` service in
+`docker-compose.prod.yml` _is_ the connector. You only need the **token**:
+
+- The Docker variant reads
+  `docker run cloudflare/cloudflared:latest tunnel --no-autoupdate run --token eyJhIjoi…`.
+- Copy **only the long string after `--token`** — it starts with `eyJ`, is
+  roughly 200 characters, and contains no spaces. Do **not** paste the whole
+  command, and don't add quotes.
+
+Put it in `.env` as `TUNNEL_TOKEN=eyJ…`. Then add the public hostname — either
+in the wizard's next step, or (if the wizard insists on a live connector
+first) launch the stack in step 8 and then open the tunnel → **Public
+Hostname** tab and add it there:
 
 - **Domain** `psinmr.com` (subdomain blank for the apex; add a second entry for
   `www` if you want it)
 - **Service** `HTTP` → `psinmr:80`
 
-Paste the token into `.env` as `TUNNEL_TOKEN=…`. (Full detail and the
-alternatives are in [Option 1](#option-1--cloudflare-tunnel-recommended) below.)
+Without a public hostname the tunnel connects but routes nothing — psinmr.com
+stays unreachable even when everything on the box is green. (Full detail and
+the alternatives are in [Option 1](#option-1--cloudflare-tunnel-recommended)
+below.)
 
-### 8. Launch
+### 8. Launch — and verify each layer
 
 ```bash
 docker compose -f docker-compose.prod.yml pull
 docker compose -f docker-compose.prod.yml up -d
-docker compose -f docker-compose.prod.yml ps      # both services healthy?
+docker compose -f docker-compose.prod.yml ps
 ```
 
-Visit <https://psinmr.com>. Cloudflare creates the DNS record automatically and
-terminates TLS at its edge — the VPS never handles a certificate and needs no
-open web ports. **Done.**
+Verify from the inside out:
+
+1. **The app container:** `ps` shows `psinmr` **healthy**, and
+   `curl -sI http://127.0.0.1:8080 | head -1` returns `HTTP/1.1 200 OK`
+   (the compose file publishes the app on **loopback only** for exactly this
+   check — it is not reachable from the internet).
+2. **The tunnel:** `ps` shows `psinmr-cloudflared` **Up** (not `Restarting`),
+   and `docker logs psinmr-cloudflared 2>&1 | tail -20` contains
+   `Registered tunnel connection`. If it's restart-looping, the token is wrong —
+   see [Troubleshooting](#troubleshooting).
+3. **The public site:** visit <https://psinmr.com>. Cloudflare creates the DNS
+   record automatically when the public hostname is added, and terminates TLS
+   at its edge — the VPS never handles a certificate and needs no open web
+   ports. **Done.**
+
+> Changed `TUNNEL_TOKEN` after starting? A plain `restart` does **not** reload
+> `.env` — re-apply with
+> `docker compose -f docker-compose.prod.yml up -d --force-recreate cloudflared`.
 
 ### 9. Keep it running and patched
 
@@ -276,7 +306,9 @@ the container over the private Docker network.
 
 1. **Create the tunnel.** Cloudflare dashboard → **Zero Trust** → **Networks**
    → **Tunnels** → **Create a tunnel** → **Cloudflared**. Name it `psinmr`.
-   Copy the **tunnel token** from the install snippet Cloudflare shows.
+   Copy the **tunnel token** from the install snippet Cloudflare shows — only
+   the long `eyJ…` string after `--token`, not the whole command (and don't run
+   the snippet; the compose `cloudflared` service is the connector).
 
 2. **Add the public hostname.** In the tunnel's **Public Hostname** tab:
    - Subdomain: _(blank)_ and _(blank)_ for the apex, or `www`
@@ -573,13 +605,16 @@ specific directive rather than disabling the whole policy.
 
 ## Troubleshooting
 
-| Symptom                                             | Cause & fix                                                                                                                                                                                |
-| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Browser downloads `index.html` instead of rendering | A `types { }` block was added to `nginx.conf`, wiping the inherited MIME table. Remove it — the stock `mime.types` already covers everything.                                              |
-| Wasm fails to load / "incorrect MIME type"          | `.wasm` not served as `application/wasm`. The config sets `default_type application/wasm` for `.wasm`; check the response `Content-Type`.                                                  |
-| Cloudflare error 502/526                            | Origin unreachable or (mode **Full strict** with) an untrusted origin cert. For Tunnel, check `cloudflared` logs; for Option 2, install a Cloudflare Origin Cert or drop to mode **Full**. |
-| Self-signed warning on `localhost:8443`             | Expected — the local cert is generated per container. Proceed past the warning, or use the HTTP port.                                                                                      |
-| Molecule editor / prediction blank                  | CSP `script-src` too strict — ensure `unsafe-eval` is present (OpenChemLib needs it).                                                                                                      |
-| BMRB entries won't open                             | Check `/bmrb-data/` proxy reachability and `cloudflared`/nginx logs; bmrb.io may be slow (timeouts are 10/30/60s). nmrXiv and GitHub loads are unaffected (they go direct).                |
-| VPS runs out of memory during `up`                  | You're building on the box. Use the GHCR image (`docker-compose.prod.yml` + `pull`) instead of `--build`.                                                                                  |
-| GHCR pull denied                                    | The package is private. Make it Public in GHCR package settings, or `docker login ghcr.io` with a read PAT on the VPS.                                                                     |
+| Symptom                                             | Cause & fix                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `psinmr-cloudflared` stuck in `Restarting`          | cloudflared is exiting — almost always a bad `TUNNEL_TOKEN`. Check `docker logs psinmr-cloudflared` ("Provided Tunnel token is not valid"). Common paste mistakes: the whole `docker run …` command instead of just the `eyJ…` string, a truncated/line-wrapped token, added quotes or spaces. Fix `.env`, then `docker compose -f docker-compose.prod.yml up -d --force-recreate cloudflared` (a plain `restart` does not reload `.env`). Sanity check: `awk -F= '/^TUNNEL_TOKEN=/{print length($2)}' .env` should print ~200, and the value should start `eyJ`. |
+| `curl localhost` fails on the VPS                   | Expected before 2026-07: the prod compose published no ports. It now publishes **loopback only** — `curl -I http://127.0.0.1:8080`. `git pull && docker compose -f docker-compose.prod.yml up -d` to pick that up. Public traffic still flows only through the tunnel.                                                                                                                                                                                                                                                                                            |
+| Tunnel healthy but psinmr.com unreachable           | No **public hostname** on the tunnel (the wizard step is easy to skip if the connector wasn't live yet). Tunnel → Public Hostname tab → add `psinmr.com` → `HTTP` → `psinmr:80`. Also check the tunnel shows a connector as **Connected**.                                                                                                                                                                                                                                                                                                                        |
+| Browser downloads `index.html` instead of rendering | A `types { }` block was added to `nginx.conf`, wiping the inherited MIME table. Remove it — the stock `mime.types` already covers everything.                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| Wasm fails to load / "incorrect MIME type"          | `.wasm` not served as `application/wasm`. The config sets `default_type application/wasm` for `.wasm`; check the response `Content-Type`.                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| Cloudflare error 502/526                            | Origin unreachable or (mode **Full strict** with) an untrusted origin cert. For Tunnel, check `cloudflared` logs; for Option 2, install a Cloudflare Origin Cert or drop to mode **Full**.                                                                                                                                                                                                                                                                                                                                                                        |
+| Self-signed warning on `localhost:8443`             | Expected — the local cert is generated per container. Proceed past the warning, or use the HTTP port.                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Molecule editor / prediction blank                  | CSP `script-src` too strict — ensure `unsafe-eval` is present (OpenChemLib needs it).                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| BMRB entries won't open                             | Check `/bmrb-data/` proxy reachability and `cloudflared`/nginx logs; bmrb.io may be slow (timeouts are 10/30/60s). nmrXiv and GitHub loads are unaffected (they go direct).                                                                                                                                                                                                                                                                                                                                                                                       |
+| VPS runs out of memory during `up`                  | You're building on the box. Use the GHCR image (`docker-compose.prod.yml` + `pull`) instead of `--build`.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| GHCR pull denied                                    | The package is private. Make it Public in GHCR package settings, or `docker login ghcr.io` with a read PAT on the VPS.                                                                                                                                                                                                                                                                                                                                                                                                                                            |

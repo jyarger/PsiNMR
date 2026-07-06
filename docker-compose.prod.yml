@@ -29,10 +29,11 @@ services:
     image: ghcr.io/jyarger/psinmr:${IMAGE_TAG:-latest}
     container_name: psinmr
     restart: unless-stopped
-    # No `ports:` — the container is only reachable from cloudflared on the
-    # internal network. Uncomment to expose on the host for local debugging:
-    # ports:
-    #   - '127.0.0.1:8080:80'
+    # Loopback-only publish for on-box verification (`curl http://127.0.0.1:8080`).
+    # NOT reachable from the internet — public traffic still flows only through
+    # cloudflared on the internal network. Remove if you want zero host ports.
+    ports:
+      - '127.0.0.1:8080:80'
 
   cloudflared:
     image: cloudflare/cloudflared:latest

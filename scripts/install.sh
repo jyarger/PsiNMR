@@ -72,6 +72,16 @@ cd "$DIR"
 [ -f "$COMPOSE_FILE" ] || err "compose file '$COMPOSE_FILE' not found in the repo."
 
 # 3. Configure .env
+if [ -n "$TOKEN" ]; then
+  # Cloudflare tunnel tokens are base64 JSON: they start with "eyJ", are ~200
+  # chars, and contain no spaces. Catch the classic paste mistakes early.
+  case "$TOKEN" in
+    *' '*) err "the tunnel token contains a space — paste ONLY the eyJ… string after --token, not the whole docker command." ;;
+    eyJ*) : ;;
+    *) err "the tunnel token should start with 'eyJ' (yours starts '$(printf %.8s "$TOKEN")…'). Copy just the token from Cloudflare's install command." ;;
+  esac
+  [ "${#TOKEN}" -ge 100 ] || err "the tunnel token looks truncated (${#TOKEN} chars; expected ~200). Re-copy it in full."
+fi
 if [ ! -f .env ]; then
   cp .env.example .env
   log "Created .env from .env.example"
@@ -86,11 +96,28 @@ else
   log "Set IMAGE_TAG=${TAG}. No --token given: edit .env before the app is reachable if this compose file needs one."
 fi
 
-# 4. Launch
+# 4. Launch (--force-recreate so an edited .env token is always re-applied)
 log "Pulling and starting ($COMPOSE_FILE)"
 docker compose -f "$COMPOSE_FILE" pull
-docker compose -f "$COMPOSE_FILE" up -d
+docker compose -f "$COMPOSE_FILE" up -d --force-recreate
 docker compose -f "$COMPOSE_FILE" ps
+
+# 5. Verify
+sleep 5
+if curl -sf -o /dev/null http://127.0.0.1:8080; then
+  log "App OK: http://127.0.0.1:8080 responds (loopback only)."
+else
+  log "WARNING: the app did not respond on 127.0.0.1:8080 — check: docker logs psinmr"
+fi
+if docker ps --format '{{.Names}}' | grep -q '^psinmr-cloudflared$'; then
+  if docker logs psinmr-cloudflared 2>&1 | grep -q 'Registered tunnel connection'; then
+    log "Tunnel OK: cloudflared registered a connection."
+  else
+    log "WARNING: cloudflared has not registered a tunnel connection (yet)."
+    log "  Check: docker logs psinmr-cloudflared   ('token is not valid' = re-copy the token, then re-run this script)"
+  fi
+  log "Reminder: the tunnel needs a Public Hostname (psinmr.com -> HTTP -> psinmr:80) in the Cloudflare dashboard."
+fi
 
 log "Done. If using Cloudflare Tunnel, PsiNMR is live at your configured hostname (e.g. https://psinmr.com)."
 log "Update later with:  cd $DIR && docker compose -f $COMPOSE_FILE pull && docker compose -f $COMPOSE_FILE up -d"
