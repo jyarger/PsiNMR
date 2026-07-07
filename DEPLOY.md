@@ -286,7 +286,24 @@ Verify from the inside out:
 
 ### 9. Keep it running and patched
 
-`restart: unless-stopped` already brings both containers back after a reboot.
+`restart: unless-stopped` already brings both containers back after a reboot,
+**with their full config** — the compose `command` (including `--protocol
+http2`) and the `.env` token are frozen into the container definitions, so
+nothing needs re-reading at boot. Verify once with a reboot test:
+
+```bash
+systemctl is-enabled docker      # "enabled" → Docker starts at boot
+sudo reboot
+# …ssh back in, then:
+docker ps                                         # both Up; psinmr (healthy)
+curl -sI http://127.0.0.1:8080 | head -1          # app:    HTTP/1.1 200 OK
+curl -sI https://psinmr.com | head -1             # public: HTTP/2 200
+```
+
+Caveat: `unless-stopped` means "unless _you_ stopped it" — after a manual
+`docker stop` or `docker compose down`, containers stay down across reboots
+until you `up -d` again.
+
 Add automatic security updates:
 
 ```bash
