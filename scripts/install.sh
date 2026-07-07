@@ -125,6 +125,11 @@ if [ -n "$STRAYS" ]; then
   log "  They are NOT on the compose network, cannot reach http://psinmr:80, and cause 502s."
   log "  Remove with:  docker rm -f $STRAYS"
 fi
+if command -v systemctl >/dev/null 2>&1 && systemctl is-active --quiet cloudflared 2>/dev/null; then
+  log "WARNING: a host-level cloudflared systemd service is running (Cloudflare's Debian wizard snippet)."
+  log "  It auto-starts at every boot, is not on the compose network, and causes intermittent 502s."
+  log "  Remove with:  sudo systemctl disable --now cloudflared && sudo cloudflared service uninstall"
+fi
 
 log "Done. If using Cloudflare Tunnel, PsiNMR is live at your configured hostname (e.g. https://psinmr.com)."
 log "Update later with:  cd $DIR && docker compose -f $COMPOSE_FILE pull && docker compose -f $COMPOSE_FILE up -d"
