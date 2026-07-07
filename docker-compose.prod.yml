@@ -39,7 +39,12 @@ services:
     image: cloudflare/cloudflared:latest
     container_name: psinmr-cloudflared
     restart: unless-stopped
-    command: tunnel --no-autoupdate run
+    # --protocol http2 = outbound TCP 443 instead of the default QUIC (UDP
+    # 7844). VPS networks often blackhole UDP mid-stream, which surfaces as
+    # "control stream encountered a failure" / "failed to run the datagram
+    # handler" and flapping connections. http2 is rock-solid; switch back to
+    # `--protocol auto` only if you know UDP 7844 outbound is clean.
+    command: tunnel --no-autoupdate --protocol http2 run
     environment:
       TUNNEL_TOKEN: ${TUNNEL_TOKEN:?set TUNNEL_TOKEN in .env}
     depends_on:

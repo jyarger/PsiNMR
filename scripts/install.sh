@@ -116,7 +116,14 @@ if docker ps --format '{{.Names}}' | grep -q '^psinmr-cloudflared$'; then
     log "WARNING: cloudflared has not registered a tunnel connection (yet)."
     log "  Check: docker logs psinmr-cloudflared   ('token is not valid' = re-copy the token, then re-run this script)"
   fi
-  log "Reminder: the tunnel needs a Public Hostname (psinmr.com -> HTTP -> psinmr:80) in the Cloudflare dashboard."
+  log "Reminder: the tunnel needs a route (psinmr.com -> HTTP -> psinmr:80) in the Cloudflare dashboard's Routes/Public Hostname tab."
+fi
+STRAYS=$(docker ps --format '{{.Names}}' | grep -i cloudflared | grep -vx 'psinmr-cloudflared' || true)
+if [ -n "$STRAYS" ]; then
+  log "WARNING: extra cloudflared container(s) running: $STRAYS"
+  log "  These are usually left over from running Cloudflare's 'docker run' wizard snippet."
+  log "  They are NOT on the compose network, cannot reach http://psinmr:80, and cause 502s."
+  log "  Remove with:  docker rm -f $STRAYS"
 fi
 
 log "Done. If using Cloudflare Tunnel, PsiNMR is live at your configured hostname (e.g. https://psinmr.com)."
