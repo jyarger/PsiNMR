@@ -29,6 +29,13 @@ heading at tag time.
   options, exact tunnel-token instructions, layered verification and a
   reboot-test checklist. New planning docs (`planning/DESKTOP_APP.md`,
   `MOBILE_APP.md`, `AUTO_UPDATE.md`) linked from the roadmap and README.
+- **Raw FID data always loads.** Importing a dataset that contains an
+  already-processed spectrum now also loads the raw FID (1D `fid` and 2D
+  `ser`), and a FID with a processed twin stays **time-domain** — click it to
+  display the raw decay and process it interactively (window functions, zero
+  filling, FT). FID-only imports keep today's auto-processing. Browsers with
+  previously saved import settings are migrated once from the old
+  prefer-processed default.
 - Peaks and Integrals panels restored in the **NMR spectra assignment**
   workspace (with peak-picking and integration toolbar tools) — they were
   omitted from its panel set while the default workspace always had them.

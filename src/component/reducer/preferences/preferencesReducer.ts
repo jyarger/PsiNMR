@@ -253,7 +253,46 @@ export function readSettings(): Settings {
     currentWorkspace: null,
     workspaces: {},
   };
-  return migrateSettings(localData);
+  return applyPsiMigrations(migrateSettings(localData));
+}
+
+const PSI_MIGRATIONS_KEY = 'psinmr-migrations';
+const FID_DATA_SELECTION_MIGRATION = 'fid-data-selection-both-v0.4';
+
+/**
+ * One-shot, fork-local migrations of persisted settings. User-saved
+ * workspaces in localStorage merge OVER the shipped defaults, so a default
+ * changed in code never reaches a browser that saved settings earlier —
+ * these rewrites bring such browsers along exactly once, after which the
+ * user's own later choices stick.
+ */
+function applyPsiMigrations(settings: Settings): Settings {
+  try {
+    if (typeof localStorage === 'undefined') return settings;
+    const done: string[] = JSON.parse(
+      localStorage.getItem(PSI_MIGRATIONS_KEY) || '[]',
+    );
+    if (done.includes(FID_DATA_SELECTION_MIGRATION)) return settings;
+
+    // v0.4: raw FIDs always load — retire the old 'preferFT' default from
+    // any saved workspace so it stops overriding the new 'both' default.
+    let changed = false;
+    for (const workspace of Object.values(settings?.workspaces || {})) {
+      const general = (workspace as any)?.nmrLoaders?.general;
+      if (general?.dataSelection === 'preferFT') {
+        general.dataSelection = 'both';
+        changed = true;
+      }
+    }
+    localStorage.setItem(
+      PSI_MIGRATIONS_KEY,
+      JSON.stringify([...done, FID_DATA_SELECTION_MIGRATION]),
+    );
+    if (changed) updateSettings(settings);
+  } catch {
+    // Storage unavailable or malformed — the in-code default is 'both'.
+  }
+  return settings;
 }
 
 export function updateSettings(settings: Settings) {

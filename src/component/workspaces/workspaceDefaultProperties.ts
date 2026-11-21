@@ -166,7 +166,10 @@ export const workspaceDefaultProperties: RequiredWorkspacePreferences = {
       keep1D: true,
       keep2D: true,
       onlyReal: false,
-      dataSelection: 'preferFT',
+      // 'both' keeps the raw FID (1D fid / 2D ser) alongside vendor-processed
+      // spectra so raw data is always available for interactive processing.
+      // Twinned FIDs are kept time-domain by keepTwinnedFidsRaw (LoadAction).
+      dataSelection: 'both',
     },
     bruker: {
       onlyFirstProcessedData: true,

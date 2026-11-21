@@ -21,6 +21,7 @@ import { initiateDatum2D } from '../../../data/data2d/Spectrum2D/index.js';
 import type { StateMoleculeExtended } from '../../../data/molecules/Molecule.js';
 import * as MoleculeManager from '../../../data/molecules/MoleculeManager.js';
 import { linkMetaWithSpectra } from '../../../data/parseMeta/linkMetaWithSpectra.js';
+import { keepTwinnedFidsRaw } from '../../../data/utilities/keepTwinnedFidsRaw.js';
 import type { UsedColors } from '../../../types/UsedColors.js';
 import { DefaultTolerance } from '../../panels/SummaryPanel/CorrelationTable/Constants.js';
 import type { State } from '../Reducer.js';
@@ -256,6 +257,9 @@ function initSpectra(
 ) {
   const spectra: any = [];
   const { usedColors, molecules, spectraColors } = options;
+  // Clear the auto-queued processing chain on FIDs whose processed twin was
+  // imported alongside them, BEFORE filters are executed during initiation.
+  keepTwinnedFidsRaw(inputSpectra);
   for (const spectrum of inputSpectra) {
     fixVarianNucleus(spectrum);
     const { info } = spectrum;
