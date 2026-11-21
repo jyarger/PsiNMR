@@ -33,7 +33,12 @@ heading at tag time.
   workspace (with peak-picking and integration toolbar tools) — they were
   omitted from its panel set while the default workspace always had them.
 - Maintenance: nginx base image bumped from the retired 1.27 branch to
-  1.30-alpine (current stable).
+  1.30-alpine (current stable); e2e CI pinned to ubuntu-24.04 runners
+  (Playwright 1.57 does not support the new ubuntu-latest 26.04 image); the
+  fast-moving `nmr-processing` / `@zakodium/nmrium-core*` / `nmr-types`
+  dependencies pinned to their tested versions — upstream `nmr-processing`
+  22.28 dropped the `checkIntegralKind` export within the same major, which
+  broke fresh installs of the published package.
 
 ## 0.3.0 — 2026-07-04
 
