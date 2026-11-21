@@ -1,10 +1,12 @@
 import {
   SvgNmrApodization,
+  SvgNmrFid,
   SvgNmrFourierTransform,
   SvgNmrZeroFilling,
 } from 'cheminfo-font';
 import { useCallback, useRef, useState } from 'react';
 
+import type { FidTraceMode } from '../../../data/data2d/Spectrum2D/extractFidTrace.js';
 import { useChartData } from '../../context/ChartContext.js';
 import { useDispatch } from '../../context/DispatchContext.js';
 import { useToaster } from '../../context/ToasterContext.js';
@@ -34,7 +36,11 @@ export default function FiltersPanel() {
   const dispatch = useDispatch();
   const toaster = useToaster();
   const { showAlert } = useAlert();
-  const { id: activeSpectrumId, filters } = useSpectrum({ filters: [] });
+  const {
+    id: activeSpectrumId,
+    info: activeSpectrumInfo,
+    filters,
+  } = useSpectrum({ filters: [] });
   const isExperimental = useCheckExperimentalFeature();
   const [isFlipped, setFlipStatus] = useState(false);
   const settingRef = useRef<SettingsRef | null>(null);
@@ -89,6 +95,19 @@ export default function FiltersPanel() {
       }
     },
     [handleChangeOption],
+  );
+
+  const handleExtractFidMenuSelect = useCallback(
+    (data?: { mode: FidTraceMode }) => {
+      if (!data) return;
+      dispatch({ type: 'EXTRACT_FID_TRACE', payload: data });
+      const nucleus = activeSpectrumInfo?.nucleus?.[0];
+      toaster.show({
+        message: `1D FID extracted — find it in the ${nucleus ? `${nucleus} ` : ''}1D tab.`,
+        intent: 'success',
+      });
+    },
+    [activeSpectrumInfo, dispatch, toaster],
   );
 
   const handleFTMenuSelect = useCallback(
@@ -160,6 +179,8 @@ export default function FiltersPanel() {
       hasActiveSpectrum && isToolEnabled('zeroFillingDimension2');
     const canFTDim1 = hasActiveSpectrum && isToolEnabled('fftDimension1');
     const canFTDim2 = hasActiveSpectrum && isToolEnabled('fftDimension2');
+    // Trace extraction needs the raw 2D FID matrices (before any FT).
+    const canExtractFid = hasActiveSpectrum && activeSpectrumInfo?.isFid;
 
     const apodizationMenuItems: Array<
       ToolbarPopoverMenuItem<{ id: MainTool }>
@@ -188,6 +209,24 @@ export default function FiltersPanel() {
         text: 'Dimension 2',
         data: { id: 'zeroFillingDimension2' },
         disabled: !canZeroFillDim2,
+      },
+    ];
+
+    // Indirect (t1 interferogram) extraction is deferred: it needs
+    // acquisition-scheme-aware recombination and a true t1 time axis to be
+    // correct (see extractFidTrace.ts).
+    const extractFidMenuItems: Array<
+      ToolbarPopoverMenuItem<{ mode: FidTraceMode }>
+    > = [
+      {
+        text: 'Direct dimension — first increment',
+        data: { mode: 'first' },
+        disabled: !canExtractFid,
+      },
+      {
+        text: 'Direct dimension — sum of increments',
+        data: { mode: 'sum' },
+        disabled: !canExtractFid,
       },
     ];
 
@@ -252,6 +291,18 @@ export default function FiltersPanel() {
             disabled={!canFTDim1 && !canFTDim2}
             options={ftMenuItems}
             onClick={handleFTMenuSelect}
+          />
+        ),
+      },
+      {
+        component: (
+          <ToolbarPopoverItem<{ mode: FidTraceMode }>
+            id="filter-extract-fid"
+            icon={<SvgNmrFid />}
+            tooltip="Extract a 1D FID trace (processable with the 1D suite)"
+            disabled={!canExtractFid}
+            options={extractFidMenuItems}
+            onClick={handleExtractFidMenuSelect}
           />
         ),
       },

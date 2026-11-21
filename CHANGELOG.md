@@ -45,6 +45,19 @@ heading at tag time.
   and a gear opens panel preferences (auto-processing on load, which data to
   load on import). The FT reducer actions now refuse to transform a dimension
   that is already frequency-domain, so a double FT cannot corrupt a spectrum.
+- **Extract 1D FIDs from 2D raw data.** A new button in the 2D Processing
+  panel extracts a direct-dimension trace of a raw `ser` as a standalone
+  complex 1D FID (first increment, or the complex sum of all increments).
+  The extracted spectrum lands in the 1D tab of its nucleus, carries the
+  Bruker digital-filter (group-delay) correction so an interactive FT phases
+  correctly, and the full 1D suite (window functions, zero filling, FT,
+  phasing) applies to it. Indirect-dimension (t1 interferogram) extraction
+  is deferred until it can be done right — it needs acquisition-scheme-aware
+  recombination (States / TPPI / echo-antiecho) and a true t1 time axis.
+- Kept-raw FIDs (the twins from "raw FID data always loads") now retain the
+  loader's queued digital-filter correction instead of dropping it, so their
+  interactive FT no longer carries a first-order phase roll from the group
+  delay.
 - Fixed two 2D processing bugs this surfaced: the dimension-1 and dimension-2
   apodization option headers had **swapped defaults** (opening "Apodization
   dimension 2" live-previewed and applied dimension 1 — upstream copy-paste

@@ -26,7 +26,9 @@ import {
 import type { SpectrumSimulationOptions } from '../../../data/data1d/spectrumSimulation.js';
 import { simulateSpectrum } from '../../../data/data1d/spectrumSimulation.js';
 import { contoursManager } from '../../../data/data2d/Spectrum2D/contours.js';
+import type { FidTraceMode } from '../../../data/data2d/Spectrum2D/extractFidTrace.js';
 import {
+  extractFidTrace,
   get2DColor,
   getMissingProjection,
   isSpectrum2D,
@@ -113,6 +115,12 @@ type AddMissingProjectionAction = ActionType<
     nucleus: string[];
   }
 >;
+type ExtractFidTraceAction = ActionType<
+  'EXTRACT_FID_TRACE',
+  {
+    mode: FidTraceMode;
+  }
+>;
 type AlignSpectraAction = ActionType<
   'ALIGN_SPECTRA',
   {
@@ -171,6 +179,7 @@ export type SpectrumActions =
   | ChangeSpectrumSettingAction
   | DeleteSpectraAction
   | AddMissingProjectionAction
+  | ExtractFidTraceAction
   | AlignSpectraAction
   | GenerateSpectrumFromPublicationStringAction
   | ImportSpectraMetaInfoAction
@@ -583,6 +592,45 @@ function handleAddMissingProjectionHandler(
 }
 
 //action
+function handleExtractFidTrace(
+  draft: Draft<State>,
+  action: ExtractFidTraceAction,
+) {
+  const { mode } = action.payload;
+
+  const spectrum = getSpectrum(draft);
+  if (!isSpectrum2D(spectrum)) return;
+
+  // Read the matrices through the unproxied spectrum: element access on an
+  // immer draft is far too slow for full 2D matrices.
+  const rawSpectrum = original(spectrum) ?? spectrum;
+  const datum1D = extractFidTrace(rawSpectrum, {
+    mode,
+    usedColors: draft.usedColors,
+  });
+  if (!datum1D) return;
+
+  draft.data.push(datum1D);
+  const groupByNucleus = groupByInfoKey('nucleus');
+  const dataGroupByNucleus = groupByNucleus(draft.data);
+  setTab(draft, dataGroupByNucleus, draft.view.spectra.activeTab, true);
+
+  // setTab(refresh) recomputes every tab's active spectrum and would hand
+  // the selection to a processed twin; keep the source FID active so
+  // another trace can be extracted right away.
+  const activeTab = draft.view.spectra.activeTab;
+  const sourceIndex = draft.data.findIndex((d) => d.id === spectrum.id);
+  if (sourceIndex !== -1) {
+    draft.view.spectra.activeSpectra[activeTab] = [
+      { id: spectrum.id, index: sourceIndex, selected: true },
+    ];
+  }
+
+  setDomain(draft);
+  setMode(draft);
+}
+
+//action
 function handleAlignSpectraHandler(
   draft: Draft<State>,
   action: AlignSpectraAction,
@@ -816,6 +864,7 @@ export {
   handleChangeSpectrumSetting,
   handleChangeSpectrumVisibilityById,
   handleDeleteSpectra,
+  handleExtractFidTrace,
   handleGenerateSpectrumFromPublicationStringHandler,
   handleImportSpectraMetaInfo,
   handleRecolorSpectraBasedOnDistinctValue,

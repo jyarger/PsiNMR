@@ -26,8 +26,21 @@ function spectrum(partial: {
 }
 
 describe('keepTwinnedFidsRaw', () => {
-  it('clears the queued chain on a FID whose processed twin is present', () => {
+  it('clears the queued chain on a FID whose processed twin is present, keeping the digital-filter correction', () => {
     const fid = spectrum({ nucleus: '1H', isFid: true });
+    const processed = spectrum({ nucleus: '1H', isFid: false });
+    keepTwinnedFidsRaw([fid, processed]);
+    // The group-delay rotation stays (the FID remains time-domain and the
+    // 1D fft filter needs it to phase correctly); everything else goes.
+    expect(fid.filters).toEqual([{ name: 'digitalFilter' }]);
+  });
+
+  it('drops the whole chain when there is no digital filter (non-Bruker data)', () => {
+    const fid = spectrum({
+      nucleus: '1H',
+      isFid: true,
+      filters: [{ name: 'apodization' }, { name: 'fft' }],
+    });
     const processed = spectrum({ nucleus: '1H', isFid: false });
     keepTwinnedFidsRaw([fid, processed]);
     expect(fid.filters).toHaveLength(0);
@@ -63,6 +76,11 @@ describe('keepTwinnedFidsRaw', () => {
       dimension: 2,
       isFid: true,
       name: 'hsqc/10',
+      filters: [
+        { name: 'digitalFilter2D' },
+        { name: 'apodizationDimension2' },
+        { name: 'fftDimension1' },
+      ],
     });
     const processed2D = spectrum({
       nucleus: ['1H', '13C'],
@@ -84,7 +102,7 @@ describe('keepTwinnedFidsRaw', () => {
       name: 'cosy/11',
     });
     keepTwinnedFidsRaw([ser, processed2D, unrelated1D, ser2]);
-    expect(ser.filters).toHaveLength(0);
+    expect(ser.filters).toEqual([{ name: 'digitalFilter2D' }]);
     expect(ser2.filters).toHaveLength(AUTO_CHAIN.length);
   });
 

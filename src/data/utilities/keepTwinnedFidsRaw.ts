@@ -18,6 +18,13 @@ import type { Spectrum } from '@zakodium/nmrium-core';
  * without a processed twin (FID-only imports) are untouched and keep today's
  * auto-processing behavior.
  *
+ * The queued digital-filter correction (`digitalFilter` / `digitalFilter2D`)
+ * is kept: it is a time-domain group-delay rotation that the loader queues
+ * on every digitally filtered Bruker FID regardless of the auto-processing
+ * preference, and the 1D fft filter phases its fractional part only when
+ * that filter entry was applied — without it an interactive FT would carry
+ * a large first-order phase roll.
+ *
  * Twins are matched by the loader-assigned experiment identity: identical
  * `info.name` (source path incl. experiment number), same dimension and the
  * same nucleus / nuclei.
@@ -41,9 +48,15 @@ export function keepTwinnedFidsRaw(spectra: Spectrum[]) {
       spectrum.filters.length > 0 &&
       processedKeys.has(key)
     ) {
-      spectrum.filters = [];
+      spectrum.filters = spectrum.filters.filter((filter) =>
+        isDigitalFilterCorrection((filter as { name?: string })?.name),
+      ) as typeof spectrum.filters;
     }
   }
+}
+
+function isDigitalFilterCorrection(name: string | undefined): boolean {
+  return name === 'digitalFilter' || name === 'digitalFilter2D';
 }
 
 function twinKey(spectrum: Spectrum): string | null {

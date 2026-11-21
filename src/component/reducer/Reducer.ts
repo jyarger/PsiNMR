@@ -622,6 +622,8 @@ function innerSpectrumReducer(draft: Draft<State>, action: Action) {
         return SpectraActions.handleDeleteSpectra(draft, action);
       case 'ADD_MISSING_PROJECTION':
         return SpectraActions.handleAddMissingProjectionHandler(draft, action);
+      case 'EXTRACT_FID_TRACE':
+        return SpectraActions.handleExtractFidTrace(draft, action);
       case 'GENERATE_SPECTRUM_FROM_PUBLICATION_STRING':
         return SpectraActions.handleGenerateSpectrumFromPublicationStringHandler(
           draft,

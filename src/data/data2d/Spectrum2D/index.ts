@@ -1,3 +1,4 @@
+export { extractFidTrace } from './extractFidTrace.js';
 export { getMissingProjection } from './getMissingProjection.js';
 export { getSlice } from './getSlice.js';
 export { initiateDatum2D } from './initiateDatum2D.js';
