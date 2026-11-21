@@ -1325,12 +1325,25 @@ function handleApplyFFTFilter(draft: Draft<State>) {
 
   const { index } = activeSpectrum;
 
+  const targetSpectrum =
+    activeFilterIndex !== -1 ? draft.tempData[index] : draft.data[index];
+
+  // FT is only valid on time-domain data; applying it to an already
+  // transformed spectrum would corrupt it, so guard the reducer itself in
+  // addition to the toolbar/panel button gating. Throwing (rather than a
+  // silent return) routes through the reducer's catch into errorAction, so
+  // the user sees why nothing happened.
+  if (!targetSpectrum?.info?.isFid) {
+    throw new Error(
+      'FT is not applicable: the active spectrum is not time-domain (FID) data.',
+    );
+  }
+
   //apply filter into the spectrum
-  Filters1DManager.applyFilters(
-    activeFilterIndex !== -1 ? draft.tempData[index] : draft.data[index],
-    [{ name: 'fft', value: {} }],
-    { filterIndex: activeFilterIndex, forceReapply: activeFilterIndex !== -1 },
-  );
+  Filters1DManager.applyFilters(targetSpectrum, [{ name: 'fft', value: {} }], {
+    filterIndex: activeFilterIndex,
+    forceReapply: activeFilterIndex !== -1,
+  });
 
   if (activeFilterIndex !== -1) {
     draft.data[index] = draft.tempData[index];
@@ -1366,6 +1379,26 @@ function applyFFTTwoDimensionFilter(
 
   const targetSpectrum =
     activeFilterIndex !== -1 ? draft.tempData[index] : draft.data[index];
+
+  // Guard against transforming a dimension that is not time-domain anymore
+  // (mirrors each filter's applicability in nmr-processing: fftDimension1
+  // clears isFid and sets isFtDimensionOne; fftDimension2 sets isFt).
+  // Throwing (rather than a silent return) routes through the reducer's
+  // catch into errorAction, so the user sees why nothing happened.
+  const info = targetSpectrum?.info;
+  if (filterName === 'fftDimension1' && !info?.isFid) {
+    throw new Error(
+      'FT on dimension 1 is not applicable: the spectrum has no time-domain data in dimension 1.',
+    );
+  }
+  if (
+    filterName === 'fftDimension2' &&
+    (!info?.isFtDimensionOne || info?.isFt)
+  ) {
+    throw new Error(
+      'FT on dimension 2 is not applicable: dimension 1 must be transformed first and dimension 2 must still be time-domain.',
+    );
+  }
 
   Filters2DManager.applyFilters(
     targetSpectrum,

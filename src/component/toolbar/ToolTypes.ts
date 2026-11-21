@@ -185,10 +185,12 @@ export const options: RecordOptions = {
     hasOptionPanel: true,
     isFilter: true,
     mode: '2D',
+    // Matches the filter's own applicability in nmr-processing: dimension 1
+    // already transformed (which clears isFid), dimension 2 still time-domain.
     spectraFilter: [
       {
         info: [
-          { key: 'isFid', value: true },
+          { key: 'isFt', value: false },
           { key: 'isFtDimensionOne', value: true },
           { key: 'isComplex', value: true },
         ],
@@ -424,10 +426,12 @@ export const options: RecordOptions = {
     hasOptionPanel: true,
     isFilter: true,
     mode: '2D',
+    // Matches the filter's own applicability in nmr-processing: dimension 1
+    // already transformed (which clears isFid), dimension 2 still time-domain.
     spectraFilter: [
       {
         info: [
-          { key: 'isFid', value: true },
+          { key: 'isFt', value: false },
           { key: 'isFtDimensionOne', value: true },
           { key: 'isComplex', value: true },
         ],

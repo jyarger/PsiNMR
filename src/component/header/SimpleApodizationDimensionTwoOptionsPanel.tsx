@@ -6,7 +6,7 @@ import { getDefaultFilterOptions } from '../utility/getDefaultFilterOptions.js';
 
 import { BaseSimpleApodizationOptionsPanel } from './base/BaseSimpleApodizationOptionsPanel.js';
 
-const defaultOptions = getDefaultFilterOptions('apodizationDimension1');
+const defaultOptions = getDefaultFilterOptions('apodizationDimension2');
 
 interface ApodizationOptionsInnerPanelProps {
   filter: ExtractFilterEntry<'apodizationDimension2'> | null;

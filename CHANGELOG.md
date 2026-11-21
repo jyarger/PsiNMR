@@ -36,6 +36,21 @@ heading at tag time.
   filling, FT). FID-only imports keep today's auto-processing. Browsers with
   previously saved import settings are migrated once from the old
   prefer-processed default.
+- **Processing panel actions and preferences.** The Processing panel header
+  now has Apodization, Zero-filling and Fourier-transform buttons: for 1D they
+  open the existing filter forms inline (live preview included) or apply the
+  FT directly; for 2D each button is a per-dimension menu, and the FT menu
+  adds a one-click **Full 2D FT (both dimensions)**. Buttons grey out with an
+  explanatory tooltip when the active spectrum has no raw time-domain data,
+  and a gear opens panel preferences (auto-processing on load, which data to
+  load on import). The FT reducer actions now refuse to transform a dimension
+  that is already frequency-domain, so a double FT cannot corrupt a spectrum.
+- Fixed two 2D processing bugs this surfaced: the dimension-1 and dimension-2
+  apodization option headers had **swapped defaults** (opening "Apodization
+  dimension 2" live-previewed and applied dimension 1 — upstream copy-paste
+  bug), and the dimension-2 apodization/zero-filling tools could never enable
+  because their visibility rules required `isFid`, which the dimension-1 FT
+  clears.
 - Peaks and Integrals panels restored in the **NMR spectra assignment**
   workspace (with peak-picking and integration toolbar tools) — they were
   omitted from its panel set while the default workspace always had them.
