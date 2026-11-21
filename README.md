@@ -67,6 +67,12 @@ images are built by GitHub Actions and published to
 `ghcr.io/jyarger/psinmr`; the server just pulls and runs
 `docker compose -f docker-compose.prod.yml up -d`.
 
+**Upgrading a live server** (psinmr.com included) is a pull + restart —
+the step-by-step runbook, version verification and rollback are in
+**[UPGRADE.md](UPGRADE.md)**. Any deployment reports exactly what it runs:
+`curl -s https://psinmr.com/version.json`, or the **Ψ → About** dialog in
+the app (version, git commit and GitHub link).
+
 ## Using PsiNMR
 
 - **INTERACTIVE NMR** — the primary call-to-action; opens the interactive

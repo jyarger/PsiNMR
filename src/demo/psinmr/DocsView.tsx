@@ -3,6 +3,7 @@ import { marked } from 'marked';
 import { useMemo } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
 
+import about from './docs/about.md?raw';
 import analysis from './docs/analysis.md?raw';
 import computeEngine from './docs/compute-engine.md?raw';
 import embedding from './docs/embedding.md?raw';
@@ -37,6 +38,7 @@ const PAGES: DocPage[] = [
     source: computeEngine,
   },
   { slug: 'faq', title: 'FAQ', source: faq },
+  { slug: 'about', title: 'About PsiNMR', source: about },
 ];
 
 /**

@@ -67,6 +67,16 @@ heading at tag time.
 - Peaks and Integrals panels restored in the **NMR spectra assignment**
   workspace (with peak-picking and integration toolbar tools) — they were
   omitted from its panel set while the default workspace always had them.
+- **Deployment version visibility.** The About dialog (Ψ button) now shows
+  the real build version with the exact git commit for CI builds, both
+  linked to GitHub; every build also ships a `/version.json` endpoint
+  (version, commit, build time) so a live deployment can be verified with
+  one `curl`. New **UPGRADE.md** runbook for upgrading psinmr.com (check
+  what's live, pull + restart, verify, roll back), a new in-app docs page
+  **About PsiNMR**, and corrected `IMAGE_TAG` examples across the deploy
+  docs — published image tags have no leading `v` (`0.3.0`, not `v0.3.0`),
+  so the old examples failed to pull (`install.sh --tag` now strips a
+  leading `v` as well).
 - Maintenance: nginx base image bumped from the retired 1.27 branch to
   1.30-alpine (current stable); e2e CI pinned to ubuntu-24.04 runners
   (Playwright 1.57 does not support the new ubuntu-latest 26.04 image); the

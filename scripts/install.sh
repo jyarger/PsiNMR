@@ -7,11 +7,13 @@
 #
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/jyarger/PsiNMR/main/scripts/install.sh | bash -s -- --token <CF_TUNNEL_TOKEN>
-#   ./install.sh --tag v0.3.0 --token <CF_TUNNEL_TOKEN>
-#   ./install.sh --tag v0.3.0 --compose-file docker-compose.caddy.yml   # self-hosted TLS
+#   ./install.sh --tag 0.3.0 --token <CF_TUNNEL_TOKEN>
+#   ./install.sh --tag 0.3.0 --compose-file docker-compose.caddy.yml   # self-hosted TLS
 #
 # Flags:
 #   --tag <tag>            Image tag to run (default: latest). Pin a release for reproducibility.
+#                          Release images are tagged WITHOUT the leading `v`
+#                          (0.3.0, not v0.3.0); a leading `v` is stripped here.
 #   --token <token>        Cloudflare Tunnel token (for the default docker-compose.prod.yml).
 #   --dir <path>           Install directory (default: ./PsiNMR).
 #   --repo <url>           Git remote (default: https://github.com/jyarger/PsiNMR.git).
@@ -31,7 +33,12 @@ err() { printf '\033[31merror:\033[0m %s\n' "$*" >&2; exit 1; }
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    --tag) TAG="${2:?--tag needs a value}"; shift 2 ;;
+    --tag)
+      TAG="${2:?--tag needs a value}"
+      # GitHub release tags are vX.Y.Z but images are published as X.Y.Z:
+      # accept either spelling.
+      case "$TAG" in v[0-9]*) TAG="${TAG#v}" ;; esac
+      shift 2 ;;
     --token) TOKEN="${2:?--token needs a value}"; shift 2 ;;
     --dir) DIR="${2:?--dir needs a value}"; shift 2 ;;
     --repo) REPO="${2:?--repo needs a value}"; shift 2 ;;

@@ -170,28 +170,42 @@ function AboutUsModal() {
 export default AboutUsModal;
 
 function VersionInfo() {
-  const { version } = versionInfo;
+  const { version, sha } = versionInfo;
+
+  // The exact commit the running build was made from (set by CI builds);
+  // disambiguates a "vX.Y.Z + unreleased commits" build of the main branch.
+  const commit = sha ? (
+    <>
+      {' · '}
+      <a
+        href={`https://github.com/jyarger/PsiNMR/commit/${sha}`}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {sha.slice(0, 7)}
+      </a>
+    </>
+  ) : null;
+
   if (version === 'HEAD') {
-    return 'HEAD';
-  } else if (version.startsWith('git-')) {
-    return (
-      <a
-        href={`https://github.com/jyarger/PsiNMR/tree/${version.slice(4)}`}
-        target="_blank"
-        rel="noreferrer"
-      >
-        git-{version.slice(4, 14)}
-      </a>
-    );
-  } else {
-    return (
-      <a
-        href={`https://github.com/jyarger/PsiNMR/tree/${version}`}
-        target="_blank"
-        rel="noreferrer"
-      >
-        {version}
-      </a>
-    );
+    return <>HEAD{commit}</>;
   }
+
+  const ref = version.startsWith('git-') ? version.slice(4) : version;
+  const label = version.startsWith('git-')
+    ? `git-${version.slice(4, 14)}`
+    : version;
+
+  return (
+    <>
+      <a
+        href={`https://github.com/jyarger/PsiNMR/tree/${ref}`}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {label}
+      </a>
+      {commit}
+    </>
+  );
 }

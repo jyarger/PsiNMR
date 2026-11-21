@@ -17,7 +17,8 @@
 #   3. docker compose -f docker-compose.prod.yml pull
 #      docker compose -f docker-compose.prod.yml up -d
 #
-# Update to a new release:
+# Update to a new release (full runbook with verification + rollback:
+# UPGRADE.md):
 #   edit IMAGE_TAG in .env (or keep :latest), then
 #   docker compose -f docker-compose.prod.yml pull && \
 #   docker compose -f docker-compose.prod.yml up -d

@@ -27,6 +27,11 @@ RUN npm ci --no-audit --no-fund
 COPY . .
 COPY --from=wasm /build/pkg ./src/compute/pkg
 
+# Exact commit of this build, passed by CI (docker-publish.yml). It ends up
+# in the About dialog and /version.json so a deployment can be verified.
+ARG GIT_SHA=
+ENV GIT_SHA=$GIT_SHA
+
 RUN npm run build
 
 # ---------------------------------------------------------------------------

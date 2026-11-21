@@ -2,9 +2,40 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import react from '@vitejs/plugin-react';
-import type { AliasOptions } from 'vite';
+import type { AliasOptions, Plugin } from 'vite';
 import { defaultClientConditions, defaultServerConditions } from 'vite';
 import { defineConfig } from 'vitest/config';
+
+const packageJson: { version: string } = JSON.parse(
+  fs.readFileSync(new URL('package.json', import.meta.url), 'utf8'),
+);
+
+/**
+ * Emit a small /version.json into the build so a deployment's exact version
+ * can be checked remotely (e.g. `curl https://psinmr.com/version.json`).
+ * GIT_SHA is provided by the Docker/CI build (see Dockerfile and
+ * .github/workflows/docker-publish.yml); local builds leave it null.
+ */
+function versionJsonPlugin(): Plugin {
+  return {
+    name: 'psinmr-version-json',
+    apply: 'build',
+    generateBundle() {
+      const payload = {
+        name: 'PsiNMR',
+        version: packageJson.version,
+        gitSha: process.env.GIT_SHA || null,
+        builtAt: new Date().toISOString(),
+      };
+      // eslint-disable-next-line unicorn/no-this-outside-of-class -- `this` is Rollup's PluginContext inside a plugin hook.
+      this.emitFile({
+        type: 'asset',
+        fileName: 'version.json',
+        source: `${JSON.stringify(payload, null, 2)}\n`,
+      });
+    },
+  };
+}
 
 // https://vitejs.dev/config/
 export default () => {
@@ -79,7 +110,13 @@ export default () => {
       },
       minify: process.env.NO_MINIFY ? false : 'oxc',
     },
-    plugins: [react()],
+    // Build-time constants for the About dialog (src/versionInfo.ts);
+    // declared for TypeScript in src/types/build-constants.d.ts.
+    define: {
+      __PSINMR_VERSION__: JSON.stringify(packageJson.version),
+      __PSINMR_GIT_SHA__: JSON.stringify(process.env.GIT_SHA ?? ''),
+    },
+    plugins: [react(), versionJsonPlugin()],
     resolve: {
       conditions: isMonorepo
         ? ['nmrium-internal', ...defaultClientConditions]

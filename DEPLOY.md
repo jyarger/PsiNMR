@@ -214,7 +214,7 @@ pulled from GHCR (see [Building & publishing](#building--publishing-the-image-ci
 ```bash
 cp .env.example .env
 nano .env
-#   IMAGE_TAG=v0.3.0     # pin a release (recommended), or `latest`
+#   IMAGE_TAG=0.3.0      # pin a release (recommended; no leading `v`), or `latest`
 #   TUNNEL_TOKEN=…       # filled in the next step
 ```
 
@@ -274,6 +274,10 @@ docker compose -f docker-compose.prod.yml pull
 docker compose -f docker-compose.prod.yml up -d
 docker compose -f docker-compose.prod.yml ps
 ```
+
+(Later upgrades of a running server are the same pull + up — the dedicated
+runbook, including version verification via `/version.json` and rollback,
+is **[UPGRADE.md](UPGRADE.md)**.)
 
 Verify from the inside out:
 
@@ -360,7 +364,7 @@ the container over the private Docker network.
 
    ```bash
    cp .env.example .env
-   # set IMAGE_TAG=v0.2.1 (or latest) and paste TUNNEL_TOKEN=...
+   # set IMAGE_TAG=0.2.2 (or latest; no leading `v`) and paste TUNNEL_TOKEN=...
    docker compose -f docker-compose.prod.yml pull
    docker compose -f docker-compose.prod.yml up -d
    ```
@@ -471,7 +475,7 @@ protection. Use Option 1–3 for anything user-facing.
 Because the VPS pulls a prebuilt image, updates are two commands:
 
 ```bash
-# pin a new release in .env (IMAGE_TAG=v0.3.0) or keep `latest`
+# pin a new release in .env (IMAGE_TAG=0.3.0 — no leading `v`) or keep `latest`
 docker compose -f docker-compose.prod.yml pull
 docker compose -f docker-compose.prod.yml up -d
 docker image prune -f          # optional: reclaim old layers
@@ -504,7 +508,7 @@ walkthrough, so a new box goes live with one command (substitute the newest
 release tag from the GitHub Releases page, or omit `--tag` for `latest`):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jyarger/PsiNMR/main/scripts/install.sh | bash -s -- --tag vX.Y.Z --token <CF_TUNNEL_TOKEN>
+curl -fsSL https://raw.githubusercontent.com/jyarger/PsiNMR/main/scripts/install.sh | bash -s -- --tag X.Y.Z --token <CF_TUNNEL_TOKEN>
 ```
 
 Sketch of what it does (install Docker if missing → clone → write `.env` →
@@ -584,15 +588,15 @@ non-technical or on-prem adoption picks up.
 
 ## Configuration reference
 
-| Setting                | Where                          | Notes                                                  |
-| ---------------------- | ------------------------------ | ------------------------------------------------------ |
-| `IMAGE_TAG`            | `.env`                         | GHCR tag to run (`v0.2.1`, `latest`, `main`, `sha-…`). |
-| `TUNNEL_TOKEN`         | `.env`                         | Cloudflare Tunnel token (Option 1). Never commit.      |
-| HTTP / HTTPS ports     | compose `ports:`               | Local: 8080/8443. Prod-tunnel: none.                   |
-| BMRB proxy cache       | `docker/nginx.conf`            | `proxy_cache_path … max_size=1g inactive=7d`.          |
-| BMRB proxy timeouts    | `docker/nginx.conf`            | connect 10s / send 30s / read 60s.                     |
-| Security headers / CSP | `docker/security-headers.conf` | Included in every location.                            |
-| Sourcemaps             | `vite.config.ts`               | Off in prod; `SOURCEMAP=hidden` to emit external maps. |
+| Setting                | Where                          | Notes                                                                                    |
+| ---------------------- | ------------------------------ | ---------------------------------------------------------------------------------------- |
+| `IMAGE_TAG`            | `.env`                         | GHCR tag to run (`0.3.0`, `latest`, `main`, `sha-…` — release tags have no leading `v`). |
+| `TUNNEL_TOKEN`         | `.env`                         | Cloudflare Tunnel token (Option 1). Never commit.                                        |
+| HTTP / HTTPS ports     | compose `ports:`               | Local: 8080/8443. Prod-tunnel: none.                                                     |
+| BMRB proxy cache       | `docker/nginx.conf`            | `proxy_cache_path … max_size=1g inactive=7d`.                                            |
+| BMRB proxy timeouts    | `docker/nginx.conf`            | connect 10s / send 30s / read 60s.                                                       |
+| Security headers / CSP | `docker/security-headers.conf` | Included in every location.                                                              |
+| Sourcemaps             | `vite.config.ts`               | Off in prod; `SOURCEMAP=hidden` to emit external maps.                                   |
 
 The app itself needs **no runtime environment variables** — it's fully static.
 All third-party endpoints (nmrXiv, BMRB, GitHub) are reached from the browser
