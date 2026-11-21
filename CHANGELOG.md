@@ -1,6 +1,39 @@
 # Changelog
 
 All notable changes to PsiNMR are documented here. Dates are ISO-8601.
+Work lands under **Unreleased** as it merges and is promoted to a version
+heading at tag time.
+
+## Unreleased
+
+- **Mobile web view** at `#/m`: a touch-first, full-screen viewer with mobile
+  chrome, a bottom-sheet stub, a tool FAB and an open-file/load-example empty
+  state; double-tap resets the view and the plot owns pinch/pan; `?url=` and
+  `?theme=` deep links; plus a **PWA manifest** (installable to the home
+  screen, start URL `/#/m`).
+- **Native client scaffolds** — thin shells that load the hosted web app so
+  every web deploy reaches them automatically (`planning/AUTO_UPDATE.md`): a
+  **Tauri desktop** shell in `desktop/` with the updater wired and a
+  three-OS release workflow (`desktop-v*` tags), and a **Capacitor mobile**
+  shell in `mobile/` pointed at `/#/m`.
+- **One-line server installer** (`scripts/install.sh`): hardened, idempotent
+  bootstrap that fails fast on malformed tunnel tokens, detects stray
+  cloudflared connectors (containers or a host systemd unit) and verifies the
+  app and tunnel after launch.
+- **Deployment hardening** from the first public deploy (psinmr.com live
+  2026-07-07): loopback publish (`127.0.0.1:8080`) for on-box verification;
+  cloudflared forced to `--protocol http2` for networks that drop QUIC; 502
+  causes traced and documented (stray wizard connectors, container and
+  systemd variants).
+- **DEPLOY.md**: zero-to-live fresh-Linux walkthrough, alternative packaging
+  options, exact tunnel-token instructions, layered verification and a
+  reboot-test checklist. New planning docs (`planning/DESKTOP_APP.md`,
+  `MOBILE_APP.md`, `AUTO_UPDATE.md`) linked from the roadmap and README.
+- Peaks and Integrals panels restored in the **NMR spectra assignment**
+  workspace (with peak-picking and integration toolbar tools) — they were
+  omitted from its panel set while the default workspace always had them.
+- Maintenance: nginx base image bumped from the retired 1.27 branch to
+  1.30-alpine (current stable).
 
 ## 0.3.0 — 2026-07-04
 

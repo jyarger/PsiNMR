@@ -4,7 +4,12 @@ PsiNMR is the first application of a broader **Psi** platform: a shared shell
 for uploading, processing, analyzing and visualizing complex scientific data,
 specialized per technique. This document tracks the intended evolution.
 
-## v1 — Stateless PsiNMR ✅ (current)
+**Release versioning:** PsiNMR ships `v0.x` tags through the public beta
+(v0.3.0 released 2026-07; v0.4.0 in progress) and **v1.0 marks the exit
+from beta**. The milestone sections below are feature arcs, not tag
+numbers — "Pro" and "Psi platform" land after v1.0.
+
+## Stateless PsiNMR ✅ (current — shipping as the v0.x beta series)
 
 A self-contained, Docker-deployable web app for NMR. No accounts, no
 server-side state.
@@ -22,7 +27,7 @@ server-side state.
 - [x] Multi-stage Docker build → nginx (wasm MIME, gzip, immutable caching,
       SPA routing).
 
-### v1.x — hardening (next)
+### Hardening (next, within the v0.x series)
 
 - [ ] Move Wasm calls into a Web Worker so large transforms never block the
       main thread; stream contour segments back incrementally.
@@ -154,7 +159,7 @@ reusing the existing static app + Rust/Wasm core rather than rewriting the UI:
   genuine interaction-design project (every desktop gesture is overloaded);
   ship the PWA first, wrap for the stores second.
 
-## v2 — PsiNMR Pro (accounts + data library)
+## PsiNMR Pro (accounts + data library) — post-v1.0
 
 Adds an optional backend so users can keep a durable, private library of NMR
 data with richer interactivity over time.
@@ -172,7 +177,7 @@ Suggested stack (keeps the door open for the Psi platform): a small API
 (FastAPI or Axum) + Postgres + object storage, with the React app talking to
 it only when a user is signed in.
 
-## v3 — The Psi platform (multi-technique)
+## The Psi platform (multi-technique) — long term
 
 Generalize the shell so each scientific-data technique is a thin app over
 shared infrastructure. The data hub, theming, auth, storage and the

@@ -32,7 +32,7 @@ RUN npm run build
 # ---------------------------------------------------------------------------
 # Stage 3 — serve the static bundle with nginx
 # ---------------------------------------------------------------------------
-FROM nginx:1.27-alpine AS runtime
+FROM nginx:1.30-alpine AS runtime
 RUN apk add --no-cache openssl \
     && mkdir -p /var/cache/nginx/bmrb \
     && chown -R nginx:nginx /var/cache/nginx

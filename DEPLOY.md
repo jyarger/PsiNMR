@@ -497,13 +497,14 @@ docker run --rm -p 8080:80 ghcr.io/jyarger/psinmr:latest
 # open http://localhost:8080
 ```
 
-### 2. One-line bootstrap script — _recommended to add (`scripts/install.sh`)_
+### 2. One-line bootstrap script — _ready today (`scripts/install.sh`)_
 
 A single idempotent script that performs steps 4–8 of the fresh-server
-walkthrough, so a new box goes live with one command:
+walkthrough, so a new box goes live with one command (substitute the newest
+release tag from the GitHub Releases page, or omit `--tag` for `latest`):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jyarger/PsiNMR/main/scripts/install.sh | bash -s -- --tag v0.3.0 --token <CF_TUNNEL_TOKEN>
+curl -fsSL https://raw.githubusercontent.com/jyarger/PsiNMR/main/scripts/install.sh | bash -s -- --tag vX.Y.Z --token <CF_TUNNEL_TOKEN>
 ```
 
 Sketch of what it does (install Docker if missing → clone → write `.env` →

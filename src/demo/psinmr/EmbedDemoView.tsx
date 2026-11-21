@@ -138,7 +138,10 @@ const SAMPLES: DemoSample[] = [
 
 export default function EmbedDemoView() {
   const frameRef = useRef<HTMLIFrameElement>(null);
-  const [log, setLog] = useState<Array<{ type: string; detail: string }>>([]);
+  const logIdRef = useRef(0);
+  const [log, setLog] = useState<
+    Array<{ id: number; type: string; detail: string }>
+  >([]);
   const embedSrc = `${window.location.origin}${window.location.pathname}#/embed`;
 
   useEffect(() => {
@@ -156,8 +159,12 @@ export default function EmbedDemoView() {
       } else if (message.type.endsWith('action-response')) {
         detail = data?.type ?? '';
       }
+      logIdRef.current += 1;
       setLog((current) =>
-        [{ type: message.type as string, detail }, ...current].slice(0, 40),
+        [
+          { id: logIdRef.current, type: message.type as string, detail },
+          ...current,
+        ].slice(0, 40),
       );
     }
     window.addEventListener('message', onMessage);
@@ -223,8 +230,8 @@ export default function EmbedDemoView() {
                 Load a sample to see nmr-wrapper events…
               </div>
             ) : (
-              log.map((entry, index) => (
-                <LogItem key={index}>
+              log.map((entry) => (
+                <LogItem key={entry.id}>
                   <b>{entry.type.replace('nmr-wrapper:', '')}</b>
                   {entry.detail ? ` — ${entry.detail}` : ''}
                 </LogItem>

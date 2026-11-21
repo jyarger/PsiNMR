@@ -81,7 +81,7 @@ images are built by GitHub Actions and published to
 - **Ψ engine chip** (top-right) — shows whether contour/FFT work is running on
   `Rust/Wasm` or the `JS` fallback.
 
-Because v1 is **stateless**, data you add lives only in the current browser
+Because the current PsiNMR is **stateless**, data you add lives only in the current browser
 session; reloading clears it. Persistence arrives with the Pro version (see
 the roadmap).
 

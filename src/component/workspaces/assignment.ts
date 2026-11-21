@@ -7,6 +7,8 @@ export const assignment: InnerWorkspace = {
     panels: {
       spectraPanel: { display: true, visible: true, open: true },
       informationPanel: { display: true, visible: true, open: false },
+      peaksPanel: { display: true, visible: true, open: false },
+      integralsPanel: { display: true, visible: true, open: false },
       rangesPanel: { display: true, visible: true, open: false },
       structuresPanel: { display: true, visible: true, open: false },
       processingsPanel: { display: true, visible: true, open: false },
@@ -20,6 +22,8 @@ export const assignment: InnerWorkspace = {
       spectraStackAlignments: true,
       spectraCenterAlignments: true,
       realImaginary: true,
+      peakPicking: true,
+      integral: true,
       zonePicking: true,
       rangePicking: true,
       slicing: true,
