@@ -8,7 +8,11 @@ on:
 
 jobs:
   e2e:
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest rolled to 26.04 (2026-11), which our pinned
+    # Playwright 1.57 does not support ("does not support <browser> on
+    # ubuntu26.04-x64"). Revisit when Playwright is upgraded (v0.5
+    # maintenance) — then this can return to ubuntu-latest.
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         project: [chromium, firefox, webkit]
